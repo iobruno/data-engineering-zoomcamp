@@ -167,12 +167,15 @@ poetry.toml
 .history
 .ionide
 
-### Docker Volume Mounting ###
+### DataTalks Data Engineering Zoomcamp ###
 
 # Docker volume for PostgresSQL
 **/pgdata/**
 
 # Docker volume for pgAdmin
 **/pgadmin/**
+
+# Datasets
+datasets/**
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode
