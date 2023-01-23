@@ -1,3 +1,5 @@
+import click
+import logging
 import os
 import pandas as pd
 
@@ -6,6 +8,7 @@ from omegaconf import OmegaConf
 from pathlib import Path
 from sqlalchemy import create_engine
 from typing import List
+from rich.logging import RichHandler
 from rich.progress import (
     BarColumn,
     Progress,
@@ -13,15 +16,24 @@ from rich.progress import (
     TextColumn,
 )
 
+
 config_file = Path(__file__).parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
+
+log = logging.getLogger("postgres_ingest")
+logging.basicConfig(
+    level="NOTSET",
+    format="%(message)s",
+    datefmt="[%X]",
+    handlers=[RichHandler(rich_tracebacks=True, tracebacks_show_locals=True)],
+)
 
 progress = Progress(
     TextColumn("[bold blue]{task.description}", justify="left"),
     BarColumn(),
     "Chunk: {task.completed}/{task.total}",
     "•",
-    "[progress.percentage]{task.percentage:>3.1f}%"
+    "[progress.percentage]{task.percentage:>3.1f}%",
 )
 
 
@@ -56,18 +68,35 @@ def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str
         progress.stop_task(task_id=task_ids[idx])
 
 
+@click.command()
+@click.option("--with-yellow-trip-data", "-y", count=True)
+@click.option("--with-green-trip-data", "-g", count=True)
+@click.option("--with-lookup-zones", "-z", count=True)
+def ingest(with_yellow_trip_data, with_green_trip_data, with_lookup_zones):
+    try:
+        log.info("Attempting to connect to Postgres with provided credentials on ENV VARs...")
+        conn = setup_db_conn()
+        conn.connect()
+        log.info("Connection successfully established!")
+
+        datasets = cfg.datasets
+
+        with progress:
+            if with_yellow_trip_data:
+                ingest_nyc_trip_data_with(conn=conn, table_name="ntl_yellow_taxi",
+                                          dataset_endpoints=datasets.yellow_trip_data)
+            if with_green_trip_data:
+                ingest_nyc_trip_data_with(conn=conn, table_name="ntl_green_taxi",
+                                          dataset_endpoints=datasets.green_trip_data)
+            if with_lookup_zones:
+                ingest_nyc_trip_data_with(conn=conn, table_name="ntl_lookup_zones",
+                                          dataset_endpoints=datasets.zone_lookups)
+        exit(0)
+
+    except Exception as ex:
+        log.error(ex)
+        exit(-1)
+
+
 if __name__ == "__main__":
-    conn = setup_db_conn()
-    conn.connect()
-
-    datasets = cfg.datasets
-
-    with progress:
-        ingest_nyc_trip_data_with(conn=conn, table_name="ntl_yellow_taxi",
-                                  dataset_endpoints=datasets.yellow_trip_data)
-        ingest_nyc_trip_data_with(conn=conn, table_name="ntl_green_taxi",
-                                  dataset_endpoints=datasets.green_trip_data)
-        ingest_nyc_trip_data_with(conn=conn, table_name="ntl_lookup_zones",
-                                  dataset_endpoints=datasets.zone_lookups)
-
-    exit(0)
+    ingest()
