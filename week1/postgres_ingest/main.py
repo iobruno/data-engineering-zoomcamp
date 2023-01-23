@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-from df_persistence import persist_df, persist_df_with, split_df_in_chunks_with
+from df_persistence import persist_df_with, split_df_in_chunks_with
 from omegaconf import OmegaConf
 from pathlib import Path
 from sqlalchemy import create_engine
@@ -17,7 +17,7 @@ config_file = Path(__file__).parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
 
 progress = Progress(
-    TextColumn("[bold blue]{task.description}", justify="right"),
+    TextColumn("[bold blue]{task.description}", justify="left"),
     BarColumn(),
     "Chunk: {task.completed}/{task.total}",
     "•",
@@ -35,29 +35,39 @@ def setup_db_conn():
     return create_engine(conn_string)
 
 
-def ingest_yellow_taxi_data_with(db_conn):
-    yellow_trip_data_urls: List[str] = cfg.datasets.yellow_trip_data
-    filenames = list(map(lambda string: string.split("/")[-1], yellow_trip_data_urls))
+def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str]):
+    filenames = list(map(lambda string: string.split("/")[-1], dataset_endpoints))
+    task_ids: List[TaskID] = [
+        progress.add_task(name, start=False, total=0)
+        for name in filenames
+    ]
 
-    with progress:
-        task_ids: List[TaskID] = [progress.add_task(name, start=False, total=0) for name in filenames]
+    for idx, url in enumerate(dataset_endpoints):
+        df = pd.read_csv(url, engine='pyarrow')
+        dfs, qty = split_df_in_chunks_with(df)
 
-        for idx, url in enumerate(yellow_trip_data_urls):
-            df = pd.read_csv(url, engine='pyarrow')
-            dfs, qty = split_df_in_chunks_with(df)
+        progress.start_task(task_id=task_ids[idx])
+        progress.update(task_id=task_ids[idx], completed=0, total=qty)
 
-            progress.start_task(task_id=task_ids[idx])
-            progress.update(task_id=task_ids[idx], completed=0, total=qty)
+        for chunk_id, new_df in enumerate(dfs):
+            persist_df_with(df=new_df, conn=conn, table_name=table_name)
+            progress.update(task_id=task_ids[idx], completed=chunk_id+1)
 
-            for chunk_id, new_df in enumerate(dfs):
-                persist_df_with(df=new_df, conn=db_conn, table_name="ntl_yellow_taxi")
-                progress.update(task_id=task_ids[idx], completed=chunk_id+1)
-
-            progress.stop_task(task_id=task_ids[idx])
+        progress.stop_task(task_id=task_ids[idx])
 
 
 if __name__ == "__main__":
     conn = setup_db_conn()
     conn.connect()
-    ingest_yellow_taxi_data_with(db_conn=conn)
+
+    datasets = cfg.datasets
+
+    with progress:
+        ingest_nyc_trip_data_with(conn=conn, table_name="ntl_yellow_taxi",
+                                  dataset_endpoints=datasets.yellow_trip_data)
+        ingest_nyc_trip_data_with(conn=conn, table_name="ntl_green_taxi",
+                                  dataset_endpoints=datasets.green_trip_data)
+        ingest_nyc_trip_data_with(conn=conn, table_name="ntl_lookup_zones",
+                                  dataset_endpoints=datasets.zone_lookups)
+
     exit(0)
