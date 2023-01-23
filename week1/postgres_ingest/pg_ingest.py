@@ -9,13 +9,7 @@ from pathlib import Path
 from sqlalchemy import create_engine
 from typing import List
 from rich.logging import RichHandler
-from rich.progress import (
-    BarColumn,
-    Progress,
-    TaskID,
-    TextColumn,
-)
-
+from rich.progress import BarColumn, Progress, TaskID, TextColumn, TimeElapsedColumn
 
 config_file = Path(__file__).parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
@@ -34,6 +28,8 @@ progress = Progress(
     "Chunk: {task.completed}/{task.total}",
     "•",
     "[progress.percentage]{task.percentage:>3.1f}%",
+    "•",
+    TimeElapsedColumn()
 )
 
 
@@ -68,6 +64,31 @@ def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str
         progress.stop_task(task_id=task_ids[idx])
 
 
+def parse_args_and_compute_datasets(conn, datasets, with_yellow_trip_data, with_green_trip_data, with_lookup_zones):
+    if with_yellow_trip_data:
+        if datasets.yellow_trip_data:
+            ingest_nyc_trip_data_with(conn, "ntl_yellow_taxi", dataset_endpoints=datasets.yellow_trip_data)
+            log.info("Done persisting the NYC Yellow Taxi trip data into DB")
+        else:
+            log.warning("The Yellow trip data init flag was specified, but the endpoint list for"
+                        "'yellow_trip_data' is empty.\nSkipping...")
+    if with_green_trip_data:
+        if datasets.green_trip_data:
+            ingest_nyc_trip_data_with(conn, "ntl_green_taxi", dataset_endpoints=datasets.green_trip_data)
+            log.info("Done persisting the NYC Green Taxi trip data into DB")
+        else:
+            log.warning("The Green trip data init flag was specified, but the endpoint list for"
+                        "'green_trip_data' is empty.\nSkipping...")
+    if with_lookup_zones:
+        if datasets.zone_lookups:
+            ingest_nyc_trip_data_with(conn, "ntl_lookup_zones", dataset_endpoints=datasets.zone_lookups)
+            log.info("Done persisting the NYC Lookup Zones")
+
+        else:
+            log.warning("The Green trip data init flag was specified, but the endpoints list for"
+                        "'zone_lookups' is empty.\nSkipping...")
+
+
 @click.command()
 @click.option("--with-yellow-trip-data", "-y", count=True)
 @click.option("--with-green-trip-data", "-g", count=True)
@@ -79,18 +100,12 @@ def ingest(with_yellow_trip_data, with_green_trip_data, with_lookup_zones):
         conn.connect()
         log.info("Connection successfully established!")
 
-        datasets = cfg.datasets
-
         with progress:
-            if with_yellow_trip_data:
-                ingest_nyc_trip_data_with(conn=conn, table_name="ntl_yellow_taxi",
-                                          dataset_endpoints=datasets.yellow_trip_data)
-            if with_green_trip_data:
-                ingest_nyc_trip_data_with(conn=conn, table_name="ntl_green_taxi",
-                                          dataset_endpoints=datasets.green_trip_data)
-            if with_lookup_zones:
-                ingest_nyc_trip_data_with(conn=conn, table_name="ntl_lookup_zones",
-                                          dataset_endpoints=datasets.zone_lookups)
+            datasets = cfg.datasets
+            parse_args_and_compute_datasets(conn=conn, datasets=datasets,
+                                            with_yellow_trip_data=with_yellow_trip_data,
+                                            with_green_trip_data=with_green_trip_data,
+                                            with_lookup_zones=with_lookup_zones)
         exit(0)
 
     except Exception as ex:
