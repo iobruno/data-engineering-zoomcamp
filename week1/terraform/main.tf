@@ -13,7 +13,7 @@ provider "google" {
 }
 
 # Ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
-resource "google_storage_bucket" "gcs_datalake_raw_bucket" {
+resource "google_storage_bucket" "dtc_datalake_raw" {
   name     = "iobruno_dtc_datalake_raw"
   location = "us-central1"
 
@@ -37,3 +37,8 @@ resource "google_storage_bucket" "gcs_datalake_raw_bucket" {
   }
 }
 
+# Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
+resource "google_bigquery_dataset" "dtc_datawarehouse_raw" {
+  dataset_id = "dtc_datawarehouse_raw"
+  location   = "us-central1"
+}
