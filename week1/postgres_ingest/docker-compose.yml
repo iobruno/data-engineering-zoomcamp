@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ny_taxi
     networks:
-      - pg-network
+      - internal
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
@@ -23,10 +23,10 @@ services:
     ports:
       - "8080:80"
     networks:
-      - pg-network
+      - internal
     volumes:
       - ./pgadmin:/var/lib/pgadmin
 
 networks:
-  pg-network:
+  internal:
     name: pg-network
