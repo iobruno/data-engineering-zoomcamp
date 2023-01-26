@@ -1,4 +1,12 @@
 terraform {
+  required_version = "~> 1.0"
+
+  # Ref.: https://cloud.google.com/docs/terraform/resource-management/store-state
+  backend "gcs" {
+    bucket = "iobruno-data-eng-zoomcamp-tfstate"
+    prefix = "terraform/state"
+  }
+
   required_providers {
     google = {
       source  = "hashicorp/google"
@@ -8,19 +16,19 @@ terraform {
 }
 
 provider "google" {
-  project = "iobruno-data-eng-zoomcamp"
-  region  = "us-central1-a"
+  project = var.gcp_project_id
+  region  = var.gcp_region
 }
 
 # Ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
 resource "google_storage_bucket" "dtc_datalake_raw" {
-  name     = "iobruno_dtc_datalake_raw"
-  location = "us-central1"
+  name     = var.gcs_datalake_raw_bucket
+  location = var.gcp_region
 
   # Cascade delete all objects within when the bucket is deleted
   force_destroy               = true
   uniform_bucket_level_access = true
-  storage_class               = "STANDARD"
+  storage_class               = var.gcs_storage_class
 
   versioning {
     enabled = true
@@ -28,8 +36,7 @@ resource "google_storage_bucket" "dtc_datalake_raw" {
 
   lifecycle_rule {
     condition {
-      # Age is defined in number of days
-      age = 30
+      age = var.gcs_blob_lifecycle_expiration_in_days
     }
     action {
       type = "Delete"
@@ -38,7 +45,7 @@ resource "google_storage_bucket" "dtc_datalake_raw" {
 }
 
 # Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
-resource "google_bigquery_dataset" "dtc_datawarehouse_raw" {
-  dataset_id = "dtc_datawarehouse_raw"
-  location   = "us-central1"
+resource "google_bigquery_dataset" "dtc_dw_staging" {
+  dataset_id = var.bq_staging_dataset
+  location   = var.gcp_region
 }

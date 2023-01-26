@@ -3,7 +3,6 @@
 ## Initial Setup
 - Download and install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk) for your platform, following the instructions on the page
 
-
 - On the GCP Console in the web, create a new `Service Account` with the roles below, and export the key with JSON format:
     - `BigQuery Admin`
     - `Storage Admin` 
@@ -20,3 +19,6 @@ $ export GOOGLE_APPLICATION_CREDENTIALS=/some/path/to/gcp-credentials.json
 ```
 $ gcloud auth application-default login
 ```
+
+## Up & Running with Terraform
+
