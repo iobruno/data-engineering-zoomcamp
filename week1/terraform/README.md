@@ -1,5 +1,7 @@
 # Terraform Setup for GCP
 
+Find the answers to [Homework 1 Part B here](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/terraform/HOMEWORK.md)
+
 ## Initial Setup
 - Download and install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk) for your platform, following the instructions on the page
 
@@ -22,3 +24,20 @@ $ gcloud auth application-default login
 
 ## Up & Running with Terraform
 
+
+Following the best practises for Terraform, 
+
+The variables that might contain sensitive information were set on `terraform.tfvars` (which, **for educational purposes only**, is set to *not* be ignored in version control - **do NOT use this for real-world scenarios**)
+
+- GCP Project ID
+- Bucket name for the RAW Datalake data
+- BigQuery Dataset name for the Staging Data
+    
+```
+$ terraform apply
+```
+
+## TODO:
+- [X] Configure Google Cloud Storage as the backend for Terraform States
+- [X] Extract sensitive data from variables.tf into *.tfvars
+- [ ] Consider using Terraform modules as the project expands further
