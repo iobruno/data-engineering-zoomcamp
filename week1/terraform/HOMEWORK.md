@@ -114,3 +114,11 @@ google_storage_bucket.dtc_datalake_raw: Creation complete after 1s [id=iobruno_d
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 ```
+
+
+## Submitting the solutions
+
+* Form for submitting: [form](https://forms.gle/S57Xs3HL9nB3YTzj9)
+* You can submit your homework multiple times. In this case, only the last submission will be used.
+
+Deadline: 30 January (Monday), 22:00 CET

@@ -1,6 +1,6 @@
 # Terraform Setup for GCP
 
-Find the answers to [Homework 1 Part B here](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/terraform/HOMEWORK.md)
+Find the answers to [**Homework 1 Part B here**](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/terraform/HOMEWORK.md)
 
 ## Initial Setup
 - Download and install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk) for your platform, following the instructions on the page
