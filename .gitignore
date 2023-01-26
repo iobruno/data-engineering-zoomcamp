@@ -178,7 +178,10 @@ crash.*.log
 # password, private keys, and other secrets. These should not be part of version
 # control as they are data points which are potentially sensitive and subject
 # to change depending on the environment.
-*.tfvars
+
+# Making an exception since this is just for the sake of the Data Engineering Zoomcamp
+# these MUST NOT be commited by default 
+# *.tfvars 
 *.tfvars.json
 
 # Ignore override files as they are usually used to override resources locally and so
