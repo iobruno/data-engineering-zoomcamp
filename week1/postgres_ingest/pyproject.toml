@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "postgres-ingest"
+version = "1.0.0"
+description = "CLI app for fetching NYC Taxi Trip Data and Ingest into a Postgres"
+authors = ["iobruno <bruno.ariev@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "postgres_ingest"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.1.3"
+omegaconf = "^2.3.0"
+pandas = "^1.5.3"
+pyarrow = "^11.0.0"
+rich = "^13.3.0"
+sqlalchemy = "^2.0.0"
+psycopg2 = { version = "2.9.5", markers = "platform_system == 'Linux'" }
+psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" }
+
+[tool.poetry.group.dev.dependencies]
+jupyterlab = "^3.5.3"
+yapf = "^0.32.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -26,10 +26,11 @@ Check the details on how to run with Docker or Locally on the `Up and Running` s
 
 ## Tech Stack
 - Python 3.9.+
-- **Virtualenv**: Miniconda or Anaconda
 - **Dataframe**: pandas, numpy
 - **CLI**: `click`, `rich` 
-- **Container**: Docker, docker-compose
+- **Virtualenv**: Conda
+- **Dependency Management**: Poetry
+- **Containers**: Docker, docker-compose
 
 ## Up and Running
 
@@ -58,9 +59,9 @@ docker run --network pg-network -it taxi_ingest
 conda create -n de-zoomcamp python=3.9 -y
 conda activate de-zoomcamp
 ```
-- Install the dependencies on `requirements-dev.txt`:
+- Install the dependencies on `pyproject.toml`:
 ```bash
-pip install -r requirements-dev.txt
+poetry install --no-root
 ```
 - Export ENV VARS to connect to DB:
 ```bash
