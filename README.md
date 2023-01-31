@@ -4,9 +4,9 @@
 
 **Week 1: Introduction & Prerequisites**:
 
-- [Homework Part A - Docker & SQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/HOMEWORK.md)
-- [Homework Part B - Terraform](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/terraform/HOMEWORK.md)
-- [Project: Postgres Ingestion from CSV](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week1/postgres_ingest)
+- [Homework Part A - Docker & SQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_1a.md)
+- [Homework Part B - Terraform](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_1b.md)
+- [Project: Postgres Ingestion from CSV](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week1/)
 - [Project: Terraform for Google Cloud Storage and BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week1/terraform)
 
 Week 2: Workflow Orchestration

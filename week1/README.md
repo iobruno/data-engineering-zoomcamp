@@ -1,7 +1,5 @@
 # Postgres Ingest
 
-Find the answers to [**Homework 1 Part A here**](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/HOMEWORK.md)
-
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones 
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/app.yml).
 
@@ -22,7 +20,7 @@ For instance: `python pg_ingest.py -gz` fetches the **NYC Green Trip Data** AND 
 
 Check the details on how to run with Docker or Locally on the `Up and Running` section
 
-![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/docs/de-zoomcamp-postgres-ingest.gif)
+![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/de-zoomcamp-postgres-ingest.gif)
 
 ## Tech Stack
 - Python 3.9.+
