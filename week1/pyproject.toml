@@ -22,6 +22,14 @@ psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" 
 jupyterlab = "^3.5.3"
 yapf = "^0.32.0"
 
+[tool.yapf]
+based_on_style = "google"
+allow_multiline_lambdas = true
+blank_line_before_nested_class_or_def = true
+coalesce_brackets = true
+column_limit = 100
+split_before_bitwise_operator = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

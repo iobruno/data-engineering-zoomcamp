@@ -1,3 +1,4 @@
+#yapf: disable
 import click
 import logging
 import os
@@ -59,29 +60,35 @@ def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str
 
         for chunk_id, new_df in enumerate(dfs):
             persist_df_with(df=new_df, conn=conn, table_name=table_name)
-            progress.update(task_id=task_ids[idx], completed=chunk_id+1)
+            progress.update(task_id=task_ids[idx], completed=chunk_id + 1)
 
         progress.stop_task(task_id=task_ids[idx])
 
 
-def parse_args_and_compute_datasets(conn, datasets, with_yellow_trip_data, with_green_trip_data, with_lookup_zones):
+def parse_args_and_compute_datasets(conn, datasets,
+                                    with_yellow_trip_data,
+                                    with_green_trip_data,
+                                    with_lookup_zones):
     if with_yellow_trip_data:
         if datasets.yellow_trip_data:
-            ingest_nyc_trip_data_with(conn, "ntl_yellow_taxi", dataset_endpoints=datasets.yellow_trip_data)
+            ingest_nyc_trip_data_with(conn, "ntl_yellow_taxi",
+                                      dataset_endpoints=datasets.yellow_trip_data)
             log.info("Done persisting the NYC Yellow Taxi trip data into DB")
         else:
             log.warning("The Yellow trip data init flag was specified, but the endpoint list for"
                         "'yellow_trip_data' is empty. Skipping...")
     if with_green_trip_data:
         if datasets.green_trip_data:
-            ingest_nyc_trip_data_with(conn, "ntl_green_taxi", dataset_endpoints=datasets.green_trip_data)
+            ingest_nyc_trip_data_with(conn, "ntl_green_taxi",
+                                      dataset_endpoints=datasets.green_trip_data)
             log.info("Done persisting the NYC Green Taxi trip data into DB")
         else:
             log.warning("The Green trip data init flag was specified, but the endpoint list for"
                         "'green_trip_data' is empty. Skipping...")
     if with_lookup_zones:
         if datasets.zone_lookups:
-            ingest_nyc_trip_data_with(conn, "ntl_lookup_zones", dataset_endpoints=datasets.zone_lookups)
+            ingest_nyc_trip_data_with(conn, "ntl_lookup_zones",
+                                      dataset_endpoints=datasets.zone_lookups)
             log.info("Done persisting the NYC Lookup Zones")
 
         else:
@@ -90,9 +97,12 @@ def parse_args_and_compute_datasets(conn, datasets, with_yellow_trip_data, with_
 
 
 @click.command(help="CLI app to extract NYC Trips data and load into Postgres")
-@click.option("--with-yellow-trip-data", "-y", count=True, help="Enables fetching for: 'NYC Yellow Trip' dataset")
-@click.option("--with-green-trip-data", "-g", count=True, help="Enables fetching for: 'NYC Green Trip' dataset")
-@click.option("--with-lookup-zones", "-z", count=True, help="Enables fetching for: 'Lookup Zones' dataset")
+@click.option("--with-yellow-trip-data", "-y", count=True,
+              help="Enables fetching for: 'NYC Yellow Trip' dataset")
+@click.option("--with-green-trip-data", "-g", count=True,
+              help="Enables fetching for: 'NYC Green Trip' dataset")
+@click.option("--with-lookup-zones", "-z", count=True,
+              help="Enables fetching for: 'Lookup Zones' dataset")
 def ingest(with_yellow_trip_data, with_green_trip_data, with_lookup_zones):
     try:
         log.info("Attempting to connect to Postgres with provided credentials on ENV VARs...")
@@ -102,7 +112,8 @@ def ingest(with_yellow_trip_data, with_green_trip_data, with_lookup_zones):
 
         with progress:
             datasets = cfg.datasets
-            parse_args_and_compute_datasets(conn=conn, datasets=datasets,
+            parse_args_and_compute_datasets(conn=conn,
+                                            datasets=datasets,
                                             with_yellow_trip_data=with_yellow_trip_data,
                                             with_green_trip_data=with_green_trip_data,
                                             with_lookup_zones=with_lookup_zones)
