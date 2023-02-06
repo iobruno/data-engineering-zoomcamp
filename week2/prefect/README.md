@@ -7,9 +7,10 @@ This subproject is designed to build a `Prefect Workflows` to fetch the CSV data
 
 ## Tech Stack
 - Python 3.9.+
-- **Virtualenv**: Miniconda or Anaconda
 - **Dataframe**: pandas, numpy
 - **Workflow**: `prefect`
+- **Virtualenv**: Conda
+- **Dependency Management**: Poetry
 
 ## Up & Running
 

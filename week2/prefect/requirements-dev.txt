@@ -1,8 +1,0 @@
-omegaconf==2.3.0
-pandas==1.5.3
-prefect==2.7.7
-prefect-gcp[cloud_storage]==0.2.5
-prefect-sqlalchemy==0.2.2
-psycopg2-binary==2.9.5
-pyarrow==10.0.1
-SQLAlchemy==1.4.46
