@@ -12,6 +12,7 @@ pandas = "^1.5.3"
 prefect = "^2.7.12"
 prefect-sqlalchemy = "^0.2.2"
 prefect-gcp = {extras = ["cloud-storage"], version = "^0.2.5"}
+greenlet = "^2.0.2"
 pyarrow = "^11.0.0"
 sqlalchemy = "1.4.46"
 psycopg2 = { version = "2.9.5", markers = "platform_system == 'Linux'" }
