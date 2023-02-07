@@ -7,9 +7,10 @@ This subproject is designed to build `Airflow DAGs` to fetch the CSV datasets fo
 
 ## Tech Stack
 - Python 3.9.+
-- **Virtualenv**: Miniconda or Anaconda
 - **Dataframe**: pandas, numpy
 - **Workflow**: `airflow`
+- **Virtualenv**: Conda
+- **Dependency Management**: Poetry
 
 ## Up & Running
 
