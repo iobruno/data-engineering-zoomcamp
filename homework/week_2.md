@@ -66,6 +66,9 @@ To execute flow runs from this deployment, start an agent that pulls work from t
 $ prefect agent start -q 'default'
 ```
 
+![prefect-deployment-scheduling](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_scheduling.png)
+
+
 ## Question 3. Loading data to BigQuery
 
 Using `etl_gcs_to_bq.py` as a starting point, modify the script for extracting data from GCS and loading it into BigQuery. 
@@ -90,15 +93,49 @@ Run your deployment to append this data to your BiqQuery table. How many rows di
 - [ ] 11,338,483
 
 ### Solution:
+
+**Google Cloud Storage - Yellow Data**:
+![prefect-gcs-yellow-data](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_gcs_yellow_data.png)
+
+**Flow execution**:
+```bash
+18:16:00.882 | INFO    | prefect.engine - Created flow run 'steel-mussel' for flow 'NYC GCS to BigQuery'
+18:16:00.933 | INFO    | Flow run 'steel-mussel' - Fetching Configurations for GCS to BigQuery ETL from .yml
+18:16:00.934 | INFO    | Flow run 'steel-mussel' - Loading up GCP Credentials from Prefect Block...
+18:16:01.025 | INFO    | Flow run 'steel-mussel' - Created task run 'extract_from_gcs-0' for task 'extract_from_gcs'
+18:16:01.025 | INFO    | Flow run 'steel-mussel' - Executing 'extract_from_gcs-0' immediately...
+18:16:01.117 | INFO    | Task run 'extract_from_gcs-0' - Fetching: 'yellow/yellow_tripdata_2019-03.parquet.gz'
+18:16:01.680 | INFO    | Task run 'extract_from_gcs-0' - Downloading blob named yellow/yellow_tripdata_2019-03.parquet.gz from the iobruno_dtc_datalake_raw bucket to /Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/gcs_datasets/yellow/yellow_tripdata_2019-03.parquet.gz
+18:16:05.537 | INFO    | Task run 'extract_from_gcs-0' - Finished in state Completed()
+18:16:05.538 | INFO    | Flow run 'steel-mussel' - Retrieval successful. Dataframe contains: 7832545 lines
+18:16:05.538 | INFO    | Flow run 'steel-mussel' - Initiating Dataframe transfer to BigQuery...
+18:16:05.548 | INFO    | Flow run 'steel-mussel' - Created task run 'load_into_bq_with-0' for task 'load_into_bq_with'
+18:16:05.548 | INFO    | Flow run 'steel-mussel' - Executing 'load_into_bq_with-0' immediately...
+18:16:56.373 | INFO    | Task run 'load_into_bq_with-0' - Finished in state Completed()
+18:16:56.374 | INFO    | Flow run 'steel-mussel' - Dataframe transfer complete!
+18:16:56.388 | INFO    | Flow run 'steel-mussel' - Created task run 'extract_from_gcs-1' for task 'extract_from_gcs'
+18:16:56.388 | INFO    | Flow run 'steel-mussel' - Executing 'extract_from_gcs-1' immediately...
+18:16:56.479 | INFO    | Task run 'extract_from_gcs-1' - Fetching: 'yellow/yellow_tripdata_2019-02.parquet.gz'
+18:16:57.020 | INFO    | Task run 'extract_from_gcs-1' - Downloading blob named yellow/yellow_tripdata_2019-02.parquet.gz from the iobruno_dtc_datalake_raw bucket to /Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/gcs_datasets/yellow/yellow_tripdata_2019-02.parquet.gz
+18:17:00.797 | INFO    | Task run 'extract_from_gcs-1' - Finished in state Completed()
+18:17:00.798 | INFO    | Flow run 'steel-mussel' - Retrieval successful. Dataframe contains: 7019375 lines
+18:17:00.798 | INFO    | Flow run 'steel-mussel' - Initiating Dataframe transfer to BigQuery...
+18:17:00.808 | INFO    | Flow run 'steel-mussel' - Created task run 'load_into_bq_with-1' for task 'load_into_bq_with'
+18:17:00.808 | INFO    | Flow run 'steel-mussel' - Executing 'load_into_bq_with-1' immediately...
+18:17:49.884 | INFO    | Task run 'load_into_bq_with-1' - Finished in state Completed()
+18:17:49.885 | INFO    | Flow run 'steel-mussel' - Dataframe transfer complete!
+18:17:49.886 | INFO    | Flow run 'steel-mussel' - All Done!
+18:17:49.904 | INFO    | Flow run 'steel-mussel' - Finished in state Completed('All states completed.')
+```
+
+**BigQuery - Query Results**:
+
 ```sql
-select count(1) as counter 
-from `iobruno-data-eng-zoomcamp.dtc_dw_staging.yellow_tripdata`  where true
+SELECT count(1) as counter 
+FROM `iobruno-data-eng-zoomcamp.dtc_dw_staging.yellow_tripdata`
 ```
-```Result:
-| Row | counter  |
-|-----|----------|
-| 1   | 14851920 |
-```
+
+![prefect-bigquery-yellow-data](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_bigquery_yellow_data.png)
 
 
 ## Question 4. Github Storage Block
@@ -134,6 +171,30 @@ To execute flow runs from this deployment, start an agent that pulls work from t
 $ prefect agent start -q 'default'
 ```
 
+**Flow execution**:
+```
+17:25:43.634 | INFO    | prefect.engine - Created flow run 'tall-moth' for flow 'NYC Taxi Trip data CSV Dataset to GCS'
+17:25:43.685 | INFO    | Flow run 'tall-moth' - Fetching URL Datasets from .yml
+17:25:43.699 | INFO    | Flow run 'tall-moth' - Created task run 'fetch_csv_from-0' for task 'fetch_csv_from'
+17:25:43.699 | INFO    | Flow run 'tall-moth' - Executing 'fetch_csv_from-0' immediately...
+17:25:43.716 | INFO    | Task run 'fetch_csv_from-0' - Now fetching: https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2020-11.csv.gz
+17:25:44.506 | INFO    | Task run 'fetch_csv_from-0' - Finished in state Completed()
+17:25:44.517 | INFO    | Flow run 'tall-moth' - Created task run 'save_to_fs_with-0' for task 'save_to_fs_with'
+17:25:44.517 | INFO    | Flow run 'tall-moth' - Executing 'save_to_fs_with-0' immediately...
+
+
+17:25:44.688 | INFO    | Task run 'save_to_fs_with-0' - Dataset 'green_tripdata_2020-11.csv.gz' contains: 88605 lines
+
+
+17:25:44.697 | INFO    | Task run 'save_to_fs_with-0' - Finished in state Completed()
+17:25:44.707 | INFO    | Flow run 'tall-moth' - Created task run 'load_into_gcs_with-0' for task 'load_into_gcs_with'
+17:25:44.707 | INFO    | Flow run 'tall-moth' - Executing 'load_into_gcs_with-0' immediately...
+17:25:44.799 | INFO    | Task run 'load_into_gcs_with-0' - Getting bucket 'iobruno_dtc_datalake_raw'.
+17:25:45.337 | INFO    | Task run 'load_into_gcs_with-0' - Uploading from PosixPath('/Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/datasets/green_tripdata_2020-11.parquet.gz') to the bucket 'iobruno_dtc_datalake_raw' path 'green/green_tripdata_2020-11.parquet.gz'.
+17:25:45.727 | INFO    | Task run 'load_into_gcs_with-0' - Finished in state Completed()
+17:25:45.741 | INFO    | Flow run 'tall-moth' - Finished in state Completed('All states completed.')
+```
+
 
 ## Question 5. Email or Slack notifications
 
@@ -165,6 +226,10 @@ How many rows were processed by the script?
 
 ### Solution:
 
+**Prefect Orion - Notifications - Slack Webhook**:
+![prefect-bigquery-notif-trigger](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_notif_trigger.png)
+
+**Flow execution**:
 ```
 7:14:45.338 | INFO    | prefect.engine - Created flow run 'rousing-sawfly' for flow 'NYC Taxi Trip data CSV Dataset to GCS'
 17:14:45.387 | INFO    | Flow run 'rousing-sawfly' - Fetching URL Datasets from .yml
@@ -175,9 +240,7 @@ How many rows were processed by the script?
 17:14:46.276 | INFO    | Flow run 'rousing-sawfly' - Created task run 'save_to_fs_with-0' for task 'save_to_fs_with'
 17:14:46.277 | INFO    | Flow run 'rousing-sawfly' - Executing 'save_to_fs_with-0' immediately...
 
-
 17:14:47.248 | INFO    | Task run 'save_to_fs_with-0' - Dataset 'green_tripdata_2019-04.csv.gz' contains: 514392 lines
-
 
 17:14:47.256 | INFO    | Task run 'save_to_fs_with-0' - Finished in state Completed()
 17:14:47.271 | INFO    | Flow run 'rousing-sawfly' - Created task run 'load_into_gcs_with-0' for task 'load_into_gcs_with'
@@ -186,6 +249,7 @@ How many rows were processed by the script?
 17:14:47.918 | INFO    | Task run 'load_into_gcs_with-0' - Uploading from PosixPath('/Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/datasets/green_tripdata_2019-04.parquet.gz') to the bucket 'iobruno_dtc_datalake_raw' path 'green/green_tripdata_2019-04.parquet.gz'.
 ```
 
+![prefect-bigquery-notif-slack](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_notif_slack.png)
 
 
 ## Question 6. Secrets
@@ -196,6 +260,11 @@ Prefect Secret blocks provide secure, encrypted storage in the database and obfu
 - [ ] 6
 - [x] 8
 - [ ] 10
+
+### Solution:
+
+**Prefect Blocks - Secret**:
+![prefect-bigquery-blocks-secret](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_blocks_secret.png)
 
 
 
