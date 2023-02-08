@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "poetry-workflow"
+version = "1.0.0"
+description = "Prefect Orchestration | Modern Data Stack | DEZoomcamp"
+authors = ["iobruno <bruno.ariev@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+omegaconf = "^2.3.0"
+pandas = "^1.5.3"
+prefect = "^2.7.12"
+prefect-gcp = {extras = ["cloud-storage"], version = "^0.2.5"}
+greenlet = "^2.0.2"
+pyarrow = "^11.0.0"
+pandas-gbq = "^0.19.1"
+
+[tool.poetry.group.dev.dependencies]
+jupyterlab = "3.5.3"
+yapf = "^0.32.0"
+
+[tool.yapf]
+based_on_style = "google"
+allow_multiline_lambdas = true
+blank_line_before_nested_class_or_def = true
+coalesce_brackets = true
+column_limit = 100
+split_before_bitwise_operator = true
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
