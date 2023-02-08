@@ -5,6 +5,16 @@ prefect_block:
       alias: "postgres-docker"
       database: "ny_taxi"
 
+  gcs:
+    dtc_datalake_raw:
+      alias: "dtc-datalake-raw"
+      bucket: "iobruno-datalake-raw"
+      blob_prefix: "dtc_ny_taxi_tripdata/"
+
+  gcp_credentials:
+    gcs_bigquery: "prefect-gcs-bigquery"
+
+
 datasets:
   green:
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2020-12.csv.gz
