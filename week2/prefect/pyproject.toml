@@ -17,6 +17,7 @@ pyarrow = "^11.0.0"
 sqlalchemy = "1.4.46"
 psycopg2 = { version = "2.9.5", markers = "platform_system == 'Linux'" }
 psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" }
+pandas-gbq = "^0.19.1"
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "3.5.3"
