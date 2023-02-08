@@ -1,8 +1,6 @@
 import logging
 import pandas as pd
-import numpy as np
 
-from math import ceil
 from omegaconf import OmegaConf
 from pathlib import Path
 from prefect import flow, task
@@ -12,12 +10,6 @@ from typing import Tuple
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
-
-logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s - %(message)s",
-                    level=logging.INFO,
-                    datefmt="%Y-%m-%dT%H:%M:%S")
-
-log = logging.getLogger("flow_pg_ingest")
 
 
 @task(log_prints=True, retries=3)
@@ -41,12 +33,21 @@ def save_to_fs_with(df: pd.DataFrame, label: str) -> Tuple[Path, str]:
 
 
 @task(log_prints=True, retries=3)
+def fix_datatypes_for(df: pd.DataFrame) -> pd.DataFrame:
+    return df.astype({
+        'PUlocationID': 'Int64',
+        'DOlocationID': 'Int64',
+        'SR_Flag': 'Int64'
+    })
+
+
+@task(log_prints=True, retries=3)
 def fetch_csv_from(url: str) -> pd.DataFrame:
     print(f"Now fetching: {url}")
     return pd.read_csv(url, engine='pyarrow')
 
 
-@flow(name="NYC Taxi Trip data CSV Dataset to GCS", log_prints=True)
+@flow(name="NYC FHV Trip Data CSV Dataset to GCS", log_prints=True)
 def ingest():
     try:
         print("Fetching URL Datasets from .yml")
@@ -56,7 +57,8 @@ def ingest():
             for endpoint in datasets.fhv:
                 filename = endpoint.split("/")[-1]
                 df = fetch_csv_from(url=endpoint)
-                filepath, parquet_filename = save_to_fs_with(df=df, label=filename)
+                cleansed_df = fix_datatypes_for(df=df)
+                filepath, parquet_filename = save_to_fs_with(df=cleansed_df, label=filename)
                 load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
                                    blob_name=f"fhv/{parquet_filename}",
                                    fs_path=filepath)
