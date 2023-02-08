@@ -36,7 +36,7 @@ def load_into_gcs_with(bucket_name: str, blob_name: str, fs_path: str):
 
 @task(log_prints=True, retries=3)
 def save_as_parquet_to_fs_with(df: pd.DataFrame, label: str) -> Tuple[Path, str]:
-    filename = f"{label.split('.')[0]}.parquet"
+    filename = f"{label.split('.')[0]}.parquet.gz"
     file_dir = root_dir.joinpath("datasets")
     file_dir.mkdir(parents=True, exist_ok=True)
     filepath = file_dir.joinpath(filename)
@@ -45,7 +45,16 @@ def save_as_parquet_to_fs_with(df: pd.DataFrame, label: str) -> Tuple[Path, str]
 
 
 @task(log_prints=True, retries=3)
-def fetch_csv_from(url: str) -> pd.DataFrame:
+def fix_datatypes_for(df: pd.DataFrame) -> pd.DataFrame:
+    return df.astype({
+        'PUlocationID': 'Int64',
+        'DOlocationID': 'Int64',
+        'SR_Flag': 'Int64'
+    })
+
+
+@task(log_prints=True, retries=3)
+def fetch_fhv_csv_from(url: str) -> pd.DataFrame:
     print(f"Now fetching: {url}")
     return pd.read_csv(url, engine='pyarrow')
 
@@ -59,8 +68,9 @@ def ingest():
         if datasets.fhv:
             for endpoint in datasets.fhv:
                 filename = endpoint.split("/")[-1]
-                df = fetch_csv_from(url=endpoint)
-                filepath, parquet_filename = save_as_parquet_to_fs_with(df=df, label=filename)
+                df = fetch_fhv_csv_from(url=endpoint)
+                cleansed_df = fix_datatypes_for(df=df)
+                filepath, parquet_filename = save_as_parquet_to_fs_with(df=cleansed_df, label=filename)
                 load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
                                    blob_name=f"fhv/{parquet_filename}",
                                    fs_path=filepath)
