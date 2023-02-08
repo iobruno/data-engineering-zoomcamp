@@ -10,7 +10,12 @@
 - [Homework Part B - Terraform-GCP](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_1b.md)
 
 
-Week 2: Workflow Orchestration
+**Week 2: Workflow Orchestration**:
+- [Prefect Flows](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_2_workflow_orchestration/prefect)
+  - [SQLAlchemy Ingest](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_2_workflow_orchestration/prefect/flows/sqlalchemy_ingest.py)
+  - [Web CSV to GCS](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_2_workflow_orchestration/prefect/flows/web_csv_to_gcs.py)
+- [Homework - Prefect Orchestration](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_2.md)
+
 
 Week 3: Data Warehouse
 
