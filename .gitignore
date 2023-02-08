@@ -215,6 +215,9 @@ terraform.rc
 **/pgadmin/**
 
 # Datasets
-datasets/**
+**/datasets/**
+
+# GCP Crendeitals
+**/credentials/**
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode,terraform
