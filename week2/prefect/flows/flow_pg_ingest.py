@@ -1,33 +1,22 @@
 import logging
-import os
 import pandas as pd
 import numpy as np
 
 from math import ceil
 from omegaconf import OmegaConf
 from pathlib import Path
-from sqlalchemy import create_engine
+from prefect import flow, task
+from prefect_sqlalchemy import SqlAlchemyConnector
 from typing import List, Tuple
 
-config_file = Path(__file__).parent.joinpath("app.yml")
+config_file = Path(__file__).parent.parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
 
-log = logging.getLogger("postgres_ingest")
-logging.basicConfig(
-    level="NOTSET",
-    format="%(message)s",
-    datefmt="[%X]",
-)
+logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s - %(message)s",
+                    level=logging.INFO,
+                    datefmt="%Y-%m-%dT%H:%M:%S")
 
-
-def setup_db_conn():
-    db_user = os.getenv("DATABASE_USERNAME")
-    db_passwd = os.getenv("DATABASE_PASSWORD")
-    db_host = os.getenv("DATABASE_HOST")
-    db_port = os.getenv("DATABASE_PORT")
-    db_name = os.getenv("DATABASE_NAME")
-    conn_string = f"postgresql://{db_user}:{db_passwd}@{db_host}:{db_port}/{db_name}"
-    return create_engine(conn_string)
+log = logging.getLogger("flow_pg_ingest")
 
 
 def split_df_in_chunks_with(df: pd.DataFrame, max_chunk_size: int = 100000) -> Tuple[List[pd.DataFrame], int]:
@@ -35,45 +24,51 @@ def split_df_in_chunks_with(df: pd.DataFrame, max_chunk_size: int = 100000) -> T
     return np.array_split(df, chunks_qty), chunks_qty
 
 
-def persist_df_with(df: pd.DataFrame, conn, table_name: str, if_table_exists='append'):
-    df.to_sql(table_name, con=conn, if_exists=if_table_exists, index=False)
+@task(log_prints=True, retries=3)
+def load_into_postgres_with(df: pd.DataFrame, table_name: str, label: str):
+    dfs, qty = split_df_in_chunks_with(df)
+
+    conn_block = SqlAlchemyConnector.load("postgres-docker")
+    with conn_block.get_connection(begin=False) as engine:
+        for chunk_id, df_chunk in enumerate(dfs):
+            print(f"[{label}] Now saving: Chunk {chunk_id+1}/{qty}")
+            df_chunk.to_sql(table_name, con=engine, if_exists='append', index=False)
 
 
-def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str]):
-    filenames = list(map(lambda string: string.split("/")[-1], dataset_endpoints))
-
-    for idx, url in enumerate(dataset_endpoints):
-        df = pd.read_csv(url, engine='pyarrow')
-        dfs, qty = split_df_in_chunks_with(df)
-
-        for chunk_id, new_df in enumerate(dfs):
-            persist_df_with(df=new_df, conn=conn, table_name=table_name)
+@task(log_prints=True)
+def drop_trips_with_no_passengers(df: pd.DataFrame) -> pd.DataFrame:
+    refined_df = df[df['passenger_count'] != 0]
+    print(f"Excluded entries with zero passengers: {df['passenger_count'].isin([0]).sum()}")
+    return refined_df
 
 
+@task(log_prints=True, retries=3)
+def extract_nyc_trip_data_with(url: str) -> pd.DataFrame:
+    print(f"Now fetching: {url}")
+    return pd.read_csv(url, engine='pyarrow')
+
+
+@flow(name="NYC Trip CSV Dataset to Postgres", log_prints=True)
 def ingest():
     try:
-        log.info("Attempting to connect to Postgres with provided credentials on ENV VARs...")
-        conn = setup_db_conn()
-        conn.connect()
-        log.info("Connection successfully established!")
-
-        log.info("Fetching URL Datasets from .yml")
+        print("Fetching URL Datasets from .yml")
         datasets = cfg.datasets
 
-        if datasets.yellow_trip_data:
-            ingest_nyc_trip_data_with(conn, "ntl_yellow_taxi",
-                                      dataset_endpoints=datasets.yellow_trip_data)
-
         if datasets.green_trip_data:
-            ingest_nyc_trip_data_with(conn, "ntl_green_taxi",
-                                      dataset_endpoints=datasets.green_trip_data)
+            for endpoint in datasets.green_trip_data:
+                filename = endpoint.split("/")[-1]
+                df = extract_nyc_trip_data_with(url=endpoint)
+                cleansed_df = drop_trips_with_no_passengers(df)
+                load_into_postgres_with(df=cleansed_df, table_name="ntl_green_taxi", label=filename)
 
         if datasets.zone_lookups:
-            ingest_nyc_trip_data_with(conn, "ntl_lookup_zones",
-                                      dataset_endpoints=datasets.zone_lookups)
+            for endpoint in datasets.zone_lookups:
+                filename = endpoint.split("/")[-1]
+                df = extract_nyc_trip_data_with(url=endpoint)
+                load_into_postgres_with(df=df, table_name="ntl_lookup_zones", label=filename)
 
     except Exception as ex:
-        log.error(ex)
+        print(ex)
         exit(-1)
 
 
