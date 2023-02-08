@@ -9,7 +9,12 @@
 - [Project: Postgres Ingestion from CSV](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week1/)
 - [Project: Terraform for Google Cloud Storage and BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week1/terraform)
 
-Week 2: Workflow Orchestration
+**Week 2: Workflow Orchestration**:
+- [Homework - Prefect Orchestration](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_2.md)
+- [Project: Prefect Flows](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week2/prefect)
+  - [Flow: CSV Dataset to Postgres](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week2/prefect/flows/flow_pg_ingest.py)
+  - [Flow: CSV Dataset to GCS .parquet](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week2/prefect/flows/flow_web_csv_dataset_to_gcs.py)
+  - [Flow: GCS Bucket to BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week2/prefect/flows/flow_gcs_to_bq.py)
 
 Week 3: Data Warehouse
 
