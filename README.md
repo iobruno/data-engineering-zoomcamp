@@ -16,7 +16,9 @@
   - [Flow: CSV Dataset to GCS .parquet](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week2/prefect/flows/flow_web_csv_dataset_to_gcs.py)
   - [Flow: GCS Bucket to BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week2/prefect/flows/flow_gcs_to_bq.py)
 
-Week 3: Data Warehouse
+**Week 3: Data Warehouse**:
+- [Homework - DataWarehouse with BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
+- [Project: Prefect Flows]((https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week3/prefect))
 
 Week 4: Analytics Engineering
 
