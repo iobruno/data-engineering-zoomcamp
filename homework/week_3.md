@@ -16,9 +16,19 @@ Stop with loading the files into a bucket. </br></br>
 ## Question 1:
 What is the count for fhv vehicle records for year 2019?
 - [ ] 65,623,481
-- [ ] 43,244,696
+- [x] 43,244,696
 - [ ] 22,978,333
 - [ ] 13,942,414
+
+### Solution:
+
+```sql
+SELECT
+  COUNT(1)
+FROM
+  `iobruno-data-eng-zoomcamp.dtc_dw_staging.nyc_fhv_tripdata` fhv;
+```
+
 
 ## Question 2:
 Write a query to count the distinct number of affiliated_base_number for the entire dataset on both the tables.</br>
@@ -27,15 +37,36 @@ What is the estimated amount of data that will be read when this query is execut
 - [ ] 25.2 MB for the External Table and 100.87MB for the BQ Table
 - [ ] 225.82 MB for the External Table and 47.60MB for the BQ Table
 - [ ] 0 MB for the External Table and 0MB for the BQ Table
-- [ ] 0 MB for the External Table and 317.94MB for the BQ Table
+- [x] 0 MB for the External Table and 317.94MB for the BQ Table
+
+### Solution:
+
+**BQ Internal Table (from .csv.gz)**:
+![bigquery-internal-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_internal.png)
+
+**BQ External Table (from .csv.gz)**:
+![bigquery-external-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_external.png)
+
 
 
 ## Question 3:
 How many records have both a blank (null) PUlocationID and DOlocationID in the entire dataset?
-- [ ] 717,748
+- [x] 717,748
 - [ ] 1,215,687
 - [ ] 5
 - [ ] 20,332
+
+### Solution:
+```sql
+SELECT
+    COUNT(1)
+FROM
+    `iobruno-data-eng-zoomcamp.dtc_dw_staging.nyc_fhv_tripdata` fhv
+WHERE
+    fhv.PUlocationID IS NULL
+    AND fhv.DOlocationID IS NULL;
+```
+
 
 ## Question 4:
 What is the best strategy to optimize the table if query always filter by pickup_datetime and order by affiliated_base_number?
@@ -64,7 +95,7 @@ bytes processed. What are these values? Choose the answer which most closely mat
 Where is the data stored in the External Table you created?
 
 - [ ] Big Query
-- [ ] GCP Bucket
+- [x] GCP Bucket
 - [ ] Container Registry
 - [ ] Big Table
 
