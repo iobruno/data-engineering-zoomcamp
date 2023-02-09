@@ -17,7 +17,10 @@
 - [Homework - Prefect Orchestration](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_2.md)
 
 
-Week 3: Data Warehouse
+**Week 3: Data Warehouse**:
+- [BigQuery: Creating Native and External Tables](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_3_data_warehouse/sql)
+- [Homework - Data Warehousing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
+
 
 Week 4: Analytics Engineering
 
