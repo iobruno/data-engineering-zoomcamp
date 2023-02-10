@@ -1,11 +1,12 @@
-import logging
-import pandas as pd
-
-from omegaconf import OmegaConf
+import io
 from pathlib import Path
-from prefect import flow, task
+from typing import Optional
+
+import pandas as pd
+from omegaconf import OmegaConf
 from prefect_gcp import GcsBucket
-from typing import Tuple
+
+from prefect import flow, task
 
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")
@@ -21,15 +22,56 @@ def load_into_gcs_with(bucket_name: str, blob_name: str, fs_path: str):
     )
 
 
-@task(log_prints=True, retries=3)
-def save_to_fs_with(df: pd.DataFrame, label: str) -> Tuple[Path, str]:
-    filename = f"{label.split('.')[0]}.parquet.gz"
-    file_dir = root_dir.joinpath("datasets")
-    file_dir.mkdir(parents=True, exist_ok=True)
-    filepath = file_dir.joinpath(filename)
-    df.to_parquet(filepath, compression='gzip')
-    print(f"Dataset '{label}' contains: {len(df)} lines")
-    return filepath, filename
+@task(log_prints=True)
+def upload_df_to_gcs(prefect_gcs_block_name: str, blob_name: str, df: pd.DataFrame,
+                     output_format: str, compression: Optional[str] = None):
+    """
+    Upload a pandas Dataframe to Google Cloud Storage as:
+        .csv, .csv.gz, .parquet, .parquet.snappy, .parquet.gz
+
+    Args:
+    - prefect_gcs_block_name (str): Prefect GCS Bucket name
+    - blob_name (str): the actual full blob name (e.g.: /path/to/gcs/blob.csv)
+    - df (pd.DataFrame): pandas Dataframe object
+    - output_format (str): Specify whether the output should be 'csv' or 'parquet'
+    - compression (Optional[str], optional): Specify the compression type for the output.
+                                              'csv' supports 'None' or 'gzip', while
+                                              'parquet' supports 'None', 'snappy' or 'gzip'.
+                                              Defaults to None.
+
+    Returns:
+    None
+    """
+    byte_buffer = io.BytesIO()
+    content_type: str = "application/octet-stream"
+
+    if not blob_name.endswith(output_format):
+        blob_name = f"{blob_name}.{output_format}"
+
+    if output_format == "csv":
+        df.to_csv(path_or_buf=byte_buffer, compression=compression, index=False)
+        if compression:
+            blob_name = f"{blob_name}.gz"
+        else:
+            content_type = "text/csv"
+
+    elif output_format == "parquet":
+        df.to_parquet(path=byte_buffer, compression=compression, index=False)
+        if compression == "gzip":
+            blob_name = f"{blob_name}.gz"
+        elif compression == "snappy":
+            blob_name = f"{blob_name}.snappy"
+
+    else:
+        raise RuntimeError("Unsupported output format. Use either 'csv' or 'parquet'")
+
+    byte_buffer.seek(0)
+    gcs_bucket = GcsBucket.load(prefect_gcs_block_name)
+    gcs_bucket.upload_from_file_object(
+        from_file_object=byte_buffer,
+        to_path=blob_name,
+        content_type=content_type
+    )
 
 
 @task(log_prints=True, retries=3)
@@ -52,17 +94,16 @@ def ingest():
     try:
         print("Fetching URL Datasets from .yml")
         datasets = cfg.datasets
-
         if datasets.fhv:
             for endpoint in datasets.fhv:
-                filename = endpoint.split("/")[-1]
+                filename = endpoint.split("/")[-1].split(".")[0]
                 df = fetch_csv_from(url=endpoint)
                 cleansed_df = fix_datatypes_for(df=df)
-                filepath, parquet_filename = save_to_fs_with(df=cleansed_df, label=filename)
-                load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
-                                   blob_name=f"fhv/{parquet_filename}",
-                                   fs_path=filepath)
-
+                upload_df_to_gcs(prefect_gcs_block_name="gcs-dtc-datalake-raw",
+                                 blob_name=f"testing_fhv/{filename}",
+                                 df=cleansed_df,
+                                 output_format='parquet',
+                                 compression='gzip')
     except Exception as ex:
         print(ex)
         exit(-1)
