@@ -1,77 +1,139 @@
-import io
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Any, Union
 
 import pandas as pd
 from omegaconf import OmegaConf
+from io import BytesIO
 from prefect_gcp import GcsBucket
 
 from prefect import flow, task
+from enum import Enum
 
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
 
 
-@task(log_prints=True, retries=3)
-def load_into_gcs_with(bucket_name: str, blob_name: str, fs_path: str):
-    gcs_bucket = GcsBucket.load("gcs-dtc-datalake-raw")
-    gcs_bucket.upload_from_path(
-        from_path=fs_path,
-        to_path=blob_name
-    )
+class OutputFormat(Enum):
+    """An enumeration class to represent different file formats,
+        compression options for upload_from_dataframe
+
+    Class Attributes:
+        CSV (tuple): Representation for 'csv' file format with no compression
+            and its related content type and suffix.
+
+        CSV_GZIP (tuple): Representation for 'csv' file format with 'gzip' compression
+            and its related content type and suffix.
+
+        PARQUET (tuple): Representation for 'parquet' file format with no compression
+            and its related content type and suffix.
+
+        PARQUET_SNAPPY (tuple): Representation for 'parquet' file format
+            with 'snappy' compression and its related content type and suffix.
+
+        PARQUET_GZIP (tuple): Representation for 'parquet' file format
+            with 'gzip' compression and its related content type and suffix.
+    """
+
+    CSV = ('csv', None, 'text/csv', '.csv')
+    CSV_GZIP = ('csv', 'gzip', 'application/x-gzip', '.csv.gz')
+    PARQUET = ('parquet', None, 'application/octet-stream', '.parquet')
+    PARQUET_SNAPPY = ('parquet', 'snappy', 'application/octet-stream', '.parquet.snappy')
+    PARQUET_GZIP = ('parquet', 'gzip', 'application/octet-stream', '.parquet.gz')
+
+    @property
+    def format(self):
+        return self.value[0]
+
+    @property
+    def compression(self):
+        return self.value[1]
+
+    @property
+    def content_type(self):
+        return self.value[2]
+
+    @property
+    def suffix(self):
+        return self.value[3]
+
+    @classmethod
+    def lookup(cls, output_format: str):
+        """
+        Returns the instance of the class that corresponds to the input `fmt`.
+        If no match is found, returns `CSV_GZIP` as a default value.
+
+        Parameters:
+            output_format (str): The string representation of the file format.
+
+        Returns:
+            OutputFormat: The instance of the class that corresponds to `fmt`.
+        """
+        lookup_table = {f'{entry.name}': entry for entry in OutputFormat}
+        return lookup_table.get(output_format.upper(), OutputFormat.CSV_GZIP)
 
 
 @task(log_prints=True)
-def upload_df_to_gcs(prefect_gcs_block_name: str, blob_name: str, df: pd.DataFrame,
-                     output_format: str, compression: Optional[str] = None):
-    """
-    Upload a pandas Dataframe to Google Cloud Storage as:
-        .csv, .csv.gz, .parquet, .parquet.snappy, .parquet.gz
+def upload_from_dataframe(prefect_gcs_block: str,
+                          df: pd.DataFrame,
+                          to_path: str,
+                          output_format: Union[str, OutputFormat] = OutputFormat.CSV_GZIP,
+                          **upload_kwargs: Dict[str, Any]):
+    """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
+
+    This function uploads the data in a Pandas DataFrame to Google Cloud Storage
+    in a specified format, such as .csv, .csv.gz, .parquet, .parquet.snappy, and .parquet.gz.
 
     Args:
-    - prefect_gcs_block_name (str): Prefect GCS Bucket name
-    - blob_name (str): the actual full blob name (e.g.: /path/to/gcs/blob.csv)
-    - df (pd.DataFrame): pandas Dataframe object
-    - output_format (str): Specify whether the output should be 'csv' or 'parquet'
-    - compression (Optional[str], optional): Specify the compression type for the output.
-                                              'csv' supports 'None' or 'gzip', while
-                                              'parquet' supports 'None', 'snappy' or 'gzip'.
-                                              Defaults to None.
+        prefect_gcs_block (str): The Prefect GcsBlock name
+        df (pd.DataFrame): The Pandas DataFrame to be uploaded.
+        to_path (str): The destination path for the uploaded DataFrame.
+        output_format (Union[str, OutputFormat]): The format to serialize the DataFrame into.
+            Defaults to `OutputFormat.CSV_GZIP`. When passed as a `str`, the valid options are:
+            'csv', 'csv_gzip', 'parquet', 'parquet_snappy', 'parquet_gz'.
+        **upload_kwargs (Dict[str, Any]): Additional keyword arguments to pass to the underlying
+            `Blob.upload_from_dataframe` method.
 
     Returns:
-    None
+        None
     """
-    byte_buffer = io.BytesIO()
-    content_type: str = "application/octet-stream"
+    gcs_bucket = GcsBucket.load(prefect_gcs_block)
 
-    if not blob_name.endswith(output_format):
-        blob_name = f"{blob_name}.{output_format}"
+    def fix_extension_with(gcs_blob: str, ext: str):
+        """Fix the extension of a GCS blob.
 
-    if output_format == "csv":
-        df.to_csv(path_or_buf=byte_buffer, compression=compression, index=False)
-        if compression:
-            blob_name = f"{blob_name}.gz"
-        else:
-            content_type = "text/csv"
+        Args:
+            gcs_blob (str): The path to the GCS blob to be modified.
+            ext (str): The extension to add to the filename.
 
-    elif output_format == "parquet":
-        df.to_parquet(path=byte_buffer, compression=compression, index=False)
-        if compression == "gzip":
-            blob_name = f"{blob_name}.gz"
-        elif compression == "snappy":
-            blob_name = f"{blob_name}.snappy"
+        Returns:
+            str: The modified path to the GCS blob with the new extension.
+        """
+        gcs_blob = Path(gcs_blob)
+        folder, filename = (
+            gcs_blob.parent,
+            Path(gcs_blob.stem).with_suffix(ext)
+        )
+        return folder.joinpath(filename)
 
-    else:
-        raise RuntimeError("Unsupported output format. Use either 'csv' or 'parquet'")
+    if type(output_format) == str:
+        output_format = OutputFormat.lookup(output_format)
 
-    byte_buffer.seek(0)
-    gcs_bucket = GcsBucket.load(prefect_gcs_block_name)
-    gcs_bucket.upload_from_file_object(
-        from_file_object=byte_buffer,
-        to_path=blob_name,
-        content_type=content_type
-    )
+    with BytesIO() as bytes_buffer:
+        if output_format.format == 'parquet':
+            df.to_parquet(path=bytes_buffer, compression=output_format.compression, index=False)
+        elif output_format.format == 'csv':
+            df.to_csv(path_or_buf=bytes_buffer, compression=output_format.compression, index=False)
+
+        bytes_buffer.seek(0)
+        to_path = fix_extension_with(to_path, output_format.suffix)
+
+        return gcs_bucket.upload_from_file_object(
+            from_file_object=bytes_buffer,
+            to_path=to_path,
+            content_type=output_format.content_type,
+            **upload_kwargs,
+        )
 
 
 @task(log_prints=True, retries=3)
@@ -96,14 +158,13 @@ def ingest():
         datasets = cfg.datasets
         if datasets.fhv:
             for endpoint in datasets.fhv:
-                filename = endpoint.split("/")[-1].split(".")[0]
-                df = fetch_csv_from(url=endpoint)
-                cleansed_df = fix_datatypes_for(df=df)
-                upload_df_to_gcs(prefect_gcs_block_name="gcs-dtc-datalake-raw",
-                                 blob_name=f"testing_fhv/{filename}",
-                                 df=cleansed_df,
-                                 output_format='parquet',
-                                 compression='gzip')
+                raw_df = fetch_csv_from(url=endpoint)
+                cleansed_df = fix_datatypes_for(df=raw_df)
+                filename = Path(endpoint).name
+                upload_from_dataframe(prefect_gcs_block="gcs-dtc-datalake-raw",
+                                      df=cleansed_df,
+                                      to_path=f"fhv/{filename}",
+                                      output_format='parquet_gzip')
     except Exception as ex:
         print(ex)
         exit(-1)
