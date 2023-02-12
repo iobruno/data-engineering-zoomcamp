@@ -77,7 +77,7 @@ class OutputFormat(Enum):
 def upload_from_dataframe(prefect_gcs_block: str,
                           df: pd.DataFrame,
                           to_path: str,
-                          output_format: Union[str, OutputFormat] = OutputFormat.CSV_GZIP,
+                          output_format: Union[str, OutputFormat] = OutputFormat.PARQUET_SNAPPY,
                           **upload_kwargs: Dict[str, Any]):
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
 
@@ -127,7 +127,6 @@ def upload_from_dataframe(prefect_gcs_block: str,
 
         bytes_buffer.seek(0)
         to_path = fix_extension_with(to_path, output_format.suffix)
-
         return gcs_bucket.upload_from_file_object(
             from_file_object=bytes_buffer,
             to_path=to_path,
@@ -151,8 +150,8 @@ def fetch_csv_from(url: str) -> pd.DataFrame:
     return pd.read_csv(url, engine='pyarrow')
 
 
-@flow(name="NYC FHV Trip Data CSV Dataset to GCS", log_prints=True)
-def ingest():
+@flow(name="NYC FHV Trip Data Dataset to GCS", log_prints=True)
+def ingest_csv_to_gcs():
     try:
         print("Fetching URL Datasets from .yml")
         datasets = cfg.datasets
@@ -160,15 +159,14 @@ def ingest():
             for endpoint in datasets.fhv:
                 raw_df = fetch_csv_from(url=endpoint)
                 cleansed_df = fix_datatypes_for(df=raw_df)
-                filename = Path(endpoint).name
                 upload_from_dataframe(prefect_gcs_block="gcs-dtc-datalake-raw",
                                       df=cleansed_df,
-                                      to_path=f"fhv/{filename}",
-                                      output_format='parquet_gzip')
+                                      to_path=f"fhv/parquet_snappy/{Path(endpoint).name}",
+                                      output_format='parquet_snappy')
     except Exception as ex:
         print(ex)
         exit(-1)
 
 
 if __name__ == "__main__":
-    ingest()
+    ingest_csv_to_gcs()
