@@ -1,5 +1,7 @@
 # Prefect Workflow Orchestration
 
+You can find the answers to the [**Project HOMEWORK here**](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
+
 This subproject is designed to build a `Prefect Workflows` to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones based on the endpoints and persist them into three different sinks:
 - Postgres
 - GCP BigQuery

@@ -18,7 +18,7 @@
 
 **Week 3: Data Warehouse**:
 - [Homework - DataWarehouse with BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
-- [Project: Prefect Flows]((https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week3/prefect))
+- [Project: Prefect Flow: Dataframe2GCS](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week3/prefect/flows/flow_web_csv_to_gcs.py)
 
 Week 4: Analytics Engineering
 

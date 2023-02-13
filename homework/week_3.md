@@ -23,12 +23,12 @@ What is the count for fhv vehicle records for year 2019?
 ### Solution:
 
 ```sql
+-- Query Result: 43244696
 SELECT
-  COUNT(1)
+  COUNT(1) as records
 FROM
-  `iobruno-data-eng-zoomcamp.dtc_dw_staging.nyc_fhv_tripdata` fhv;
+  `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata` fhv;
 ```
-
 
 ## Question 2:
 Write a query to count the distinct number of affiliated_base_number for the entire dataset on both the tables.</br>
@@ -41,12 +41,27 @@ What is the estimated amount of data that will be read when this query is execut
 
 ### Solution:
 
+```sql
+-- Scans for 317.94 MB on BQ Table:
+SELECT
+    COUNT(DISTINCT(Affiliated_base_number)) as records
+FROM
+    `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata` fhv;    
+```
+
+```sql
+-- Scans for 0 B on BQ Table:
+SELECT
+    COUNT(DISTINCT(Affiliated_base_number)) as records
+FROM
+    `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata_ext_csv_gz` fhv;    
+```
+
 **BQ Internal Table (from .csv.gz)**:
 ![bigquery-internal-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_internal.png)
 
 **BQ External Table (from .csv.gz)**:
 ![bigquery-external-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_external.png)
-
 
 
 ## Question 3:
@@ -58,8 +73,9 @@ How many records have both a blank (null) PUlocationID and DOlocationID in the e
 
 ### Solution:
 ```sql
+-- Query Result: 717748
 SELECT
-    COUNT(1)
+    COUNT(1) as records
 FROM
     `iobruno-data-eng-zoomcamp.dtc_dw_staging.nyc_fhv_tripdata` fhv
 WHERE
@@ -67,14 +83,22 @@ WHERE
     AND fhv.DOlocationID IS NULL;
 ```
 
-
 ## Question 4:
 What is the best strategy to optimize the table if query always filter by pickup_datetime and order by affiliated_base_number?
 
 - [ ] Cluster on pickup_datetime Cluster on affiliated_base_number
-- [ ] Partition by pickup_datetime Cluster on affiliated_base_number
+- [x] Partition by pickup_datetime Cluster on affiliated_base_number
 - [ ] Partition by pickup_datetime Partition by affiliated_base_number
 - [ ] Partition by affiliated_base_number Cluster on pickup_datetime
+
+```text
+- Partitions reduces the amount that BigQuery has to processes to fetch the results. 
+Instead of doing a FULL table scan to match each result, it can just look up for the results
+within the partitions.
+
+- Clustering, on the other hand, clusters or groups togethers the entries based on a specified column,
+which helps boosting the query performance (and costs) when the results are ordered by that specific column  
+```
 
 ## Question 5:
 Implement the optimized solution you chose for question 4. Write a query to retrieve the distinct affiliated_base_number 
@@ -86,10 +110,42 @@ Now change the table in the from clause to the partitioned table you created for
 bytes processed. What are these values? Choose the answer which most closely matches.
 
 - [ ] 12.82 MB for non-partitioned table and 647.87 MB for the partitioned table
-- [ ] 647.87 MB for non-partitioned table and 23.06 MB for the partitioned table
+- [x] 647.87 MB for non-partitioned table and 23.06 MB for the partitioned table
 - [ ] 582.63 MB for non-partitioned table and 0 MB for the partitioned table
 - [ ] 646.25 MB for non-partitioned table and 646.25 MB for the partitioned table
 
+### Solution:
+
+** Partition the table**:
+```sql
+-- Scans for 647.87 MB
+CREATE OR REPLACE TABLE `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata_by_date`
+PARTITION BY DATE(pickup_datetime) AS (
+    SELECT * 
+    FROM `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata`
+);
+```
+
+**Non-partitioned Table - Query Consumption**: 647.87 MB
+```sql
+-- Scans for 23.05 MB
+SELECT
+  DISTINCT(Affiliated_base_number)
+FROM
+  `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata` fhv
+WHERE
+  fhv.pickup_datetime BETWEEN '2019-03-01' AND '2019-03-31';
+```
+
+**Partitioned Table - Query Consumption**: 23.05 MB
+```sql
+SELECT
+  DISTINCT(Affiliated_base_number)
+FROM
+  `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata_by_date` fhv
+WHERE
+  fhv.pickup_datetime BETWEEN '2019-03-01' AND '2019-03-31';
+```
 
 ## Question 6:
 Where is the data stored in the External Table you created?
@@ -104,13 +160,21 @@ Where is the data stored in the External Table you created?
 It is best practice in Big Query to always cluster your data:
 
 - [ ] True
-- [ ] False
+- [x] False
 
+### Solution:
+
+- Best practises efforts are generally put in practice to either improve Query Performance or reduce Costs
+- However, on tables where the data size < 1 GB, Clustering or Partitioning might actually incur in worsening the performance,
+as there'll be more metadata processing and lookups involved in the Query Plan
 
 ## (Not required) Question 8:
-A better format to store these files may be parquet. Create a data pipeline to download the gzip files and convert them into parquet. Upload the files to your GCP Bucket and create an External and BQ Table.
+A better format to store these files may be parquet. Create a data pipeline to download the gzip files 
+and convert them into parquet. Upload the files to your GCP Bucket and create an External and BQ Table.
 
 Note: Column types for all files used in an External Table must have the same datatype. While an External Table may be created and shown in the side panel in Big Query, this will need to be validated by running a count query on the External Table to check if any errors occur.
+
+![bigquery-parquet-snappy-gzip-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_parquet_csv.png)
 
 ## Submitting the solutions
 
