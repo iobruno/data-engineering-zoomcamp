@@ -3,6 +3,6 @@
 
 gcp_project_id = "iobruno-data-eng-zoomcamp"
 
-gcs_datalake_raw_bucket = "iobruno_dtc_datalake_raw"
+gcs_datalake_raw_bucket = "iobruno_datalake_raw"
 
 bq_staging_dataset = "dtc_ny_taxi_tripdata_staging"

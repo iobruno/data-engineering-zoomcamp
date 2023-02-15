@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Dict, Any, Union
 
 import pandas as pd
-from omegaconf import OmegaConf
+from omegaconf import OmegaConf, DictConfig
 from io import BytesIO
 from prefect_gcp import GcsBucket
 
@@ -152,20 +152,22 @@ def fetch_csv_from(url: str) -> pd.DataFrame:
 @flow(name="Web CSV Dataset to GCS", log_prints=True)
 def ingest_csv_to_gcs():
     print("Fetching URL Datasets from .yml")
-    datasets: Dict = cfg.datasets
+    datasets: DictConfig = cfg.datasets
+    prefect: DictConfig = cfg.prefect
 
-    for name, endpoints in datasets.items():
+    for dataset_name, endpoints in datasets.items():
         if endpoints is None:
-            print(f"Dataset '{name}' found in config file, "
+            print(f"Dataset '{dataset_name}' found in config file, "
                   f"but it contains no valid endpoints entries. Skipping...")
             endpoints = []
 
         for endpoint in endpoints:
             raw_df = fetch_csv_from(url=endpoint)
-            cleansed_df = fix_datatypes_for(df=raw_df, schema=schemas.get(name))
-            upload_from_dataframe(prefect_gcs_block="gcs-dtc-datalake-raw",
+            cleansed_df = fix_datatypes_for(df=raw_df, schema=schemas.get(dataset_name))
+            filename = Path(endpoint).name
+            upload_from_dataframe(prefect_gcs_block=prefect.gcs_block_name,
                                   df=cleansed_df,
-                                  to_path=f"{name}/{Path(endpoint).name}",
+                                  to_path=f"{prefect.gcs_blob_prefix}/{dataset_name}/{filename}",
                                   output_format='parquet_snappy')
 
 

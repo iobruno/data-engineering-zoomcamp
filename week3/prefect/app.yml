@@ -1,5 +1,6 @@
-gcp:
-  gcs_target_bucket: "gcs-dtc-datalake-raw"
+prefect:
+  gcs_block_name: "gcs-dtc-datalake-raw"
+  gcs_blob_prefix: "ny_taxi_tripdata"
 
 datasets:
   green:
