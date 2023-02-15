@@ -11,7 +11,10 @@ from enum import Enum
 
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")
+schema_file = root_dir.joinpath("schemas.yml")
+
 cfg = OmegaConf.load(config_file)
+schemas = OmegaConf.load(schema_file)
 
 
 class OutputFormat(Enum):
@@ -136,12 +139,8 @@ def upload_from_dataframe(prefect_gcs_block: str,
 
 
 @task(log_prints=True, retries=3)
-def fix_datatypes_for(df: pd.DataFrame) -> pd.DataFrame:
-    return df.astype({
-        'PUlocationID': 'Int64',
-        'DOlocationID': 'Int64',
-        'SR_Flag': 'Int64'
-    })
+def fix_datatypes_for(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
+    return df.astype(schema)
 
 
 @task(log_prints=True, retries=3)
@@ -150,22 +149,24 @@ def fetch_csv_from(url: str) -> pd.DataFrame:
     return pd.read_csv(url, engine='pyarrow')
 
 
-@flow(name="NYC FHV Trip Data Dataset to GCS", log_prints=True)
+@flow(name="Web CSV Dataset to GCS", log_prints=True)
 def ingest_csv_to_gcs():
-    try:
-        print("Fetching URL Datasets from .yml")
-        datasets = cfg.datasets
-        if datasets.fhv:
-            for endpoint in datasets.fhv:
-                raw_df = fetch_csv_from(url=endpoint)
-                cleansed_df = fix_datatypes_for(df=raw_df)
-                upload_from_dataframe(prefect_gcs_block="gcs-dtc-datalake-raw",
-                                      df=cleansed_df,
-                                      to_path=f"fhv/parquet_snappy/{Path(endpoint).name}",
-                                      output_format='parquet_snappy')
-    except Exception as ex:
-        print(ex)
-        exit(-1)
+    print("Fetching URL Datasets from .yml")
+    datasets: Dict = cfg.datasets
+
+    for name, endpoints in datasets.items():
+        if endpoints is None:
+            print(f"Dataset '{name}' found in config file, "
+                  f"but it contains no valid endpoints entries. Skipping...")
+            endpoints = []
+
+        for endpoint in endpoints:
+            raw_df = fetch_csv_from(url=endpoint)
+            cleansed_df = fix_datatypes_for(df=raw_df, schema=schemas.get(name))
+            upload_from_dataframe(prefect_gcs_block="gcs-dtc-datalake-raw",
+                                  df=cleansed_df,
+                                  to_path=f"{name}/{Path(endpoint).name}",
+                                  output_format='parquet_snappy')
 
 
 if __name__ == "__main__":
