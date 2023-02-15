@@ -3,7 +3,7 @@ terraform {
 
   # Ref.: https://cloud.google.com/docs/terraform/resource-management/store-state
   backend "gcs" {
-    bucket = "iobruno-data-eng-zoomcamp-tfstate"
+    bucket = "iobruno-training-gcp-tfstate"
     prefix = "terraform/state"
   }
 

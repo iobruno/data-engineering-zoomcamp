@@ -1,6 +1,6 @@
 prefect:
   gcs_block_name: "gcs-dtc-datalake-raw"
-  gcs_blob_prefix: "ny_taxi_tripdata"
+  gcs_blob_prefix: "dtc_ny_taxi_tripdata"
 
 datasets:
   green:

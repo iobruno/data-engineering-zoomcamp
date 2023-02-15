@@ -1,7 +1,7 @@
 # This is for educational purposes ONLY for the Data Engineering Zoomcamp on DataTalks.Club
 # For real-world scenarios, DO. NOT. EVER. commit *.tfvars files to version control
 
-gcp_project_id = "iobruno-data-eng-zoomcamp"
+gcp_project_id = "iobruno-training-gcp"
 
 gcs_datalake_raw_bucket = "iobruno_datalake_raw"
 
