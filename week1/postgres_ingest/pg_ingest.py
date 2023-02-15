@@ -1,16 +1,17 @@
 #yapf: disable
-import click
 import logging
 import os
-import pandas as pd
+from pathlib import Path
+from typing import List
 
+import click
+import pandas as pd
 from df_persistence import persist_df_with, split_df_in_chunks_with
 from omegaconf import OmegaConf
-from pathlib import Path
-from sqlalchemy import create_engine
-from typing import List
 from rich.logging import RichHandler
-from rich.progress import BarColumn, Progress, TaskID, TextColumn, TimeElapsedColumn
+from rich.progress import (BarColumn, Progress, TaskID, TextColumn,
+                           TimeElapsedColumn)
+from sqlalchemy import create_engine
 
 config_file = Path(__file__).parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)

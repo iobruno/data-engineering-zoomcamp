@@ -1,7 +1,8 @@
-import numpy as np
-import pandas as pd
 from math import ceil
 from typing import List, Tuple
+
+import numpy as np
+import pandas as pd
 
 
 def split_df_in_chunks_with(df: pd.DataFrame,

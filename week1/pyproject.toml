@@ -21,6 +21,7 @@ psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "^3.5.3"
 yapf = "^0.32.0"
+isort = "^5.12.0"
 
 [tool.yapf]
 based_on_style = "google"

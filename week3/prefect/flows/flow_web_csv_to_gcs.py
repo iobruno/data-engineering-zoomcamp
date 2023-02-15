@@ -1,13 +1,12 @@
+from enum import Enum
+from io import BytesIO
 from pathlib import Path
-from typing import Dict, Any, Union
+from typing import Any, Dict, Union
 
 import pandas as pd
-from omegaconf import OmegaConf, DictConfig
-from io import BytesIO
-from prefect_gcp import GcsBucket
-
+from omegaconf import DictConfig, OmegaConf
 from prefect import flow, task
-from enum import Enum
+from prefect_gcp import GcsBucket
 
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")

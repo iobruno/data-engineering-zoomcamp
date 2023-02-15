@@ -1,13 +1,13 @@
 import logging
-import pandas as pd
-import numpy as np
-
 from math import ceil
-from omegaconf import OmegaConf
 from pathlib import Path
+from typing import List, Tuple
+
+import numpy as np
+import pandas as pd
+from omegaconf import OmegaConf
 from prefect import flow, task
 from prefect_gcp import GcsBucket
-from typing import List, Tuple
 
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")

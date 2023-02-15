@@ -1,13 +1,13 @@
 import logging
-import pandas as pd
-import numpy as np
-
 from math import ceil
-from omegaconf import OmegaConf
 from pathlib import Path
+from typing import List, Tuple
+
+import numpy as np
+import pandas as pd
+from omegaconf import OmegaConf
 from prefect import flow, task
 from prefect_sqlalchemy import SqlAlchemyConnector
-from typing import List, Tuple
 
 config_file = Path(__file__).parent.parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
