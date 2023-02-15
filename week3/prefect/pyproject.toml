@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "poetry-workflow"
+name = "prefect-workflow"
 version = "1.0.0"
 description = "Prefect Orchestration | Modern Data Stack | DEZoomcamp"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
@@ -13,7 +13,6 @@ prefect = "^2.7.12"
 prefect-gcp = {extras = ["cloud-storage"], version = "^0.2.5"}
 greenlet = "^2.0.2"
 pyarrow = "^11.0.0"
-pandas-gbq = "^0.19.1"
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "3.5.3"
