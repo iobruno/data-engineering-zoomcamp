@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode,terraform
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,jupyternotebooks,visualstudiocode,terraform
+# Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode,terraform,dbt
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,jupyternotebooks,visualstudiocode,terraform,dbt
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
@@ -206,6 +206,12 @@ terraform.rc
 .history
 .ionide
 
+### dbt ###
+target/
+dbt_modules/
+dbt_packages/
+logs/
+
 ### DataTalks Data Engineering Zoomcamp ###
 
 # Docker volume for PostgresSQL
@@ -223,4 +229,4 @@ terraform.rc
 ### macOS ###
 **/.DS_Store
 
-# End of https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode,terraform
+# End of https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode,terraform,dbt
