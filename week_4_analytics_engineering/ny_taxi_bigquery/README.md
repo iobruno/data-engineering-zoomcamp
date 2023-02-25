@@ -1,22 +1,59 @@
-# dbt for Analytics Engineering 
+# dbt for Analytics Engineering
 
-This subproject is designed to build a `dbt` models from the `NY Taxi Tripdata Datasets` on BigQuery, 
-and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visualizations 
+This subproject is designed to build a `dbt` models from the `NY Taxi Tripdata Datasets` on BigQuery,
+and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visualizations
 
 ## Tech Stack
+- Python 3.9 / 3.10
+- BigQuery
 - [dbt-bigquery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
-- BigQuery 
-- Looker Studio 
+- Looker Studio
+- [Poetry](https://python-poetry.org/docs/)
 
 ## Up and Running
 
 ### Developer Setup
 
-Install **dbt**, with the associated adapter for your Datasource 
+**1.** Create and activate a virtualenv for Python 3.9 with conda:
+```shell
+conda create -n dbt-bigquery python=3.10 -y
+conda activate dbt-bigquery
 ```
-brew update
-brew tap dbt-labs/dbt
-brew install dbt-bigquery
+
+**2.** Install the dependencies on `pyproject.toml`:
+```shell
+poetry install --no-root
+```
+
+**3.** (Optional) Install pre-commit:
+```shell
+brew install pre-commit
+
+# From root folder where `.pre-commit-config.yaml` is located, run:
+pre-commit install
+```
+
+**5.** Run `dbt deps` to install dbt plugins
+```shell
+dbt deps
+```
+
+**5.** Run `dbt run` to trigger the dbt models to run:
+```shell
+dbt run
+```
+
+**6.** Generate the Docs and the Data Lineage graph with:
+```shell
+dbt docs generate
+```
+```shell
+dbt docs serve
+```
+
+**7.** Access the generated docs on a web browser at the URL:
+```shell
+open http://localhost:8080
 ```
 
 ## Resources:
@@ -27,4 +64,7 @@ brew install dbt-bigquery
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 ## TODO:
-- T.B.D.
+- [x] Getting Started with dbt
+- [x] Generate and serve docs and Data Lineage Graphs locally
+- [ ] Orchestrate the dbt execution with Airflow/Prefect
+- [ ] Integrate it with a Data Quality/Observability
