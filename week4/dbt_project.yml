@@ -21,3 +21,12 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 models:
   ny_taxi_tripdata: {}
+
+seeds:
+  taxi_rides_ny:
+    taxi_zones_lookup:
+      +column_types:
+        LocationID: numeric
+        Borough: string
+        Zone: string
+        service_zone: string
