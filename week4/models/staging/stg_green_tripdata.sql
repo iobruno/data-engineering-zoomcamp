@@ -1,9 +1,17 @@
 {{ config(materialized='view') }}
 
 
+WITH green_trip_data AS (
+    SELECT
+        *, 
+        ROW_NUMBER() OVER(PARTITION BY VendorID, lpep_pickup_datetime) as row_num
+    FROM
+        {{ source('staging', 'green_tripdata') }}
+)
+
 SELECT 
     -- identifiers
-    {{ dbt_utils.generate_surrogate_key(['VendorID', 'PULocationID', 'DOLocationID', 'lpep_pickup_datetime']) }} as trip_id,
+    {{ dbt_utils.generate_surrogate_key(['VendorID', 'lpep_pickup_datetime']) }} as trip_id,
     VendorID as vendor_id,
     RatecodeID as ratecode_id,
     PULocationID as pickup_location_id,
@@ -33,10 +41,11 @@ SELECT
     {{ resolve_payment_type_desc_for('payment_type') }} as payment_type_desc, 
 
 FROM 
-    {{ source('staging', 'green_tripdata') }}
+    green_trip_data
 
 WHERE 
     VendorID IS NOT NULL
+    AND row_num = 1
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --var 'is_test_run: true'
