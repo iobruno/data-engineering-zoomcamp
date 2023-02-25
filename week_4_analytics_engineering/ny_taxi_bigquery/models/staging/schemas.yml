@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+
+  - name: staging
+    database: iobruno-gcp-labs
+    schema: dtc_ny_taxi_tripdata_staging
+
+    tables:
+    - name: green_tripdata
+    - name: yellow_tripdata
+    - name: fhv_tripdata
