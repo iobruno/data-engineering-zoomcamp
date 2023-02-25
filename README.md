@@ -22,7 +22,10 @@
 - [Homework - Data Warehousing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
 
 
-Week 4: Analytics Engineering
+**Week 4: Analytics Engineering**:
+- [Data Modeling with dbt + BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering/ny_taxi_bigquery)
+- [Homework - Analytics Engineering](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_4.md)
+
 
 Week 5: Batch processing
 
