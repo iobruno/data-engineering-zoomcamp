@@ -23,7 +23,7 @@ models:
   ny_taxi_tripdata: {}
 
 seeds:
-  taxi_rides_ny:
+  ny_taxi_tripdata:
     taxi_zones_lookup:
       +column_types:
         LocationID: numeric
