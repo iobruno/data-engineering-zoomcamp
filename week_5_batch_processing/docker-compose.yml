@@ -1,0 +1,38 @@
+version: "3.6"
+
+services:
+  spark-master:
+    container_name: spark-master
+    image: bitnami/spark:3.3.2
+    restart: always
+    environment:
+      - SPARK_MODE=master
+      - SPARK_MASTER_PORT=7077
+      - SPARK_MASTER_WEBUI_PORT=9090
+      - SPARK_LOCAL_IP=spark-master
+    ports:
+      - '9090:9090'
+      - '7077:7077'
+    networks:
+      - sdn
+
+  spark-worker:
+    container_name: spark-worker
+    image: bitnami/spark:3.3.2
+    restart: always
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=24g
+      - SPARK_WORKER_WEBUI_PORT=9091
+    ports:
+      - '9091:9091'
+    networks:
+      - sdn
+    depends_on:
+      - spark-master
+
+networks:
+  sdn:
+    name: spark-network
