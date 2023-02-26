@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "pyspark-playground"
+version = "0.1.0"
+description = "Batch Processing with PySpark - DTC"
+authors = ["iobruno <bruno.ariev@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dtc_pyspark_assignment"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyspark = "3.3.2"
+pyarrow = "^11.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+yapf = "^0.32.0"
+jupyterlab = "^3.6.1"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
