@@ -18,11 +18,17 @@
 
 **Week 3: Data Warehouse**:
 - [Homework - DataWarehouse with BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
-- [Project: Prefect Flow: Dataframe2GCS](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week3/prefect/flows/flow_web_csv_to_gcs.py)
+- [Project: Prefect Flow: upload_from_dataframe](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week3/prefect/flows/flow_web_csv_to_gcs.py)
 
-Week 4: Analytics Engineering
+**Week 4: Analytics Engineering**:
+- [Homework - Analytics Engineering](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_4.md)
+- [Project: dbt Modeling](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week4)
 
-Week 5: Batch processing
+**Week 5: Batch processing**:
+- [Homework - Batch Processing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_5.md)
+- Jupyter Playgrounds:
+  - [PySpark + SparkSQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyspark/pyspark_playground.ipynb)
+  - [PyFlink + FlinkSQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyflink/pyflink_playground.ipynb)
 
 Week 6: Streaming
 

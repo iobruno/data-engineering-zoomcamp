@@ -37,13 +37,17 @@ This subproject builds `pyflink` playground to develop Batch Processing Pipeline
                   ░▓██▒                          ▓░  ▒█▓█  ░░▒▒▒
                       ▒▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░▓▓  ▓░▒█░
 
-                    ______ _ _       _       _____  ____  _      
-                   |  ____| (_)     | |     / ____|/ __ \| |     
-                   | |__  | |_ _ __ | | __ | (___ | |  | | |     
-                   |  __| | | | '_ \| |/ /  \___ \| |  | | |     
-                   | |    | | | | | |   <   ____) | |__| | |____ 
-                   |_|    |_|_|_| |_|_|\_\ |_____/ \___\_\______|
-        
+    ______ _ _       _       _____  ____  _         _____ _ _            _  BETA
+   |  ____| (_)     | |     / ____|/ __ \| |       / ____| (_)          | |
+   | |__  | |_ _ __ | | __ | (___ | |  | | |      | |    | |_  ___ _ __ | |_
+   |  __| | | | '_ \| |/ /  \___ \| |  | | |      | |    | | |/ _ \ '_ \| __|
+   | |    | | | | | |   <   ____) | |__| | |____  | |____| | |  __/ | | | |_
+   |_|    |_|_|_| |_|_|\_\ |_____/ \___\_\______|  \_____|_|_|\___|_| |_|\__|
+
+        Welcome! Enter 'HELP;' to list all available commands. 'QUIT;' to exit.
+
+
+Flink SQL>   
 ```
 
 ## Tech Stack
@@ -51,6 +55,8 @@ This subproject builds `pyflink` playground to develop Batch Processing Pipeline
 - FlinkSQL
 - JDK 11 
 - Jupyter Notebook (EDA)
+- Poetry (to manage python dependencies)
+
 
 ## Up and Running
 
@@ -62,7 +68,7 @@ Install JDK 11. You can do so easily with [SDKMAN!](https://sdkman.io/):
 $ sdk i java 11.0.18-librca
 ```
 
-**IMPORTANT NOTES**: 
+### IMPORTANT NOTES: 
 
 > **1.** The current version of `apache-flink` for python (1.16.0) depends on `apache-beam==2.35.0`,  
         which is not working properly with Python 3.9, at least not on Mac M1 (aarm64)
@@ -105,6 +111,8 @@ python -m pip install dist/*.whl
 
 
 ## TODO:
-- [X] Playground setup for PyFlink
-- [x] Explore the Table API to read CSVs
+- [X] Set up a Jupyter Playground for PyFlink
+- [x] Explore Flink's Table API to read CSVs
 - [x] Explore the FlinkSQL API
+- [ ] Set up a Standalone Cluster for Flink
+- [ ] Submit a PyFlink job to the Cluster
