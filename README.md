@@ -25,7 +25,8 @@
 - [Project: dbt Modeling](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week4)
 
 **Week 5: Batch processing**:
-- [Homework - Batch Processing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_5.md)
+- [Homework Answers - Batch Processing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_5.md)
+- [Homework Project - PySpark](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyspark/pyspark_homework.ipynb)
 - Jupyter Playgrounds:
   - [PySpark + SparkSQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyspark/pyspark_playground.ipynb)
   - [PyFlink + FlinkSQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyflink/pyflink_playground.ipynb)
