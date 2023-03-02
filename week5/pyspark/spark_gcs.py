@@ -23,3 +23,11 @@ def read_csv_from_gcs(spark: SparkSession,
         sdf.createTempView(view_name)
 
     return sdf
+
+
+def read_parquet_from_gcs(spark: SparkSession,
+                          gcs_prefix: str,
+                          view_name: str = None) -> DataFrame:
+    sdf: DataFrame = spark.read.parquet(gcs_prefix)
+    sdf.createTempView(view_name)
+    return sdf
