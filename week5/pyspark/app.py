@@ -1,30 +1,52 @@
-import os
+from os import environ as env
 
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.functions import col
 from pyspark.sql.types import *
-
-from spark_gcs import read_csv_from_gcs
-
-
-def config_spark_session(name: str, master: str) -> SparkSession:
-    spark = SparkSession.builder\
-        .config("spark.sql.execution.arrow.pyspark.enabled", "true")\
-        .config("spark.driver.memory", "2g")\
-        .config("spark.executor.memory", "8g")\
-        .config("spark.cores.max", 8)\
-        .appName(name)\
-        .master(master)\
-        .getOrCreate()
-
-    spark._jsc.hadoopConfiguration()\
-        .set("google.cloud.auth.service.account.json.keyfile",
-             os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
-
-    return spark
+from spark_gcs import read_csv_from_gcs, read_parquet_from_gcs
 
 
-def join_dataframe_with_spark_sql(spark: SparkSession):
-    return spark.sql(""""
+def join_dfs_with_spark_api(_fhv: DataFrame, _zones: DataFrame) -> DataFrame:
+    fhv = _fhv.select(
+        col("dispatching_base_num"),
+        col("Affiliated_base_number").alias("affiliated_base_num"),
+        col("pickup_datetime"),
+        col("dropOff_datetime").alias("dropoff_datetime"),
+        col("PUlocationID").alias("pickup_location_id"),
+        col("DOlocationID").alias("dropoff_location_id")
+    )
+
+    zones = _zones.select(
+        col("LocationID").alias("location_id"),
+        col("Borough").alias("borough"),
+        col("Zone").alias("zone"),
+        col("service_zone")
+    )
+
+    return fhv.alias("f").join(
+        zones.alias("pu"),
+        col("f.pickup_location_id") == col("pu.location_id"),
+        how="inner"
+    ).join(
+        zones.alias("do"),
+        col("f.dropoff_location_id") == col("do.location_id"),
+        how="inner"
+    ).select(
+        col("f.dispatching_base_num"),
+        col("f.affiliated_base_num"),
+
+        col("f.pickup_datetime"),
+        col("pu.zone").alias("pickup_zone"),
+        col("pu.service_zone").alias("pickup_service_zone"),
+
+        col("f.dropoff_location_id"),
+        col("do.zone").alias("dropoff_zone"),
+        col("do.service_zone").alias("dropoff_service_zone")
+    )
+
+
+def join_dfs_with_spark_sql(spark: SparkSession) -> DataFrame:
+    return spark.sql("""
         WITH t_fhv AS (
             SELECT
                 dispatching_base_num, 
@@ -41,7 +63,7 @@ def join_dataframe_with_spark_sql(spark: SparkSession):
                 LocationID as location_id,
                 Borough as borough,
                 Zone as zone,
-                service_zone as service_zone                
+                service_zone                
             FROM zones        
         )    
         
@@ -65,27 +87,55 @@ def join_dataframe_with_spark_sql(spark: SparkSession):
     """)
 
 
+def zone_lookup_schema() -> StructType:
+    return StructType([
+        StructField("LocationID", IntegerType(), True),
+        StructField("Borough", StringType(), True),
+        StructField("Zone", StringType(), True),
+        StructField("service_zone", StringType(), True),
+    ])
+
+
+def config_spark_session(name: str, master: str) -> SparkSession:
+    spark = SparkSession.builder \
+        .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
+        .config("spark.driver.memory", "2g") \
+        .config("spark.executor.memory", "8g") \
+        .config("spark.cores.max", 8) \
+        .appName(name) \
+        .master(master) \
+        .getOrCreate()
+
+    spark._jsc\
+        .hadoopConfiguration() \
+        .set("google.cloud.auth.service.account.json.keyfile", env["GOOGLE_APPLICATION_CREDENTIALS"])
+
+    return spark
+
+
 def main():
+    fhv_gcs_path = "gs://iobruno_datalake_raw/dtc_ny_taxi_tripdata/fhv/fhv_tripdata_2019-01.parquet.snappy"
+    zone_lookup_gcs_path = "gs://iobruno_datalake_raw/dtc_ny_taxi_tripdata/zone_lookup/taxi_zone_lookup.csv"
+
     spark = config_spark_session(name="pyspark-playground",
                                  master="local[*]")
 
-    fhv_schema = StructType([
-        StructType("dispatching_base_num", StringType, True),
-        StructType("pickup_datetime", TimestampType, True),
-        StructType("dropOff_datetime", TimestampType, True),
+    fhv: DataFrame = read_parquet_from_gcs(spark,
+                                           gcs_prefix=fhv_gcs_path,
+                                           view_name="fhv")
 
-        StructType("PUlocationID", LongType, True),
-        StructType("DOlocationID", LongType, True),
+    zones: DataFrame = read_csv_from_gcs(spark,
+                                         gcs_prefix=zone_lookup_gcs_path,
+                                         view_name="zones",
+                                         schema=zone_lookup_schema())
 
-        StructType("SR_Flag", LongType, True),
-        StructType("Affiliated_base_number", StringType, True),
-    ])
-
-    read_csv_from_gcs(spark, schema="", gcs_prefix="", view_name="fhv")
-    read_csv_from_gcs(spark, schema="", gcs_prefix="", view_name="zones")
-
-    sdf = join_dataframe_with_spark_sql(spark)
+    # Join DataFrames with SparkSQL
+    sdf = join_dfs_with_spark_sql(spark)
     sdf.printSchema()
+
+    # Join DataFrames with Spark API
+    sdf2 = join_dfs_with_spark_api(fhv, zones)
+    sdf2.printSchema()
 
 
 if __name__ == "__main__":

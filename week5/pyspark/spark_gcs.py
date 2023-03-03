@@ -1,11 +1,12 @@
 from pyspark.sql import DataFrame
 from pyspark.sql.session import SparkSession
+from pyspark.sql.types import StructType
 
 
 def read_csv_from_gcs(spark: SparkSession,
                       gcs_prefix: str,
                       view_name: str = None,
-                      schema: str = None,
+                      schema: StructType = None,
                       has_header: bool = True) -> DataFrame:
     if schema:
         sdf = spark.read\
