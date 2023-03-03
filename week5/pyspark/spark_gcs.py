@@ -1,4 +1,3 @@
-
 from pyspark.sql import DataFrame
 from pyspark.sql.session import SparkSession
 
@@ -11,12 +10,12 @@ def read_csv_from_gcs(spark: SparkSession,
     if schema:
         sdf = spark.read\
             .option("header", has_header)\
-            .option("inferSchema", True)\
+            .schema(schema)\
             .csv(path=gcs_prefix)
     else:
         sdf = spark.read\
             .option("header", has_header)\
-            .option("inferSchema", False)\
+            .option("inferSchema", True)\
             .csv(path=gcs_prefix)
 
     if view_name:

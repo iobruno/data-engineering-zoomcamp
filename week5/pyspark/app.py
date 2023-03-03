@@ -1,3 +1,5 @@
+import os
+
 from pyspark.sql import SparkSession
 from spark_gcs import read_csv_from_gcs
 
@@ -13,7 +15,8 @@ def config_spark_session(name: str, master: str) -> SparkSession:
         .getOrCreate()
 
     spark._jsc.hadoopConfiguration()\
-        .set("google.cloud.auth.service.account.json.keyfile", "")
+        .set("google.cloud.auth.service.account.json.keyfile",
+             os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
 
     return spark
 
