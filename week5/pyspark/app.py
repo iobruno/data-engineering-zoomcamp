@@ -1,6 +1,8 @@
 import os
 
 from pyspark.sql import SparkSession
+from pyspark.sql.types import *
+
 from spark_gcs import read_csv_from_gcs
 
 
@@ -67,8 +69,20 @@ def main():
     spark = config_spark_session(name="pyspark-playground",
                                  master="local[*]")
 
-    read_csv_from_gcs(spark, gcs_prefix="", view_name="fhv")
-    read_csv_from_gcs(spark, gcs_prefix="", view_name="zones")
+    fhv_schema = StructType([
+        StructType("dispatching_base_num", StringType, True),
+        StructType("pickup_datetime", TimestampType, True),
+        StructType("dropOff_datetime", TimestampType, True),
+
+        StructType("PUlocationID", LongType, True),
+        StructType("DOlocationID", LongType, True),
+
+        StructType("SR_Flag", LongType, True),
+        StructType("Affiliated_base_number", StringType, True),
+    ])
+
+    read_csv_from_gcs(spark, schema="", gcs_prefix="", view_name="fhv")
+    read_csv_from_gcs(spark, schema="", gcs_prefix="", view_name="zones")
 
     sdf = join_dataframe_with_spark_sql(spark)
     sdf.printSchema()
