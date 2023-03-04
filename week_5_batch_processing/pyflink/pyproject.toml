@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pyflink-playground"
-version = "0.1.0"
-description = "Batch Processing with PySpark - DTC"
+version = "1.0-SNAPSHOT"
+description = "Batch Processing with PyFlink"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 license = "MIT"
 readme = "README.md"

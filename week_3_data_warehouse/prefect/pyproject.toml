@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "prefect-workflow"
-version = "1.0.0"
-description = "Prefect Orchestration | Modern Data Stack | DEZoomcamp"
+version = "1.0"
+description = "Prefect Workflow Orchestration"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
 omegaconf = "^2.3.0"
-pandas = "^1.5.3"
+pandas = {extras = ["performance"], version = "^1.5.3"}
 prefect = "^2.7.12"
 prefect-gcp = {extras = ["cloud-storage"], version = "^0.3.0"}
 greenlet = "^2.0.2"

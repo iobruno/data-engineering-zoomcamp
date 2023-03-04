@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "poetry-workflow"
-version = "1.0.0"
-description = "Airflow Orchestration | Modern Data Stack | DEZoomcamp"
+name = "airflow-workflow"
+version = "1.0-SNAPSHOT"
+description = "Airflow Workflow Orchestration"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 readme = "README.md"
 

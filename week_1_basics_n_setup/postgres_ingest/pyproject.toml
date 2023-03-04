@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "postgres-ingest"
-version = "1.0.0"
-description = "CLI app for fetching NYC Taxi Trip Data and Ingest into a Postgres"
+version = "1.0"
+description = "CLI App to fetch NY Taxi Tripdata and Ingest to Postgres"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -20,7 +20,6 @@ psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" 
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "^3.5.3"
-yapf = "^0.32.0"
 isort = "^5.12.0"
 
 [tool.yapf]
