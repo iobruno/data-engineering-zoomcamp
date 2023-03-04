@@ -53,33 +53,28 @@ def extract_from_gcs(color: str,
 
 
 @flow(name="NYC GCS to BigQuery", log_prints=True)
-def ingest():
-    try:
-        print("Fetching Configurations for GCS to BigQuery ETL from .yml")
-        gcs2bq_datasets = cfg.etl.gcs_to_bigquery
+def gcs_to_bigquery():
+    print("Fetching Configurations for GCS to BigQuery ETL from .yml")
+    gcs2bq_datasets = cfg.etl.gcs_to_bigquery
 
-        print("Loading up GCP Credentials from Prefect Block...")
-        gcp_credentials_block = GcpCredentials.load("prefect-gcs-bigquery-admin-new")
+    print("Loading up GCP Credentials from Prefect Block...")
+    gcp_credentials_block = GcpCredentials.load("prefect-gcs-bigquery-admin-new")
 
-        target_dir: Path = root_dir.joinpath("gcs_datasets")
+    target_dir: Path = root_dir.joinpath("gcs_datasets")
 
-        for color, year_months in gcs2bq_datasets.items():
-            for year_month in year_months:
-                df = extract_from_gcs(color=color,
-                                      year_month=year_month,
-                                      compression="gzip",
-                                      local_fs_dir=target_dir)
-                print(f"Retrieval successful. Dataframe contains: {len(df)} lines")
-                print("Initiating Dataframe transfer to BigQuery...")
-                load_into_bq_with(df, credentials=gcp_credentials_block)
-                print("Dataframe transfer complete!")
+    for color, year_months in gcs2bq_datasets.items():
+        for year_month in year_months:
+            df = extract_from_gcs(color=color,
+                                  year_month=year_month,
+                                  compression="gzip",
+                                  local_fs_dir=target_dir)
+            print(f"Retrieval successful. Dataframe contains: {len(df)} lines")
+            print("Initiating Dataframe transfer to BigQuery...")
+            load_into_bq_with(df, credentials=gcp_credentials_block)
+            print("Dataframe transfer complete!")
 
-        print("All Done!")
-
-    except Exception as ex:
-        print(ex)
-        exit(-1)
+    print("All Done!")
 
 
 if __name__ == "__main__":
-    ingest()
+    gcs_to_bigquery()

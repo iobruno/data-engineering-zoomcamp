@@ -51,33 +51,28 @@ def fetch_csv_from(url: str) -> pd.DataFrame:
 
 
 @flow(name="NYC Taxi Trip data CSV Dataset to GCS", log_prints=True)
-def ingest():
-    try:
-        print("Fetching URL Datasets from .yml")
-        datasets = cfg.datasets
+def web_csv_to_gcs():
+    print("Fetching URL Datasets from .yml")
+    datasets = cfg.datasets
 
-        if datasets.green_trip_data:
-            for endpoint in datasets.green_trip_data:
-                filename = endpoint.split("/")[-1]
-                df = fetch_csv_from(url=endpoint)
-                filepath, parquet_filename = save_to_fs_with(df=df, label=filename)
-                load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
-                                   blob_name=f"green/{parquet_filename}",
-                                   fs_path=filepath)
+    if datasets.green_trip_data:
+        for endpoint in datasets.green_trip_data:
+            filename = endpoint.split("/")[-1]
+            df = fetch_csv_from(url=endpoint)
+            filepath, parquet_filename = save_to_fs_with(df=df, label=filename)
+            load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
+                               blob_name=f"green/{parquet_filename}",
+                               fs_path=filepath)
 
-        if datasets.yellow_trip_data:
-            for endpoint in datasets.yellow_trip_data:
-                filename = endpoint.split("/")[-1]
-                df = fetch_csv_from(url=endpoint)
-                filepath, parquet_filename = save_to_fs_with(df=df, label=filename)
-                load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
-                                   blob_name=f"yellow/{parquet_filename}",
-                                   fs_path=filepath)
-
-    except Exception as ex:
-        print(ex)
-        exit(-1)
+    if datasets.yellow_trip_data:
+        for endpoint in datasets.yellow_trip_data:
+            filename = endpoint.split("/")[-1]
+            df = fetch_csv_from(url=endpoint)
+            filepath, parquet_filename = save_to_fs_with(df=df, label=filename)
+            load_into_gcs_with(bucket_name=cfg.gcp.gcs_target_bucket,
+                               blob_name=f"yellow/{parquet_filename}",
+                               fs_path=filepath)
 
 
 if __name__ == "__main__":
-    ingest()
+    web_csv_to_gcs()
