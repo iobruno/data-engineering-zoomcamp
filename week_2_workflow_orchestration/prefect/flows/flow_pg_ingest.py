@@ -6,8 +6,9 @@ from typing import List, Tuple
 import numpy as np
 import pandas as pd
 from omegaconf import OmegaConf
-from prefect import flow, task
 from prefect_sqlalchemy import SqlAlchemyConnector
+
+from prefect import flow, task
 
 config_file = Path(__file__).parent.parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
@@ -19,7 +20,8 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s - %(message)s",
 log = logging.getLogger("flow_pg_ingest")
 
 
-def split_df_in_chunks_with(df: pd.DataFrame, max_chunk_size: int = 100000) -> Tuple[List[pd.DataFrame], int]:
+def split_df_in_chunks_with(df: pd.DataFrame,
+                            max_chunk_size: int = 100000) -> Tuple[List[pd.DataFrame], int]:
     chunks_qty = ceil(len(df) / max_chunk_size)
     return np.array_split(df, chunks_qty), chunks_qty
 

@@ -16,10 +16,8 @@ schemas = OmegaConf.load(schema_file)
 
 
 @task(log_prints=True)
-def upload_from_dataframe(prefect_gcs_block: str,
-                          df: pd.DataFrame,
-                          to_path: str,
-                          serialization: str = 'parquet_snappy'):
+def upload_from_dataframe(prefect_gcs_block: str, pandas_df: pd.DataFrame, to_path: str,
+                          serialization_fmt: str):
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
     GitHub PR> https://github.com/PrefectHQ/prefect-gcp/pull/140
 
@@ -28,9 +26,9 @@ def upload_from_dataframe(prefect_gcs_block: str,
 
     Args:
         prefect_gcs_block: The Prefect GcsBlock name
-        df: The Pandas DataFrame to be uploaded.
+        pandas_df: The Pandas DataFrame to be uploaded.
         to_path: The destination path for the uploaded DataFrame.
-        serialization: The format to serialize the DataFrame into.
+        serialization_fmt: The format to serialize the DataFrame into.
             The valid options are: 'csv', 'csv_gzip', 'parquet', 'parquet_snappy', 'parquet_gz'
             Defaults to `OutputFormat.CSV_GZIP`. .
 
@@ -38,7 +36,9 @@ def upload_from_dataframe(prefect_gcs_block: str,
         The path that the object was uploaded to.
     """
     gcs_bucket = GcsBucket.load(prefect_gcs_block)
-    gcs_bucket.upload_from_dataframe(df=df, to_path=to_path, serialization_format=serialization)
+    gcs_bucket.upload_from_dataframe(df=pandas_df,
+                                     to_path=to_path,
+                                     serialization_format=serialization_fmt)
 
 
 @task(log_prints=True)
@@ -71,8 +71,9 @@ def ingest_csv_to_gcs():
             raw_df = fetch_csv_from(url=endpoint)
             cleansed_df = fix_datatypes_for(df=raw_df, schema=schemas.get(dataset_name))
             upload_from_dataframe(prefect_gcs_block=prefect.gcs_block_name,
-                                  df=cleansed_df,
-                                  to_path=gcs_path)
+                                  pandas_df=cleansed_df,
+                                  to_path=gcs_path,
+                                  serialization_fmt='parquet_snappy')
 
 
 if __name__ == "__main__":

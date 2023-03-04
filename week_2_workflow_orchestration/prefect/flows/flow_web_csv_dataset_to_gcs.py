@@ -6,8 +6,9 @@ from typing import List, Tuple
 import numpy as np
 import pandas as pd
 from omegaconf import OmegaConf
-from prefect import flow, task
 from prefect_gcp import GcsBucket
+
+from prefect import flow, task
 
 root_dir = Path(__file__).parent.parent
 config_file = root_dir.joinpath("app.yml")
@@ -20,7 +21,8 @@ logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s - %(message)s",
 log = logging.getLogger("flow_pg_ingest")
 
 
-def split_df_in_chunks_with(df: pd.DataFrame, max_chunk_size: int = 100000) -> Tuple[List[pd.DataFrame], int]:
+def split_df_in_chunks_with(df: pd.DataFrame,
+                            max_chunk_size: int = 100000) -> Tuple[List[pd.DataFrame], int]:
     chunks_qty = ceil(len(df) / max_chunk_size)
     return np.array_split(df, chunks_qty), chunks_qty
 
@@ -28,10 +30,7 @@ def split_df_in_chunks_with(df: pd.DataFrame, max_chunk_size: int = 100000) -> T
 @task(log_prints=True, retries=3)
 def load_into_gcs_with(bucket_name: str, blob_name: str, fs_path: str):
     gcs_bucket = GcsBucket.load("gcs-dtc-datalake-raw")
-    gcs_bucket.upload_from_path(
-        from_path=fs_path,
-        to_path=blob_name
-    )
+    gcs_bucket.upload_from_path(from_path=fs_path, to_path=blob_name)
 
 
 @task(log_prints=True, retries=3)
