@@ -21,7 +21,6 @@ pandas-gbq = "^0.19.1"
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "3.5.3"
-yapf = "^0.32.0"
 isort = "^5.12.0"
 
 [tool.yapf]
@@ -31,6 +30,7 @@ blank_line_before_nested_class_or_def = true
 coalesce_brackets = true
 column_limit = 100
 split_before_bitwise_operator = true
+split_before_named_assigns = false
 
 [build-system]
 requires = ["poetry-core"]

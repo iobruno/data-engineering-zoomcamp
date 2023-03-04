@@ -30,6 +30,7 @@ blank_line_before_nested_class_or_def = true
 coalesce_brackets = true
 column_limit = 100
 split_before_bitwise_operator = true
+split_before_named_assigns = false
 
 [build-system]
 requires = ["poetry-core"]

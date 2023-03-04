@@ -17,7 +17,7 @@ psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" 
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "3.5.3"
-yapf = "^0.32.0"
+isort = "^5.12.0"
 
 [tool.yapf]
 based_on_style = "google"
@@ -26,6 +26,7 @@ blank_line_before_nested_class_or_def = true
 coalesce_brackets = true
 column_limit = 100
 split_before_bitwise_operator = true
+split_before_named_assigns = false
 
 [build-system]
 requires = ["poetry-core"]

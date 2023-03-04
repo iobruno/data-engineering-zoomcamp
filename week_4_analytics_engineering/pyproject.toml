@@ -12,9 +12,7 @@ python = "^3.9"
 dbt-bigquery = "^1.4.1"
 dbt-duckdb = "^1.4.0"
 
-
 [tool.poetry.group.dev.dependencies]
-yapf = "^0.32.0"
 isort = "^5.12.0"
 
 [build-system]
