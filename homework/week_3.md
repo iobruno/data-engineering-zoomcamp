@@ -5,7 +5,7 @@ You can load the data however you would like, but keep the files in .GZ Format.
 If you are using orchestration such as Airflow or Prefect do not load the data into Big Query using the orchestrator.</br>
 Stop with loading the files into a bucket. </br></br>
 
-**NOTE:** 
+**NOTE:**
 - You can use the CSV option for the GZ files when creating an External Table</br>
 
 **SETUP:**
@@ -46,7 +46,7 @@ What is the estimated amount of data that will be read when this query is execut
 SELECT
     COUNT(DISTINCT(Affiliated_base_number)) as records
 FROM
-    `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata` fhv;    
+    `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata` fhv;
 ```
 
 ```sql
@@ -54,14 +54,14 @@ FROM
 SELECT
     COUNT(DISTINCT(Affiliated_base_number)) as records
 FROM
-    `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata_ext_csv_gz` fhv;    
+    `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata_ext_csv_gz` fhv;
 ```
 
 **BQ Internal Table (from .csv.gz)**:
-![bigquery-internal-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_internal.png)
+![bigquery-internal-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week3_bq_internal.png)
 
 **BQ External Table (from .csv.gz)**:
-![bigquery-external-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_external.png)
+![bigquery-external-from-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week3_bq_external.png)
 
 
 ## Question 3:
@@ -92,21 +92,21 @@ What is the best strategy to optimize the table if query always filter by pickup
 - [ ] Partition by affiliated_base_number Cluster on pickup_datetime
 
 ```text
-- Partitions reduces the amount that BigQuery has to processes to fetch the results. 
+- Partitions reduces the amount that BigQuery has to processes to fetch the results.
 Instead of doing a FULL table scan to match each result, it can just look up for the results
 within the partitions.
 
 - Clustering, on the other hand, clusters or groups togethers the entries based on a specified column,
-which helps boosting the query performance (and costs) when the results are ordered by that specific column  
+which helps boosting the query performance (and costs) when the results are ordered by that specific column
 ```
 
 ## Question 5:
-Implement the optimized solution you chose for question 4. Write a query to retrieve the distinct affiliated_base_number 
-between pickup_datetime 2019/03/01 and 2019/03/31 (inclusive).  
+Implement the optimized solution you chose for question 4. Write a query to retrieve the distinct affiliated_base_number
+between pickup_datetime 2019/03/01 and 2019/03/31 (inclusive).
 
-Use the BQ table you created earlier in your from clause and note the estimated bytes.   
+Use the BQ table you created earlier in your from clause and note the estimated bytes.
 
-Now change the table in the from clause to the partitioned table you created for question 4 and note the estimated 
+Now change the table in the from clause to the partitioned table you created for question 4 and note the estimated
 bytes processed. What are these values? Choose the answer which most closely matches.
 
 - [ ] 12.82 MB for non-partitioned table and 647.87 MB for the partitioned table
@@ -121,7 +121,7 @@ bytes processed. What are these values? Choose the answer which most closely mat
 -- Scans for 647.87 MB
 CREATE OR REPLACE TABLE `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata_by_date`
 PARTITION BY DATE(pickup_datetime) AS (
-    SELECT * 
+    SELECT *
     FROM `iobruno-data-eng-zoomcamp.dtc_dw_staging.fhv_tripdata`
 );
 ```
@@ -169,12 +169,12 @@ It is best practice in Big Query to always cluster your data:
 as there'll be more metadata processing and lookups involved in the Query Plan
 
 ## (Not required) Question 8:
-A better format to store these files may be parquet. Create a data pipeline to download the gzip files 
+A better format to store these files may be parquet. Create a data pipeline to download the gzip files
 and convert them into parquet. Upload the files to your GCP Bucket and create an External and BQ Table.
 
 Note: Column types for all files used in an External Table must have the same datatype. While an External Table may be created and shown in the side panel in Big Query, this will need to be validated by running a count query on the External Table to check if any errors occur.
 
-![bigquery-parquet-snappy-gzip-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week3_bq_parquet_csv.png)
+![bigquery-parquet-snappy-gzip-csv](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week3_bq_parquet_csv.png)
 
 ## Submitting the solutions
 

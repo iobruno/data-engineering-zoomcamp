@@ -5,7 +5,8 @@ The goal of this homework is to familiarise users with workflow orchestration an
 
 ## Question 1. Load January 2020 data
 
-Using the `etl_web_to_gcs.py` flow that loads taxi data into GCS as a guide, create a flow that loads the green taxi CSV dataset for January 2020 into GCS and run it. Look at the logs to find out how many rows the dataset has.
+Using the `etl_web_to_gcs.py` flow that loads taxi data into GCS as a guide, create a flow that loads the green taxi CSV
+dataset for January 2020 into GCS and run it. Look at the logs to find out how many rows the dataset has.
 
 How many rows does that dataset have?
 
@@ -59,23 +60,23 @@ Found flow 'NYC Taxi Trip data CSV Dataset to GCS'
 Default '.prefectignore' file written to /Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/.prefectignore
 Deployment YAML created at '/Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/ingest-deployment.yaml'.
 Deployment storage None does not have upload capabilities; no files uploaded.  Pass --skip-upload to suppress this warning.
-Deployment 'NYC Taxi Trip data CSV Dataset to GCS/day01-monthly-csv-to-gcs' successfully created with id 
+Deployment 'NYC Taxi Trip data CSV Dataset to GCS/day01-monthly-csv-to-gcs' successfully created with id
 '00d1d042-7d4d-412a-82a5-beed75380d25'.
 
 To execute flow runs from this deployment, start an agent that pulls work from the 'default' work queue:
 $ prefect agent start -q 'default'
 ```
 
-![prefect-deployment-scheduling](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_scheduling.png)
+![prefect-deployment-scheduling](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week2_prefect_scheduling.png)
 
 
 ## Question 3. Loading data to BigQuery
 
-Using `etl_gcs_to_bq.py` as a starting point, modify the script for extracting data from GCS and loading it into BigQuery. 
-This new script should not fill or remove rows with missing values. 
+Using `etl_gcs_to_bq.py` as a starting point, modify the script for extracting data from GCS and loading it into BigQuery.
+This new script should not fill or remove rows with missing values.
 (The script is really just doing the E and L parts of ETL).
 
-The main flow should print the total number of rows processed by the script. 
+The main flow should print the total number of rows processed by the script.
 Set the flow decorator to log the print statement.
 
 Parametrize the entrypoint flow to accept a list of months, a year, and a taxi color.
@@ -84,7 +85,7 @@ Make any other necessary changes to the code for it to function as required.
 
 Create a deployment for this flow to run in a local subprocess with local flow code storage (the defaults).
 
-Make sure you have the parquet data files for Yellow taxi data for Feb. 2019 and March 2019 loaded in GCS. 
+Make sure you have the parquet data files for Yellow taxi data for Feb. 2019 and March 2019 loaded in GCS.
 Run your deployment to append this data to your BiqQuery table. How many rows did your flow code process?
 
 - [x] 14,851,920
@@ -95,7 +96,7 @@ Run your deployment to append this data to your BiqQuery table. How many rows di
 ### Solution:
 
 **Google Cloud Storage - Yellow Data**:
-![prefect-gcs-yellow-data](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_gcs_yellow_data.png)
+![prefect-gcs-yellow-data](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week2_prefect_gcs_yellow_data.png)
 
 **Flow execution**:
 ```bash
@@ -131,17 +132,17 @@ Run your deployment to append this data to your BiqQuery table. How many rows di
 **BigQuery - Query Results**:
 
 ```sql
-SELECT count(1) as counter 
+SELECT count(1) as counter
 FROM `iobruno-data-eng-zoomcamp.dtc_dw_staging.yellow_tripdata`
 ```
 
-![prefect-bigquery-yellow-data](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_bigquery_yellow_data.png)
+![prefect-bigquery-yellow-data](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week2_prefect_bigquery_yellow_data.png)
 
 
 ## Question 4. Github Storage Block
 
-Using the `web_to_gcs` script from the videos as a guide, you want to store your flow code in a GitHub repository for collaboration with your team. 
-Prefect can look in the GitHub repo to find your flow code and read it. 
+Using the `web_to_gcs` script from the videos as a guide, you want to store your flow code in a GitHub repository for collaboration with your team.
+Prefect can look in the GitHub repo to find your flow code and read it.
 Create a GitHub storage block from the UI or in Python code and use that in your Deployment instead of storing your flow code locally or baking your flow code into a Docker image.
 
 Note that you will have to push your code to GitHub, Prefect will not push it for you.
@@ -162,8 +163,8 @@ $ prefect deployment build flows/flow_web_csv_dataset_to_gcs.py:ingest --name gi
 Found flow 'NYC GCS  to BigQuery'
 Default '.prefectignore' file written to /Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/.prefectignore
 Deployment YAML created at '/Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/ingest-deployment.yaml'.
-Deployment storage GitHub(repository='https://github.com/DataTalksClub/data-engineering-zoomcamp.git', reference=None, 
-access_token=None, include_git_objects=True) does not have upload capabilities; no files uploaded.  Pass --skip-upload to suppress 
+Deployment storage GitHub(repository='https://github.com/DataTalksClub/data-engineering-zoomcamp.git', reference=None,
+access_token=None, include_git_objects=True) does not have upload capabilities; no files uploaded.  Pass --skip-upload to suppress
 this warning.
 Deployment 'NYC GCS  to BigQuery/git-prefect-flow' successfully created with id 'b6e0074b-fa9d-406a-8510-8ecc9f1d8fc6'.
 
@@ -227,7 +228,7 @@ How many rows were processed by the script?
 ### Solution:
 
 **Prefect Orion - Notifications - Slack Webhook**:
-![prefect-bigquery-notif-trigger](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_notif_trigger.png)
+![prefect-bigquery-notif-trigger](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week2_prefect_notif_trigger.png)
 
 **Flow execution**:
 ```
@@ -249,7 +250,7 @@ How many rows were processed by the script?
 17:14:47.918 | INFO    | Task run 'load_into_gcs_with-0' - Uploading from PosixPath('/Users/iobruno/Vault/data-engineering-zoomcamp/week2/prefect/datasets/green_tripdata_2019-04.parquet.gz') to the bucket 'iobruno_dtc_datalake_raw' path 'green/green_tripdata_2019-04.parquet.gz'.
 ```
 
-![prefect-bigquery-notif-slack](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_notif_slack.png)
+![prefect-bigquery-notif-slack](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week2_prefect_notif_slack.png)
 
 
 ## Question 6. Secrets
@@ -264,7 +265,7 @@ Prefect Secret blocks provide secure, encrypted storage in the database and obfu
 ### Solution:
 
 **Prefect Blocks - Secret**:
-![prefect-bigquery-blocks-secret](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/dezoomcamp_week2_prefect_blocks_secret.png)
+![prefect-bigquery-blocks-secret](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week2_prefect_blocks_secret.png)
 
 
 

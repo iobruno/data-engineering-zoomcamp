@@ -20,7 +20,7 @@ For instance: `python pg_ingest.py -gz` fetches the **NYC Green Trip Data** AND 
 
 Check the details on how to run with Docker or Locally on the `Up and Running` section
 
-![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/docs/week1_pg_ingest.gif)
+![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_pg_ingest.gif)
 
 ## Tech Stack
 - Python 3.9 / 3.10
@@ -38,7 +38,7 @@ Check the details on how to run with Docker or Locally on the `Up and Running` s
  docker-compose up -d
 ```
 
-Make sure to uncomment the endpoint lines of the Datasets you want to 
+Make sure to uncomment the endpoint lines of the Datasets you want to
 fetch on [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/app.yml)
 
 **2.** Build the Docker image for the Ingestion Script:
