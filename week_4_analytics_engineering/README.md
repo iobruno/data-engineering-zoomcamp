@@ -1,30 +1,44 @@
-# dbt for Analytics Engineering 
+# dbt for Analytics Engineering
 
-This subproject is designed to build a `dbt` models from the `NY Taxi Tripdata Datasets` on BigQuery, 
-and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visualizations 
+This subproject is designed to build a `dbt` models from the `NY Taxi Tripdata Datasets` on BigQuery,
+and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visualizations
 
 ## Tech Stack
+- Python 3.9 / 3.10
+- BigQuery
 - [dbt-bigquery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
-- BigQuery 
-- Looker Studio 
+- Looker Studio
+- [Poetry](https://python-poetry.org/docs/)
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Install **dbt**, with the associated adapter for your Datasource 
+**1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-brew update
-brew tap dbt-labs/dbt
-brew install dbt-bigquery
+conda create -n de-zoomcamp python=3.9 -y
+conda activate de-zoomcamp
 ```
 
-**2.** Run `dbt run` to trigger the dbt models to run:
+**2.** Install the dependencies on `pyproject.toml`:
+```shell
+poetry install --no-root
+```
+
+**3.** (Optional) Install pre-commit:
+```shell
+brew install pre-commit
+
+# From root folder where `.pre-commit-config.yaml` is located, run:
+pre-commit install
+```
+
+**4.** Run `dbt run` to trigger the dbt models to run:
 ```shell
 dbt run
 ```
 
-**3.** Generate the Docs and the Data Lineage graph with:
+**5.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
 ```
@@ -32,11 +46,10 @@ dbt docs generate
 dbt docs serve
 ```
 
-**4.** Access the generated docs on a web browser at the URL:
+**6.** Access the generated docs on a web browser at the URL:
 ```shell
 http://localhost:8080
 ```
-
 
 ## Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)

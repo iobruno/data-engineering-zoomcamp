@@ -6,12 +6,33 @@ This subproject is designed to build `Airflow DAGs` to fetch the CSV datasets fo
 - Google Cloud Storage
 
 ## Tech Stack
-- Python 3.9.+
-- **Dataframe**: pandas, numpy
-- **Workflow**: `airflow`
-- **Virtualenv**: Conda
-- **Dependency Management**: Poetry
+- Python 3.9 / 3.10
+- pandas, numpy
+- [Airflow](https://airflow.apache.org/)
+- [Poetry](https://python-poetry.org/docs/)
 
-## Up & Running
+## Up and Running
 
+### Developer Setup
+
+**1.** Create and activate a virtualenv for Python 3.9 with conda:
+```shell
+conda create -n de-zoomcamp python=3.9 -y
+conda activate de-zoomcamp
+```
+
+**2.** Install the dependencies on `pyproject.toml`:
+```shell
+poetry install --no-root
+```
+
+**3.** (Optional) Install pre-commit:
+```shell
+brew install pre-commit
+
+# From root folder where `.pre-commit-config.yaml` is located, run:
+pre-commit install
+```
+
+## TODO:
 - T.B.D.
