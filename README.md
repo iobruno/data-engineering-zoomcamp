@@ -1,4 +1,4 @@
-# Data Engineering Zoomcamp 2023 Cohort
+# Data Engineering Zoomcamp - Cohort 2023
 
 - [Course Playlist on Youtube](https://www.youtube.com/playlist?list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb)
 
