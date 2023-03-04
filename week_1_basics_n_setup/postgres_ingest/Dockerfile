@@ -1,12 +1,13 @@
-FROM python:3.11
+FROM python:3.10
 
 WORKDIR /app
 
 ADD pyproject.toml pyproject.toml
 ADD poetry.lock poetry.lock
-ADD postgres_ingest/app.yml app.yml
-ADD postgres_ingest/df_persistence.py df_persistence.py
-ADD postgres_ingest/pg_ingest.py pg_ingest.py
+ADD app.yml app.yml
+
+ADD df_persistence.py df_persistence.py
+ADD pg_ingest.py pg_ingest.py
 
 ENV DATABASE_USERNAME=postgres
 ENV DATABASE_PASSWORD=postgres
