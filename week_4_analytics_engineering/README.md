@@ -12,12 +12,31 @@ and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visu
 
 ### Developer Setup
 
-Install **dbt**, with the associated adapter for your Datasource 
-```
+**1.** Install **dbt**, with the associated adapter for your Datasource 
+```shell
 brew update
 brew tap dbt-labs/dbt
 brew install dbt-bigquery
 ```
+
+**2.** Run `dbt run` to trigger the dbt models to run:
+```shell
+dbt run
+```
+
+**3.** Generate the Docs and the Data Lineage graph with:
+```shell
+dbt docs generate
+```
+```shell
+dbt docs serve
+```
+
+**4.** Access the generated docs on a web browser at the URL:
+```shell
+http://localhost:8080
+```
+
 
 ## Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
@@ -27,4 +46,7 @@ brew install dbt-bigquery
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 ## TODO:
-- T.B.D.
+- [x] Getting Started with dbt
+- [x] Generate and serve docs and Data Lineage Graphs locally
+- [ ] Orchestrate the dbt execution with Airflow/Prefect
+- [ ] Integrate it with a Data Quality/Observability
