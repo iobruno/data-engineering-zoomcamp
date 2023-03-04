@@ -1,14 +1,13 @@
-from enum import Enum
-from io import BytesIO
 from pathlib import Path
-from typing import Any, Dict, Union
 
 import pandas as pd
 from omegaconf import DictConfig, OmegaConf
-from prefect import flow, task
 from prefect_gcp import GcsBucket
 
+from prefect import flow, task
+
 root_dir = Path(__file__).parent.parent
+
 config_file = root_dir.joinpath("app.yml")
 schema_file = root_dir.joinpath("schemas.yml")
 
@@ -16,117 +15,33 @@ cfg = OmegaConf.load(config_file)
 schemas = OmegaConf.load(schema_file)
 
 
-class DataFrameSerializationFormat(Enum):
-    """An enumeration class to represent different file formats,
-        compression options for upload_from_dataframe
-
-    Attributes:
-        CSV: Representation for 'csv' file format with no compression
-            and its related content type and suffix.
-
-        CSV_GZIP: Representation for 'csv' file format with 'gzip' compression
-            and its related content type and suffix.
-
-        PARQUET: Representation for 'parquet' file format with no compression
-            and its related content type and suffix.
-
-        PARQUET_SNAPPY: Representation for 'parquet' file format
-            with 'snappy' compression and its related content type and suffix.
-
-        PARQUET_GZIP: Representation for 'parquet' file format
-            with 'gzip' compression and its related content type and suffix.
-    """
-
-    CSV = ('csv', None, 'text/csv', '.csv')
-    CSV_GZIP = ('csv', 'gzip', 'application/x-gzip', '.csv.gz')
-    PARQUET = ('parquet', None, 'application/octet-stream', '.parquet')
-    PARQUET_SNAPPY = ('parquet', 'snappy', 'application/octet-stream', '.parquet.snappy')
-    PARQUET_GZIP = ('parquet', 'gzip', 'application/octet-stream', '.parquet.gz')
-
-    @property
-    def format(self):
-        return self.value[0]
-
-    @property
-    def compression(self):
-        return self.value[1]
-
-    @property
-    def content_type(self):
-        return self.value[2]
-
-    @property
-    def suffix(self):
-        return self.value[3]
-
-    def fix_extension_with(self, gcs_blob_path: str) -> str:
-        """Fix the extension of a GCS blob.
-
-        Args:
-            gcs_blob_path: The path to the GCS blob to be modified.
-
-        Returns:
-            The modified path to the GCS blob with the new extension.
-        """
-        gcs_blob_path = Path(gcs_blob_path)
-        folder = gcs_blob_path.parent
-        filename = Path(gcs_blob_path.stem).with_suffix(self.suffix)
-        return str(folder.joinpath(filename).as_posix())
-
-
 @task(log_prints=True)
-def upload_from_dataframe(
-        prefect_gcs_block: str,
-        df: pd.DataFrame,
-        to_path: str,
-        serialization_format: Union[str, DataFrameSerializationFormat] = 'parquet_snappy',
-        **upload_kwargs: Dict[str, Any]):
+def upload_from_dataframe(prefect_gcs_block: str,
+                          df: pd.DataFrame,
+                          to_path: str,
+                          serialization: str = 'parquet_snappy'):
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
+    GitHub PR> https://github.com/PrefectHQ/prefect-gcp/pull/140
 
     This function uploads the data in a Pandas DataFrame to Google Cloud Storage
-    in a specified format, such as .csv, .csv.gz, .parquet, .parquet.snappy, and .parquet.gz.
+    in a specified format, such as .csv, .csv.gz, .parquet, .parquet.snappy, and .parquet.gz
 
     Args:
         prefect_gcs_block: The Prefect GcsBlock name
         df: The Pandas DataFrame to be uploaded.
         to_path: The destination path for the uploaded DataFrame.
-        serialization_format: The format to serialize the DataFrame into.
-            When passed as a `str`, the valid options are:
-            'csv', 'csv_gzip', 'parquet', 'parquet_snappy', 'parquet_gz'.
+        serialization: The format to serialize the DataFrame into.
+            The valid options are: 'csv', 'csv_gzip', 'parquet', 'parquet_snappy', 'parquet_gz'
             Defaults to `OutputFormat.CSV_GZIP`. .
-        **upload_kwargs (Dict[str, Any]): Additional keyword arguments to pass to
-            the underlying `Blob.upload_from_dataframe` method.
 
     Returns:
         The path that the object was uploaded to.
     """
     gcs_bucket = GcsBucket.load(prefect_gcs_block)
-
-    if isinstance(serialization_format, str):
-        serialization_format = DataFrameSerializationFormat[serialization_format.upper()]
-
-    with BytesIO() as bytes_buffer:
-        if serialization_format.format == 'parquet':
-            df.to_parquet(path=bytes_buffer,
-                          compression=serialization_format.compression,
-                          index=False)
-        elif serialization_format.format == 'csv':
-            df.to_csv(path_or_buf=bytes_buffer,
-                      compression=serialization_format.compression,
-                      index=False)
-
-        bytes_buffer.seek(0)
-        to_path = serialization_format.fix_extension_with(gcs_blob_path=to_path)
-
-        return gcs_bucket.upload_from_file_object(
-            from_file_object=bytes_buffer,
-            to_path=to_path,
-            content_type=serialization_format.content_type,
-            **upload_kwargs,
-        )
+    gcs_bucket.upload_from_dataframe(df=df, to_path=to_path, serialization_format=serialization)
 
 
-@task(log_prints=True, retries=3)
+@task(log_prints=True)
 def fix_datatypes_for(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
     return df.astype(schema)
 

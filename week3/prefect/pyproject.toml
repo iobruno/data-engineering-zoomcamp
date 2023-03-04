@@ -10,7 +10,7 @@ python = "^3.9"
 omegaconf = "^2.3.0"
 pandas = "^1.5.3"
 prefect = "^2.7.12"
-prefect-gcp = {extras = ["cloud-storage"], version = "^0.2.5"}
+prefect-gcp = {extras = ["cloud-storage"], version = "^0.3.0"}
 greenlet = "^2.0.2"
 pyarrow = "^11.0.0"
 
