@@ -62,7 +62,12 @@ cp gcs-connector-latest-hadoop2.jar $SPARK_HOME/jars/
 6.1. Either spin up a Jupyter Lab and explore [pyspark_homework.ipynb](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyspark/pyspark_homework.ipynb) 
 or [pyspark_playground.ipynb](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week5/pyspark/pyspark_playground.ipynb)
 
-6.2. Configure `GOOGLE_APPLICATION_CREDENTIALS` env variable pointing to a .json Service Account with Read Access to GCS
+6.2. Configure `GOOGLE_APPLICATION_CREDENTIALS` env variable pointing to a .json 
+Service Account with Read Access to GCS, and run: 
+
+```shell
+python spark_app.py
+```
 
 ## TODO:
 - [X] Set up a Jupyter Playground for PySpark
