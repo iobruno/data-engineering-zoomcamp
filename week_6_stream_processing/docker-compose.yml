@@ -1,0 +1,114 @@
+version: "3.9"
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: cp-zookeeper
+    platform: linux/arm64
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+      - ZOOKEEPER_SYNC_LIMIT=5
+    volumes:
+      - ./confluent-data/zk-data:/var/lib/zookeeper/data
+      - ./confluent-data/zk-txn-logs:/var/lib/zookeeper/log
+    ports:
+      - '2181:2181'
+
+  kafka_0:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: cp-kafka-0
+    platform: linux/arm64
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=INTERNAL://kafka_0:29090,EXTERNAL://:9090
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_0:29090,EXTERNAL://127.0.0.1:9090
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_DELETE_TOPIC_ENABLE=true
+    volumes:
+      - ./confluent-data/kafka_0:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+    ports:
+      - '9090:9090'
+
+  kafka_1:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: cp-kafka-1
+    platform: linux/arm64
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=INTERNAL://kafka_1:29091,EXTERNAL://:9091
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_1:29091,EXTERNAL://127.0.0.1:9091
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_DELETE_TOPIC_ENABLE=true
+    volumes:
+      - ./confluent-data/kafka_1:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+    ports:
+      - '9091:9091'
+
+  kafka_2:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: cp-kafka-2
+    platform: linux/arm64
+    environment:
+      - KAFKA_BROKER_ID=3
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_LISTENERS=INTERNAL://kafka_2:29092,EXTERNAL://:9092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka_2:29092,EXTERNAL://127.0.0.1:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_DELETE_TOPIC_ENABLE=true
+    volumes:
+      - ./confluent-data/kafka_2:/var/lib/kafka/data
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.3.2
+    container_name: cp-schema-registry
+    platform: linux/arm64
+    environment:
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka_0:29090,PLAINTEXT://kafka_1:29091,PLAINTEXT://kafka_2:29092
+      - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:8081
+      - SCHEMA_REGISTRY_DEBUG=true
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+    ports:
+      - '9081:8081'
+
+  rest-proxy:
+    image: confluentinc/cp-kafka-rest:7.3.2
+    platform: linux/arm64
+    container_name: cp-kafka-rest-proxy
+    environment:
+      - KAFKA_REST_HOST_NAME=rest-proxy
+      - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka_0:29090,PLAINTEXT://kafka_1:29091,PLAINTEXT://kafka_2:29092
+      - KAFKA_REST_SCHEMA_REGISTRY_URL=schema-registry:8081
+      - KAFKA_REST_LISTENERS=http://rest-proxy:8082
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+      - schema-registry
+    ports:
+      - '9082:8082'

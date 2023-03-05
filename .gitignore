@@ -213,8 +213,8 @@ crash.*.log
 # to change depending on the environment.
 
 # Making an exception since this is just for the sake of the Data Engineering Zoomcamp
-# these MUST NOT be commited by default 
-# *.tfvars 
+# these MUST NOT be commited by default
+# *.tfvars
 *.tfvars.json
 
 # Ignore override files as they are usually used to override resources locally and so
@@ -252,6 +252,9 @@ logs/
 
 # Docker volume for pgAdmin
 **/pgadmin/**
+
+# Docker volume for Kafka and ZooKeeper
+**/confluent-data/**
 
 # Datasets
 **/*datasets/**
