@@ -1,12 +1,12 @@
-## Week 5 Homework 
+## Week 5 Homework
 
 In this homework we'll put what we learned about Spark in practice.
 For this homework we will be using the FHVHV 2021-06 data found here. [FHVHV Data](https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhvhv/fhvhv_tripdata_2021-06.csv.gz )
 
 
-### Question 1: 
+### Question 1:
 
-**Install Spark and PySpark** 
+**Install Spark and PySpark**
 
 - Install Spark
 - Run PySpark
@@ -29,12 +29,12 @@ spark.version
 '3.3.2'
 ```
 
-### Question 2: 
+### Question 2:
 
 **HVFHW June 2021**
 
-Read it with Spark using the same schema as we did in the lessons. We will use this dataset for all the remaining questions.  Repartition it to 12 partitions and save it to parquet.  
-What is the average size of the Parquet (ending with .parquet extension) Files that were created (in MB). Select the answer which most closely matches.  
+Read it with Spark using the same schema as we did in the lessons. We will use this dataset for all the remaining questions.  Repartition it to 12 partitions and save it to parquet.
+What is the average size of the Parquet (ending with .parquet extension) Files that were created (in MB). Select the answer which most closely matches.
 
 - [ ] 2 MB
 - [x] 24 MB
@@ -47,32 +47,32 @@ df = spark.sql("""SELECT * FROM fhvhv""")
 
 df.repartition(12)\
     .write\
+    .option("compression", "snappy")\
     .mode("overwrite")\
-    .parquet("/tmp/dtc/fhvhv-w5q2")
+    .parquet("/tmp/dtc/fhvhv-week5")
 ```
 
 ```
 ls -lh /tmp/dtc/fhvhv-w5q2/
 
--rw-r--r--@ 1 iobruno  wheel     0B Feb 27 06:58 _SUCCESS
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00000-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00001-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00002-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00003-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00004-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00005-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00006-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00007-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00008-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00009-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00010-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
--rw-r--r--@ 1 iobruno  wheel    24M Feb 27 06:58 part-00011-7c46d7b5-095c-496d-a66d-6c0c573e8e19-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel     0B Mar  5 00:08 _SUCCESS
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00000-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00001-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00002-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00003-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00004-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00005-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00006-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00007-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00008-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00009-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00010-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
+-rw-r--r--@ 1 iobruno  wheel    24M Mar  5 00:08 part-00011-f51983be-cec6-40ed-bc3f-198e2cfa39ac-c000.snappy.parquet
 ```
 
+## Question 3:
 
-## Question 3: 
-
-**Count records**  
+**Count records**
 
 How many taxi trips were there on June 15? Consider only trips that started on June 15.
 
@@ -85,18 +85,16 @@ How many taxi trips were there on June 15? Consider only trips that started on J
 ```sql
 spark.sql("""
 
-WITH tripdata AS (
-        SELECT
-            dayofmonth(pickup_datetime) as day_of_month,
-            count(1) as num_trips
-        FROM
-            fhvhv
-        GROUP BY
-            dayofmonth(pickup_datetime)
-    )
-    SELECT * FROM tripdata t
-    WHERE t.day_of_month = 15
-    
+    SELECT
+        dayofmonth(pickup_datetime) as day_of_month,
+        count(1) as num_trips
+    FROM
+        fhvhv
+    WHERE
+        dayofmonth(pickup_datetime) = 15
+    GROUP BY
+        dayofmonth(pickup_datetime)
+
 """).take(1)
 ```
 
@@ -105,9 +103,9 @@ WITH tripdata AS (
 [Row(day_of_month=15, num_trips=452470)]
 ```
 
-## Question 4: 
+## Question 4:
 
-**Longest trip for each day**  
+**Longest trip for each day**
 
 Now calculate the duration for each trip. How long was the longest trip in Hours?
 
@@ -130,15 +128,15 @@ spark.sql("""
         FROM
             fhvhv
     ),
-    
+
     trip_duration AS (
-        SELECT 
+        SELECT
             (duration_in_secs/3600) as duration_in_hours,
             dense_rank() OVER( ORDER BY duration_in_secs DESC ) as rnk
         FROM tripdata t
     )
-    
-    SELECT 
+
+    SELECT
         td.duration_in_hours
     FROM trip_duration td
     WHERE td.rnk = 1
@@ -150,8 +148,7 @@ spark.sql("""
 [Row(duration_in_hours=66.8788888888889)]
 ```
 
-
-### Question 5: 
+### Question 5:
 
 **User Interface**
 
@@ -180,8 +177,7 @@ Spark context available as 'sc' (master = local[*], app id = local-1677421297685
 SparkSession available as 'spark'.
 ```
 
-
-### Question 6: 
+### Question 6:
 
 **Most frequent pickup location zone**
 
@@ -199,17 +195,17 @@ Using the zone lookup data and the fhvhv June 2021 data, what is the name of the
 
 ```sql
 spark.sql("""
-    
+
     WITH trip_count_per_location AS (
-        SELECT 
+        SELECT
             f.pickup_location_id,
             count(1) as num_trips,
             dense_rank() over (order by count(1) desc) as rnk
         FROM fhvhv f
         GROUP BY f.pickup_location_id
-    ) 
-    
-    SELECT 
+    )
+
+    SELECT
         t.pickup_location_id,
         z.zone,
         t.num_trips,
@@ -217,7 +213,7 @@ spark.sql("""
     FROM trip_count_per_location t
     INNER JOIN zones z ON t.pickup_location_id = z.location_id
     WHERE t.rnk = 1
-    
+
 """).take(1)
 ```
 
@@ -229,6 +225,6 @@ spark.sql("""
 ## Submitting the solutions
 
 * Form for submitting: https://forms.gle/EcSvDs6vp64gcGuD8
-* You can submit your homework multiple times. In this case, only the last submission will be used. 
+* You can submit your homework multiple times. In this case, only the last submission will be used.
 
 Deadline: 06 March (Monday), 22:00 CET
