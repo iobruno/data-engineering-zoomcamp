@@ -1,5 +1,5 @@
 package club.datatalks.kafka
 
-fun main() {
-    println("Bootstrapping Kafka Stream Application")
+fun main(args: Array<String>) {
+    println("Bootstrapping Kafka Stream Application in Kotlin")
 }
