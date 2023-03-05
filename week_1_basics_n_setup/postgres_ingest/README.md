@@ -20,7 +20,7 @@ For instance: `python pg_ingest.py -gz` fetches the **NYC Green Trip Data** AND 
 
 Check the details on how to run with Docker or Locally on the `Up and Running` section
 
-![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_pg_ingest.gif)
+![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_pg_ingest_cli.gif)
 
 ## Tech Stack
 - Python 3.9 / 3.10
