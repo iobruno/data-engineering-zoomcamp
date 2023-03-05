@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "python-stream-processing"
+version = "1.0.0"
+description = "Stream Processing with Kafka using Python"
+authors = ["iobruno <bruno.ariev@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "python_stream_processing"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+faust-streaming = "^0.10.4"
+protobuf = "^4.22.0"
+avro = "^1.11.1"
+
+[tool.poetry.group.dev.dependencies]
+jupyterlab = "^3.6.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
