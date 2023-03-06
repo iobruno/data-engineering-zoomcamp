@@ -198,3 +198,33 @@ services:
       - schema-registry
     ports:
       - '8080:8080'
+
+  # kafka-ui Docs:
+  #   - https://github.com/provectus/kafka-ui
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:59837394fbd06602e0d04827d2edbc8673197d88
+    platform: linux/arm64
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=kafka_docker_0
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_0:29090
+      - KAFKA_CLUSTERS_0_SCHEMAREGISTRY=http://schema-registry:8081
+      - KAFKA_CLUSTERS_0_KSQLDBSERVER=http://0.0.0.0:8088
+      - KAFKA_CLUSTERS_1_NAME=kafka_docker_1
+      - KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS=kafka_1:29091
+      - KAFKA_CLUSTERS_1_SCHEMAREGISTRY=http://schema-registry:8081
+      - KAFKA_CLUSTERS_1_KSQLDBSERVER=http://0.0.0.0:8088
+      - KAFKA_CLUSTERS_2_NAME=kafka_docker_2
+      - KAFKA_CLUSTERS_2_BOOTSTRAPSERVERS=kafka_2:29092
+      - KAFKA_CLUSTERS_2_SCHEMAREGISTRY=http://schema-registry:8081
+      - KAFKA_CLUSTERS_2_KSQLDBSERVER=http://0.0.0.0:8088
+      - SERVER_PORT=8080
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+      - ksqldb-server
+      - schema-registry
+    ports:
+      - '4000:8080'
