@@ -2,9 +2,10 @@ version: "3.9"
 services:
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.2
     container_name: cp-zookeeper
+    image: confluentinc/cp-zookeeper:7.3.2
     platform: linux/arm64
+    restart: always
     environment:
       - ZOOKEEPER_CLIENT_PORT=2181
       - ZOOKEEPER_TICK_TIME=2000
@@ -16,9 +17,10 @@ services:
       - '2181:2181'
 
   kafka_0:
-    image: confluentinc/cp-kafka:7.3.2
     container_name: cp-kafka-0
+    image: confluentinc/cp-kafka:7.3.2
     platform: linux/arm64
+    restart: always
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -37,9 +39,10 @@ services:
       - '9090:9090'
 
   kafka_1:
-    image: confluentinc/cp-kafka:7.3.2
     container_name: cp-kafka-1
+    image: confluentinc/cp-kafka:7.3.2
     platform: linux/arm64
+    restart: always
     environment:
       - KAFKA_BROKER_ID=2
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -58,9 +61,10 @@ services:
       - '9091:9091'
 
   kafka_2:
-    image: confluentinc/cp-kafka:7.3.2
     container_name: cp-kafka-2
+    image: confluentinc/cp-kafka:7.3.2
     platform: linux/arm64
+    restart: always
     environment:
       - KAFKA_BROKER_ID=3
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -78,10 +82,43 @@ services:
     ports:
       - '9092:9092'
 
-  schema-registry:
-    image: confluentinc/cp-schema-registry:7.3.2
-    container_name: cp-schema-registry
+  ksqldb-server:
+    container_name: cp-ksqldb-server
+    image: confluentinc/cp-ksqldb-server:7.3.2
     platform: linux/arm64
+    restart: always
+    environment:
+      KSQL_LISTENERS: http://0.0.0.0:8088
+      KSQL_BOOTSTRAP_SERVERS: kafka_0:29090,kafka_1:29091,kafka_2:29092
+      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+    ports:
+      - '8088:8088'
+
+  ksqldb-cli:
+    container_name: cp-ksqldb-cli
+    image: confluentinc/cp-ksqldb-cli:7.3.2
+    platform: linux/amd64
+    restart: always
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+      - ksqldb-server
+    entrypoint: /bin/sh
+    tty: true
+
+  schema-registry:
+    container_name: cp-schema-registry
+    image: confluentinc/cp-schema-registry:7.3.2
+    platform: linux/arm64
+    restart: always
     environment:
       - SCHEMA_REGISTRY_HOST_NAME=schema-registry
       - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka_0:29090,PLAINTEXT://kafka_1:29091,PLAINTEXT://kafka_2:29092
@@ -93,12 +130,13 @@ services:
       - kafka_1
       - kafka_2
     ports:
-      - '9081:8081'
+      - '8081:8081'
 
   rest-proxy:
+    container_name: cp-kafka-rest-proxy
     image: confluentinc/cp-kafka-rest:7.3.2
     platform: linux/arm64
-    container_name: cp-kafka-rest-proxy
+    restart: always
     environment:
       - KAFKA_REST_HOST_NAME=rest-proxy
       - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka_0:29090,PLAINTEXT://kafka_1:29091,PLAINTEXT://kafka_2:29092
@@ -111,4 +149,4 @@ services:
       - kafka_2
       - schema-registry
     ports:
-      - '9082:8082'
+      - '8082:8082'
