@@ -171,3 +171,30 @@ services:
       - schema-registry
     ports:
       - '3000:3000'
+
+  # Conduktor Platform Docs:
+  #   - https://docs.conduktor.io/platform/configuration/env-variables
+  #   - https://docs.conduktor.io/platform/installation/hardware
+  conduktor-platform:
+    container_name: conduktor-platform
+    image: conduktor/conduktor-platform:1.12.1
+    platform: linux/arm64
+    environment:
+      - CDK_CLUSTERS_0_ID=warp
+      - CDK_CLUSTERS_0_NAME=kafka-in-docker-cluster
+      - CDK_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_0:29090,kafka_1:29091,kafka_2:29092
+      - CDK_CLUSTERS_0_SCHEMAREGISTRY_ID=warp-registry
+      - CDK_CLUSTERS_0_SCHEMAREGISTRY_URL=http://schema-registry:8081
+      - CDK_AUTH_LOCAL-USERS_0_EMAIL=admin@conduktor.io
+      - CDK_AUTH_LOCAL-USERS_0_PASSWORD=admin
+      - CDK_LISTENING_PORT=8080
+      - RUN_MODE=nano
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+      - ksqldb-server
+      - schema-registry
+    ports:
+      - '8080:8080'
