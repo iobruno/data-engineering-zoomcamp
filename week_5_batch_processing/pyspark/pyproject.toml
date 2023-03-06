@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyspark-playground"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 description = "Batch Processing with PySpark"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 license = "MIT"

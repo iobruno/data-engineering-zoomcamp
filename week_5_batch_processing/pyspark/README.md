@@ -74,12 +74,13 @@ or [pyspark_playground.ipynb](https://github.com/iobruno/data-engineering-zoomca
 Service Account with Read Access to GCS, and run:
 
 ```shell
-python spark_app.py
+python spark_gcs_to_gcs.py
 ```
 
 ## TODO:
 - [X] Set up a Jupyter Playground for PySpark
 - [X] Explore the SparkSQL API
 - [X] Enable Spark to read from Google Cloud Storage
-- [ ] Set up a Standalone Cluster for Spark
-- [ ] Submit a PySpark job to the Cluster
+- [ ] Submit a PySpark job to the Google Dataproc
+- [ ] Set up a Standalone Cluster for Spark in [kind](https://kind.sigs.k8s.io/)
+- [ ] Submit a PySpark job to the Spark Cluster
