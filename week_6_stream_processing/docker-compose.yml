@@ -150,3 +150,24 @@ services:
       - schema-registry
     ports:
       - '8082:8082'
+
+  # kpow Docs:
+  #   - https://docs.kpow.io/ce/configuration/
+  kpow:
+    container_name: kpow
+    image: factorhouse/kpow-ce:90.6.1
+    platform: linux/arm64
+    restart: always
+    environment:
+      - BOOTSTRAP=kafka_0:29090,kafka_1:29091,kafka_2:29092
+      - SECURITY_PROTOCOL=PLAINTEXT
+      - SCHEMA_REGISTRY_URL=http://schema-registry:8081
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+      - ksqldb-server
+      - schema-registry
+    ports:
+      - '3000:3000'
