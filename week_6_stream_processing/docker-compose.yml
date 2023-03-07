@@ -15,6 +15,8 @@ services:
       - ./confluent-data/zk-txn-logs:/var/lib/zookeeper/log
     ports:
       - '2181:2181'
+    networks:
+      - dspn
 
   kafka_0:
     container_name: cp-kafka-0
@@ -37,6 +39,8 @@ services:
       - zookeeper
     ports:
       - '9090:9090'
+    networks:
+      - dspn
 
   kafka_1:
     container_name: cp-kafka-1
@@ -59,6 +63,8 @@ services:
       - zookeeper
     ports:
       - '9091:9091'
+    networks:
+      - dspn
 
   kafka_2:
     container_name: cp-kafka-2
@@ -81,6 +87,8 @@ services:
       - zookeeper
     ports:
       - '9092:9092'
+    networks:
+      - dspn
 
   ksqldb-server:
     container_name: cp-ksqldb-server
@@ -99,11 +107,13 @@ services:
       - kafka_2
     ports:
       - '8088:8088'
+    networks:
+      - dspn
 
   ksqldb-cli:
     container_name: cp-ksqldb-cli
     image: confluentinc/cp-ksqldb-cli:7.3.2
-    platform: linux/amd64
+    platform: linux/arm64
     restart: always
     depends_on:
       - zookeeper
@@ -113,6 +123,8 @@ services:
       - ksqldb-server
     entrypoint: /bin/sh
     tty: true
+    networks:
+      - dspn
 
   schema-registry:
     container_name: cp-schema-registry
@@ -131,6 +143,8 @@ services:
       - kafka_2
     ports:
       - '8081:8081'
+    networks:
+      - dspn
 
   rest-proxy:
     container_name: cp-kafka-rest-proxy
@@ -150,9 +164,11 @@ services:
       - schema-registry
     ports:
       - '8082:8082'
+    networks:
+      - dspn
 
   # kpow Docs:
-  #   - https://docs.kpow.io/ce/configuration/
+  # - https://docs.kpow.io/ce/configuration/
   kpow:
     container_name: kpow
     image: factorhouse/kpow-ce:90.6.1
@@ -171,10 +187,12 @@ services:
       - schema-registry
     ports:
       - '3000:3000'
+    networks:
+      - dspn
 
   # Conduktor Platform Docs:
-  #   - https://docs.conduktor.io/platform/configuration/env-variables
-  #   - https://docs.conduktor.io/platform/installation/hardware
+  # - https://docs.conduktor.io/platform/configuration/env-variables
+  # - https://docs.conduktor.io/platform/installation/hardware
   conduktor-platform:
     container_name: conduktor-platform
     image: conduktor/conduktor-platform:1.12.1
@@ -198,33 +216,9 @@ services:
       - schema-registry
     ports:
       - '8080:8080'
+    networks:
+      - dspn
 
-  # kafka-ui Docs:
-  #   - https://github.com/provectus/kafka-ui
-  kafka-ui:
-    container_name: kafka-ui
-    image: provectuslabs/kafka-ui:59837394fbd06602e0d04827d2edbc8673197d88
-    platform: linux/arm64
-    environment:
-      - KAFKA_CLUSTERS_0_NAME=kafka_docker_0
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_0:29090
-      - KAFKA_CLUSTERS_0_SCHEMAREGISTRY=http://schema-registry:8081
-      - KAFKA_CLUSTERS_0_KSQLDBSERVER=http://0.0.0.0:8088
-      - KAFKA_CLUSTERS_1_NAME=kafka_docker_1
-      - KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS=kafka_1:29091
-      - KAFKA_CLUSTERS_1_SCHEMAREGISTRY=http://schema-registry:8081
-      - KAFKA_CLUSTERS_1_KSQLDBSERVER=http://0.0.0.0:8088
-      - KAFKA_CLUSTERS_2_NAME=kafka_docker_2
-      - KAFKA_CLUSTERS_2_BOOTSTRAPSERVERS=kafka_2:29092
-      - KAFKA_CLUSTERS_2_SCHEMAREGISTRY=http://schema-registry:8081
-      - KAFKA_CLUSTERS_2_KSQLDBSERVER=http://0.0.0.0:8088
-      - SERVER_PORT=8080
-    depends_on:
-      - zookeeper
-      - kafka_0
-      - kafka_1
-      - kafka_2
-      - ksqldb-server
-      - schema-registry
-    ports:
-      - '4000:8080'
+networks:
+  dspn:
+    name: distributed-stream-processing-network
