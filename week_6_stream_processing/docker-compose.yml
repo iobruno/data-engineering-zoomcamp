@@ -171,7 +171,7 @@ services:
   # - https://docs.kpow.io/ce/configuration/
   kpow:
     container_name: kpow
-    image: factorhouse/kpow-ce:90.6.1
+    image: factorhouse/kpow-ce:91.1.1
     platform: linux/arm64
     restart: always
     environment:
