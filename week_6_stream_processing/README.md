@@ -30,7 +30,6 @@ ksql>
 - [ksqlDB](https://ksqldb.io/)
 - [kpow](https://docs.kpow.io/ce/)
 - [Conduktor Platform](https://www.conduktor.io/explorer/)
-- [UI for Kafka](https://github.com/provectus/kafka-ui)
 - Docker, docker-compose
 
 
@@ -43,6 +42,22 @@ ksql>
 
 ### Developer Setup
 
+**Note for Windows Users**:
+
+You'll have to ensure that `userid:1000`, `groupid:1000` have read/write permissions for the bind mounts setup on docker-compose.yml
+```shell
+mkdir -p confluent-data/zk-data
+mkdir -p confluent-data/zk-txn-logs
+mkdir -p confluent-data/kafka_0
+mkdir -p confluent-data/kafka_1
+mkdir -p confluent-data/kafka_2
+```
+
+```shell
+chown -R 1000:1000 confluent-data/
+```
+
+
 **1.** Fire up the Confluent Platform and the UIs with:
 ```
 docker-compose up -d
@@ -50,10 +65,33 @@ docker-compose up -d
 
 **2.** Start up with the ksqlDB CLI
 ```
-docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
+docker exec -it cp-ksqldb-cli ksql http://ksqldb-server:8088
 ```
 
-**3.** Pick one of the following 3x tools as a Web UI for Kafka Administration
+You should be getting into this console:
+```
+                  ===========================================
+                  =       _              _ ____  ____       =
+                  =      | | _____  __ _| |  _ \| __ )      =
+                  =      | |/ / __|/ _` | | | | |  _ \      =
+                  =      |   <\__ \ (_| | | |_| | |_) |     =
+                  =      |_|\_\___/\__, |_|____/|____/      =
+                  =                   |_|                   =
+                  =        The Database purpose-built       =
+                  =        for stream processing apps       =
+                  ===========================================
+
+Copyright 2017-2022 Confluent Inc.
+
+CLI v7.3.2, Server v7.3.2 located at http://ksqldb-server:8088
+Server Status: RUNNING
+
+Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
+
+ksql>
+```
+
+**3.** Pick one of the following 2x tools as a Web UI for Kafka Administration
 
 **3.1.** `kpow` Web UI:
 
@@ -66,10 +104,10 @@ open http://localhost:3000/
 open http://localhost:8080
 ```
 
-**3.3.** `UI for Kafka` Web UI:
-```shell
-open http://localhost:8080
-```
+Credentials:
+- `username:` admin@conduktor.io
+- `password:` admin
+
 
 ## TODO:
 - [x] Set up a Kafka Cluster with ZooKeeper
