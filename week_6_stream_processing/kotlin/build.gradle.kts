@@ -24,6 +24,9 @@ dependencies {
     val protobufVersion = "3.22.0"
     val jacksonVersion = "2.14.2"
 
+    val kotlinLoggingVersion = "3.0.5"
+    val logbackVersion = "1.4.5"
+
     val junitVersion = "5.9.2"
     val mockKVersion = "1.13.4"
     val kotestVersion = "5.5.5"
@@ -50,6 +53,10 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
+
+    /** Logging **/
+    implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
+    implementation("ch.qos.logback:logback-classic:${logbackVersion}")
 
     /** Unit and Integration Test Frameworks **/
     testImplementation("org.apache.kafka:kafka-streams-test-utils:${confluentKafkaVersion}-ccs")
