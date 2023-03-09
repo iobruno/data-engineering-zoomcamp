@@ -8,10 +8,10 @@ import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.time.Duration
+import java.time.Duration.ofSeconds
 import java.util.Properties
 
-
-class KafkaJsonConsumer<T> {
+class KafkaJsonConsumer<T : Any> {
 
     private val consumerConfig: Properties by lazy {
         val properties = Properties()
@@ -29,17 +29,21 @@ class KafkaJsonConsumer<T> {
         properties
     }
 
-    private val jsonConsumer : KafkaConsumer<String, T> by lazy {
+    private val jsonConsumer: KafkaConsumer<String, T> by lazy {
         KafkaConsumer<String, T>(consumerConfig)
     }
 
-    fun subscribeTo(topic: String) {
+    fun subscribeTo(
+        topic: String,
+        consumerGroup: String? = null,
+        pollingDuration: Duration = ofSeconds(1L)
+    ): ConsumerRecords<String, T> {
+        consumerGroup?.let { this.consumerConfig[GROUP_ID_CONFIG] = it }
         jsonConsumer.subscribe(listOf(topic))
-        while (true) {
-            val kafkaRecord: ConsumerRecords<String, T>? = jsonConsumer.poll(Duration.ofSeconds(5L))
-            val records: List<T> = kafkaRecord?.map { it.value() }.orEmpty()
-            records.forEach { println(it) }
-        }
+        return jsonConsumer.poll(pollingDuration)!!
     }
+
+    fun commit() =
+        jsonConsumer.commitSync()
 
 }
