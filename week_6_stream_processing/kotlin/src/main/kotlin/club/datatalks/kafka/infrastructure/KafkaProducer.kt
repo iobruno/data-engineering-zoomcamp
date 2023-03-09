@@ -4,8 +4,10 @@ import io.confluent.kafka.serializers.KafkaJsonSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.serialization.StringSerializer
 import java.util.*
+import java.util.concurrent.Future
 
 interface KafkaSerializable {
     fun messageKey(): String
@@ -27,9 +29,9 @@ class KafkaJsonProducer<T> where T : KafkaSerializable {
         KafkaProducer(producerConfig)
     }
 
-    fun push(entities: Iterable<T>, topic: String) {
+    fun push(entities: Iterable<T>, topic: String): List<Future<RecordMetadata>> {
         val records: List<ProducerRecord<String, T>> = entities.map { ProducerRecord(topic, it.messageKey(), it) }
-        records.forEach {
+        return records.map {
             jsonProducer.send(it)
         }
     }
