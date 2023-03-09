@@ -43,8 +43,8 @@ java -jar build/libs/kafka-stream-processing-1.0-SNAPSHOT-all.jar
 ```
 
 ## TODO:
-- [X] Set up an environment for Kotlin, Kafka Client and KafkaStreams
-- [ ] Explore serialization with JSON
+- [x] Set up an environment for Kotlin, Kafka Client and KafkaStreams
+- [x] Explore serialization with JSON
 - [ ] Explore serialization with Avro
 - [ ] Explore KafkaStreams as built-in library in the App
 - [ ] Set up a Schema Registry
