@@ -22,7 +22,7 @@ dependencies {
     val confluentKafkaVersion = "7.3.2"
     val avroVersion = "1.11.1"
     val protobufVersion = "3.22.0"
-    val openCsvVersion = "5.7.1"
+    val jacksonVersion = "2.14.2"
 
     val kotlinLoggingVersion = "3.0.5"
     val logbackVersion = "1.4.5"
@@ -50,7 +50,9 @@ dependencies {
     implementation("io.confluent:kafka-streams-json-schema-serde:${confluentKafkaVersion}")
 
     /** CSV Parser **/
-    implementation("com.opencsv:opencsv:${openCsvVersion}")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
 
     /** Logging **/
     implementation("io.github.microutils:kotlin-logging-jvm:${kotlinLoggingVersion}")
