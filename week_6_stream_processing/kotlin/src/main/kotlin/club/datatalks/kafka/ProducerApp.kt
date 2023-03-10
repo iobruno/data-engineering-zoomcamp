@@ -25,7 +25,7 @@ fun main() {
 
     logger.info { "Deserializing CSV into a Data Class..." }
     val reader = Files.newBufferedReader(csvFilePath)!!
-    val rides = RideDTO.listFromCsv(reader)
+    val rides: List<RideDTO> = RideDTO.listFromCsv(reader)
 
     logger.info { "Preparing to push messages to Kafka (topic='${topic}')" }
     val kafkaJsonProducer = KafkaJsonProducer<RideDTO>()
