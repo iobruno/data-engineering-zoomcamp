@@ -1,5 +1,5 @@
 {#
-    Resolves the Payment Type Description based on an Id 
+    Resolves the Payment Type Description based on an Id
     that varies from 1 to 6
 #}
 

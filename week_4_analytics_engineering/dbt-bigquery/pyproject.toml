@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dbt-analytics"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 description = "Analytics Engineering with dbt"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 license = "MIT"

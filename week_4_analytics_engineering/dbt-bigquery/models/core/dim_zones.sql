@@ -5,5 +5,5 @@ SELECT
     Borough as borough,
     Zone as zone,
     REPLACE(service_zone, 'Boro', 'Green') as service_zone
-FROM     
+FROM
     {{ ref('taxi_zones_lookup') }}
