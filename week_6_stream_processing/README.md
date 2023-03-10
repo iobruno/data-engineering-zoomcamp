@@ -28,8 +28,9 @@ ksql>
 - Confluent Schema Registry
 - Confluent REST Proxy
 - [ksqlDB](https://ksqldb.io/)
-- [kpow](https://docs.kpow.io/ce/)
+- [Confluent Control Center](https://docs.confluent.io/platform/current/control-center/overview.html)
 - [Conduktor Platform](https://www.conduktor.io/explorer/)
+- [kpow](https://docs.kpow.io/ce/)
 - Docker, docker-compose
 
 
@@ -91,12 +92,13 @@ Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
 ksql>
 ```
 
-**3.** Pick one of the following 2x tools as a Web UI for Kafka Administration
+**3.** Pick one of the following 3x tools as a Web UI for Kafka Administration
 
-**3.1.** `kpow` Web UI:
+**NOTE:** Be aware that `Confluent Control Center` is only available for a 30-day trial period.
 
+**3.1.** `Confluent Control Center` Web UI:
 ```shell
-open http://localhost:3000/
+open http://localhost:9021
 ```
 
 **3.2.** `Conduktor Platform` Web UI:
@@ -107,6 +109,14 @@ open http://localhost:8080
 Credentials:
 - `username:` admin@conduktor.io
 - `password:` admin
+
+
+**3.3.** `kpow` Web UI:
+
+```shell
+open http://localhost:3000/
+```
+
 
 
 ## TODO:

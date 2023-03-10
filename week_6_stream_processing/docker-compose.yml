@@ -154,7 +154,7 @@ services:
     environment:
       - KAFKA_REST_HOST_NAME=rest-proxy
       - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka_0:29090,PLAINTEXT://kafka_1:29091,PLAINTEXT://kafka_2:29092
-      - KAFKA_REST_SCHEMA_REGISTRY_URL=schema-registry:8081
+      - KAFKA_REST_SCHEMA_REGISTRY_URL=http://schema-registry:8081
       - KAFKA_REST_LISTENERS=http://rest-proxy:8082
     depends_on:
       - zookeeper
@@ -167,17 +167,24 @@ services:
     networks:
       - dspn
 
-  # kpow Docs:
-  # - https://docs.kpow.io/ce/configuration/
-  kpow:
-    container_name: kpow
-    image: factorhouse/kpow-ce:91.1.1
+  # Confluent Control Center Docs:
+  # - https://docs.confluent.io/platform/current/control-center/installation/configure-control-center.html
+  # - https://docs.confluent.io/platform/current/control-center/installation/properties.html
+  control-center:
+    container_name: cp-control-center
+    image: confluentinc/cp-enterprise-control-center:7.3.2
     platform: linux/arm64
     restart: always
     environment:
-      - BOOTSTRAP=kafka_0:29090,kafka_1:29091,kafka_2:29092
-      - SECURITY_PROTOCOL=PLAINTEXT
-      - SCHEMA_REGISTRY_URL=http://schema-registry:8081
+      - CONTROL_CENTER_BOOTSTRAP_SERVERS=kafka_0:29090,kafka_1:29091,kafka_2:29092
+      - CONTROL_CENTER_ZOOKEEPER_CONNECT=zookeeper:2181
+      - CONTROL_CENTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+      - CONTROL_CENTER_KSQL_KSQLDB-SERVER-0_URL=http://ksqldb-server:8088
+      - CONTROL_CENTER_REPLICATION_FACTOR=1
+      - CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS=1
+      - CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS=1
+      - CONFLUENT_METRICS_TOPIC_REPLICATION=1
+      - PORT=9021
     depends_on:
       - zookeeper
       - kafka_0
@@ -186,7 +193,7 @@ services:
       - ksqldb-server
       - schema-registry
     ports:
-      - '3000:3000'
+      - '9021:9021'
     networks:
       - dspn
 
@@ -218,6 +225,30 @@ services:
       - '8080:8080'
     networks:
       - dspn
+
+  # kpow Docs:
+  # - https://docs.kpow.io/ce/configuration/
+  kpow:
+    container_name: kpow
+    image: factorhouse/kpow-ce:91.1.1
+    platform: linux/arm64
+    restart: always
+    environment:
+      - BOOTSTRAP=kafka_0:29090,kafka_1:29091,kafka_2:29092
+      - SECURITY_PROTOCOL=PLAINTEXT
+      - SCHEMA_REGISTRY_URL=http://schema-registry:8081
+    depends_on:
+      - zookeeper
+      - kafka_0
+      - kafka_1
+      - kafka_2
+      - ksqldb-server
+      - schema-registry
+    ports:
+      - '3000:3000'
+    networks:
+      - dspn
+
 
 networks:
   dspn:
