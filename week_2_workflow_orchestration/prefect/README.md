@@ -1,8 +1,8 @@
 # Prefect Workflow Orchestration
 
-This subproject is designed to build a `Prefect Workflows` to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones based on the endpoints and persist them into three different sinks:
+This subproject is designed for `Prefect Flows` to fetch the CSV datasets for NYC Taxi Tripdata,
+based on the endpoints provided on `app.yml` and sink them into:
 - Postgres
-- GCP BigQuery
 - Google Cloud Storage
 
 ## Tech Stack
@@ -17,8 +17,8 @@ This subproject is designed to build a `Prefect Workflows` to fetch the CSV data
 
 **1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-conda create -n de-zoomcamp python=3.9 -y
-conda activate de-zoomcamp
+conda create -n prefect python=3.9 -y
+conda activate prefect
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
@@ -41,35 +41,17 @@ prefect orion start
 
 ### Prefect Flows
 
-**flows/web_csv_dataset_to_csv.py**:
+**flows/web_csv_to_gcs.py**:
 
-- Before running `flows/web_csv_dataset_to_csv.py`, you should uncomment/add the lines under `datasets.green_trip_data`
-  and `datasets.yellow_trip_data` that contains the URL for the dataset you want to be on GCS
-- The source of the dataset must be in `.csv` or `.csv.gz`
-- The target on GCS will always be as `.parquet.gz`
-
-```shell
-python flows/web_csv_dataset_to_csv.py
-```
-
-**flows/gcs_to_bq.py**:
-- Before running `flows/flow_gcs_to_bq.py`, you should ADD entries **as a list**, under `etl.gcs_to_bigquery.yellow` and/or
-  `etl.gcs_to_bigquery.green`, using the format
-- The entries MUST be formatted as: `YYYY-MM`
-- The config below means, the flow will attempt to search GCS for `yellow_taxi_tripdata`, for the year-months: `2019-03`
-  and `2019-02`, and load them up into BigQuery.
-
-```yaml
-etl:
-  gcs_to_bigquery:
-    yellow:
-      - "2019-03"
-      - "2019-02"
-```
+- Before running `flows/web_csv_to_gcs.py`, you should comment out/uncomment the endpoints in `app.yml`
+  under `datasets.green_trip_data`, `datasets.yelow`, and `datasets.fhv`
+- The dataset source must be either in `.csv` or `.csv.gz`
+- The target on GCS will always be as `.parquet.snappy`
 
 ```shell
-python flows/gcs_to_bq.py
+python flows/web_cs_to_gcs.py
 ```
+
 
 ## TODO:
 - [x] Externalize configurations to config file (app.yml)

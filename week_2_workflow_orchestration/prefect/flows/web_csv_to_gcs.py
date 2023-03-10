@@ -36,8 +36,7 @@ def upload_from_dataframe(prefect_gcs_block: str, pandas_df: pd.DataFrame, to_pa
         The path that the object was uploaded to.
     """
     gcs_bucket = GcsBucket.load(prefect_gcs_block)
-    gcs_bucket.upload_from_dataframe(df=pandas_df,
-                                     to_path=to_path,
+    gcs_bucket.upload_from_dataframe(df=pandas_df, to_path=to_path,
                                      serialization_format=serialization_fmt)
 
 
@@ -70,10 +69,8 @@ def ingest_csv_to_gcs():
 
             raw_df = fetch_csv_from(url=endpoint)
             cleansed_df = fix_datatypes_for(df=raw_df, schema=schemas.get(dataset_name))
-            upload_from_dataframe(prefect_gcs_block=prefect.gcs_block_name,
-                                  pandas_df=cleansed_df,
-                                  to_path=gcs_path,
-                                  serialization_fmt='parquet_snappy')
+            upload_from_dataframe(prefect_gcs_block=prefect.gcs_block_name, pandas_df=cleansed_df,
+                                  to_path=gcs_path, serialization_fmt='parquet_snappy')
 
 
 if __name__ == "__main__":

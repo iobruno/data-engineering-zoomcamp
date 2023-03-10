@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "prefect-workflow"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 description = "Prefect Workflow Orchestration"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 readme = "README.md"
@@ -10,14 +10,13 @@ python = "^3.9"
 omegaconf = "^2.3.0"
 pandas = {extras = ["performance"], version = "^1.5.3"}
 prefect = "^2.7.12"
+prefect-gcp = {extras = ["cloud-storage"], version = "^0.3.0"}
 prefect-sqlalchemy = "^0.2.2"
-prefect-gcp = {extras = ["cloud-storage"], version = "^0.2.5"}
 greenlet = "^2.0.2"
 pyarrow = "^11.0.0"
-sqlalchemy = "1.4.46"
 psycopg2 = { version = "2.9.5", markers = "platform_system == 'Linux'" }
 psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" }
-pandas-gbq = "^0.19.1"
+sqlalchemy = "1.4.46"
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "3.5.3"
