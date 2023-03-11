@@ -14,18 +14,17 @@
 - [Homework - Prefect Orchestration](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_2.md)
 - [Project: Prefect Flows](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_2_workflow_orchestration/prefect)
   - [Flow: CSV Dataset to Postgres](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_2_workflow_orchestration/prefect/flows/pg_ingest.py)
-  - [Flow: CSV Dataset to GCS .parquet](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_2_workflow_orchestration/prefect/flows/web_csv_to_gcs.py)
-  - [Flow: GCS Bucket to BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_2_workflow_orchestration/prefect/flows/gcs_to_bigquery.py)
+  - [Flow: CSV Dataset to GCS](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_2_workflow_orchestration/prefect/flows/web_csv_to_gcs.py)
 
 
 **Week 3: Data Warehouse**:
 - [Homework - Data Warehouse with BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_3.md)
-- [Project: Prefect Flow: upload_from_dataframe](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_3_data_warehouse/prefect/flows/web_csv_to_gcs.py)
+- [BigQuery: Creating Native and External Tables](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_3_data_warehouse/sql)
 
 
 **Week 4: Analytics Engineering**:
 - [Homework - Analytics Engineering](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_4.md)
-- [Project: dbt Modeling](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering)
+- [Data Modeling with dbt](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering)
 
 
 **Week 5: Batch processing**:
@@ -33,7 +32,7 @@
 - [Homework Project - PySpark Jupyter](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_5_batch_processing/pyspark/notebooks/pyspark_homework.ipynb)
 - [PySpark Project: FHV with Zone Lookup](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_5_batch_processing/pyspark)
 - Jupyter Playgrounds:
-  - [PySpark + SparkSQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_5_batch_processing/pyspark/notebooks/pyspark_playground.ipynb)
+  - [PySpark + SparkSQL + GCS](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_5_batch_processing/pyspark/notebooks/pyspark_gcs_playground.ipynb)
   - [PyFlink + FlinkSQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_5_batch_processing/pyflink/notebooks/pyflink_playground.ipynb)
 
 
