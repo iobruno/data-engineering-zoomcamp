@@ -33,12 +33,17 @@ brew install pre-commit
 pre-commit install
 ```
 
-**4.** Run `dbt run` to trigger the dbt models to run:
+**5.** Run `dbt deps` to install dbt plugins
+```shell
+dbt deps
+```
+
+**5.** Run `dbt run` to trigger the dbt models to run:
 ```shell
 dbt run
 ```
 
-**5.** Generate the Docs and the Data Lineage graph with:
+**6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
 ```
@@ -46,9 +51,9 @@ dbt docs generate
 dbt docs serve
 ```
 
-**6.** Access the generated docs on a web browser at the URL:
+**7.** Access the generated docs on a web browser at the URL:
 ```shell
-http://localhost:8080
+open http://localhost:8080
 ```
 
 ## Resources:
