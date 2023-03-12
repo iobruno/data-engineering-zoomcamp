@@ -24,7 +24,7 @@ models:
 
 seeds:
   ny_taxi_tripdata:
-    taxi_zones_lookup:
+    taxi_zone_lookup:
       +column_types:
         LocationID: numeric
         Borough: string

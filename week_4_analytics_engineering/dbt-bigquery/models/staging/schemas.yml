@@ -5,10 +5,7 @@ sources:
   - name: staging
     database: iobruno-training-gcp
     schema: dtc_ny_taxi_tripdata_staging
-
     tables:
     - name: green_tripdata
-
     - name: yellow_tripdata
-
     - name: fhv_tripdata

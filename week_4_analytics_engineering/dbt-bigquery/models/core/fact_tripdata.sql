@@ -1,28 +1,31 @@
 {{ config(materialize='table') }}
 
-WITH green_tripdata as (
+
+WITH green_tripdata AS (
     SELECT
-        *,
-        'green' as service_type
+        g.*,
+        'green' AS service_type
     FROM
-        {{ ref('stg_green_tripdata') }}
+        {{ ref('stg_green_tripdata') }} g
 ),
 
-yellow_tripdata as (
+yellow_tripdata AS (
     SELECT
-        *,
-        'yellow' as service_type
+        y.*,
+        'yellow' AS service_type
     FROM
-        {{ ref('stg_yellow_tripdata') }}
+        {{ ref('stg_yellow_tripdata') }} y
 ),
 
-all_tripdata as (
-    SELECT * from green_tripdata
+all_tripdata AS (
+    SELECT * FROM green_tripdata
+
     UNION ALL
+
     SELECT * FROM yellow_tripdata
 ),
 
-lookup_zones as (
+lookup_zones AS (
     SELECT * FROM {{ ref('dim_zones' )}}
     WHERE borough != 'Unknown'
 )
@@ -33,11 +36,11 @@ SELECT
     t.service_type,
     t.ratecode_id,
     t.pickup_location_id,
-    pu.borough as pickup_borough,
-    pu.zone as pickup_zone,
+    pu.borough AS pickup_borough,
+    pu.zone AS pickup_zone,
     t.dropoff_location_id,
-    do.borough as dropoff_borough,
-    do.zone as dropoff_zone,
+    do.borough AS dropoff_borough,
+    do.zone AS dropoff_zone,
     t.pickup_datetime,
     t.dropoff_datetime,
     t.store_and_fwd_flag,

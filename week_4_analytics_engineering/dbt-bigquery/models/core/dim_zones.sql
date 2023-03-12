@@ -1,9 +1,10 @@
 {{ config(materialize='table') }}
 
+
 SELECT
-    LocationID as location_id,
-    Borough as borough,
-    Zone as zone,
-    REPLACE(service_zone, 'Boro', 'Green') as service_zone
+    LocationID AS location_id,
+    Borough AS borough,
+    Zone AS zone,
+    REPLACE(service_zone, 'Boro', 'Green') AS service_zone
 FROM
-    {{ ref('taxi_zones_lookup') }}
+    {{ ref('taxi_zone_lookup') }}
