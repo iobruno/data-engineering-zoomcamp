@@ -16,8 +16,8 @@ and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visu
 
 **1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-conda create -n de-zoomcamp python=3.9 -y
-conda activate de-zoomcamp
+conda create -n dbt-bigquery python=3.10 -y
+conda activate dbt-bigquery
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:

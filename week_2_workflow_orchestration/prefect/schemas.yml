@@ -46,5 +46,20 @@ fhv:
   dropOff_datetime: datetime64[ns]
   PUlocationID: Int64
   DOlocationID: Int64
-  SR_Flag: Int64
-  Affiliated_base_number: str
+  SR_Flag: string
+  Affiliated_base_number: string
+
+fhvhv:
+  dispatching_base_num: string
+  pickup_datetime: datetime64[ns]
+  dropoff_datetime: datetime64[ns]
+  PULocationID: Int64
+  DOLocationID: Int64
+  SR_Flag: string
+  Affiliated_base_number: string
+
+zone_lookup:
+  LocationID: Int64
+  Borough: string
+  Zone: string
+  service_zone: string
