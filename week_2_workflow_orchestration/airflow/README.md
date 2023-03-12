@@ -17,8 +17,8 @@ This subproject is designed to build `Airflow DAGs` to fetch the CSV datasets fo
 
 **1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-conda create -n de-zoomcamp python=3.9 -y
-conda activate de-zoomcamp
+conda create -n airflow python=3.10 -y
+conda activate airflow
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:

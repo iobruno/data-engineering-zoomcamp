@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "airflow-workflow"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 description = "Airflow Workflow Orchestration"
 authors = ["iobruno <bruno.ariev@gmail.com>"]
 readme = "README.md"
