@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+
+  - name: parquet
+    meta:
+      external_location: "read_parquet('/Users/iobruno/Vault/datasets/{name}/*.parquet.snappy')"
+    tables:
+      - name: fhv
+      - name: fhvhv
+      - name: green
+      - name: yellow
+      - name: zone_lookup
