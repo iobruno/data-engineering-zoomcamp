@@ -1,6 +1,6 @@
 # dbt and PipeRider for Data Observability
 
-This subproject is designed to build a `dbt` model on top of DuckDB, and have some PipeRider pipelines for Data Observability
+This subproject is designed to build a `dbt` model on top of DuckDB, and have PipeRider for profiling our models, and generate reports for better Observability.
 
 
 ## Tech Stack
@@ -65,5 +65,5 @@ open http://localhost:8080
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 ## TODO:
-- [ ] Bootstrap dbt with DuckDB Adapter
+- [x] Bootstrap dbt with DuckDB Adapter for NY Tripdata
 - [ ] Integrate with PipeRider
