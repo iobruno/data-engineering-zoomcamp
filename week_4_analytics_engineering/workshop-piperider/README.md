@@ -2,6 +2,8 @@
 
 This subproject is designed to build a `dbt` model on top of DuckDB, and have PipeRider for profiling our models, and generate reports for better Observability.
 
+![workshop-piperider-workflow](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/workshop_piperider_workflow.png)
+
 
 ## Tech Stack
 - Python 3.9 / 3.10
@@ -34,28 +36,19 @@ brew install pre-commit
 pre-commit install
 ```
 
-**5.** Run `dbt deps` to install dbt plugins
+**5.** Run `dbt deps` and `dbt build`:
 ```shell
 dbt deps
+dbt build
 ```
 
-**5.** Run `dbt run` to trigger the dbt models to run:
+**5.** Initialize the PipeRider setup and run it for the first time:
 ```shell
-dbt run
+piperider init 
+piperider run
 ```
 
-**6.** Generate the Docs and the Data Lineage graph with:
-```shell
-dbt docs generate
-```
-```shell
-dbt docs serve
-```
-
-**7.** Access the generated docs on a web browser at the URL:
-```shell
-open http://localhost:8080
-```
+T.B.D.
 
 ## Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
@@ -66,4 +59,7 @@ open http://localhost:8080
 
 ## TODO:
 - [x] Bootstrap dbt with DuckDB Adapter for NY Tripdata
-- [ ] Integrate with PipeRider
+- [x] Integrate with PipeRider and generate reports
+- [x] Modify the dbt models, generate a new report and compare
+- [x] Utilize the comparison on a [GitHub Pull Request](https://github.com/iobruno/data-engineering-zoomcamp/pull/2)
+- [ ] Set up a CI Pipeline with GitHub Actions
