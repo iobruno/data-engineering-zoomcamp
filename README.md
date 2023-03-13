@@ -27,6 +27,11 @@
 - [Homework - Analytics Engineering](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_4.md)
 
 
+**Week 4.5: Workshop - Data Observability with PipeRider**
+- [Data Reliability with dbt+PipeRider](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering/piperider_duckdb)
+- [Homework - PipeRider](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/workshop_piperider.md)
+
+
 Week 5: Batch processing
 
 Week 6: Streaming
