@@ -1,8 +1,8 @@
-name: 'ny_taxi_bigquery'
+name: 'piperider_duckdb'
 version: '1.0.0'
 config-version: 2
 
-profile: 'ny_taxi_tripdata@iobruno-gcp-labs'
+profile: 'dbt_duckdb_piperider'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -19,5 +19,16 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
 models:
-  ny_taxi_bigquery: {}
+  piperider_duckdb:
+    staging:
+      materialized: view
+    core:
+      materialized: table
+
+vars:
+  payment_type_values: [1, 2, 3, 4, 5, 6]
