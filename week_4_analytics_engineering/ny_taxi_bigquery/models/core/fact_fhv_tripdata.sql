@@ -1,39 +1,42 @@
 {{ config(materialize='table') }}
 
-WITH fhv_tripdata as (
-    SELECT 
-        trip_id, 
+
+WITH fhv_tripdata AS (
+    SELECT
         dispatching_base_num,
         affiliated_base_num,
         pickup_datetime,
         dropoff_datetime,
         pickup_location_id,
-        dropoff_location_id,	
-        shared_ride_flag        	
+        dropoff_location_id,
+        shared_ride_flag,
+        ROW_NUMBER() OVER( PARTITION BY dispatching_base_num, pickup_datetime ) AS row_num
     FROM
         {{ ref('stg_fhv_tripdata') }}
 ),
 
-lookup_zones as (
-    SELECT * FROM {{ ref('dim_zones' )}}
+lookup_zones AS (
+    SELECT *
+    FROM {{ ref('dim_zone_lookup' )}}
     WHERE borough != 'Unknown'
 )
 
 SELECT
-    t.trip_id,
     t.dispatching_base_num,
     t.affiliated_base_num,
-    t.pickup_location_id as pickup_location_id,
-    pu.borough as pickup_borough,
-    pu.zone as pickup_zone,
-    pu.service_zone as pickup_service_zone,
-    t.dropoff_location_id as dropoff_location_id,    
-    do.borough as dropoff_borough,
-    do.zone as dropoff_zone,
-    do.service_zone as dropoff_service_zone,
-    t.shared_ride_flag,        	
+    t.pickup_location_id        AS pickup_location_id,
+    pickup.borough              AS pickup_borough,
+    pickup.zone                 AS pickup_zone,
+    pickup.service_zone         AS pickup_service_zone,
+    t.dropoff_location_id       AS dropoff_location_id,
+    dropoff.borough             AS dropoff_borough,
+    dropoff.zone                AS dropoff_zone,
+    dropoff.service_zone        AS dropoff_service_zone,
+    t.shared_ride_flag,
     t.pickup_datetime,
     t.dropoff_datetime
+
 FROM fhv_tripdata t
-INNER JOIN lookup_zones pu ON t.pickup_location_id = pu.location_id
-INNER JOIN lookup_zones do ON t.dropoff_location_id = do.location_id
+INNER JOIN lookup_zones pickup  ON t.pickup_location_id  = pickup.location_id
+INNER JOIN lookup_zones dropoff ON t.dropoff_location_id = dropoff.location_id
+WHERE t.row_num = 1
