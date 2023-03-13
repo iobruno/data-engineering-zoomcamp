@@ -10,6 +10,7 @@ packages = [{include = "analytics_engineering"}]
 [tool.poetry.dependencies]
 python = "^3.9"
 dbt-duckdb = "^1.4.0"
+piperider = {extras = ["duckdb"], version = "^0.20.1"}
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.12.0"
