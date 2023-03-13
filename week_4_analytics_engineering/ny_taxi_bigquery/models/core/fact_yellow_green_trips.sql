@@ -43,6 +43,7 @@ lookup_zones AS (
 )
 
 SELECT
+    t.trip_id,
     t.vendor_id,
     t.service_type,
     t.ratecode_id,
