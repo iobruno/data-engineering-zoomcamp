@@ -17,10 +17,5 @@ SELECT
     SUM(total_amount)           AS revenue_monthly_total_amount,
     SUM(congestion_surcharge)   AS revenue_monthly_congestion_surcharge,
 
-    -- Aditional Calculations
-    COUNT(trip_id)              AS total_monthly_trips,
-    AVG(passenger_count)        AS avg_montly_passenger_count,
-    AVG(trip_distance)          AS avg_montly_trip_distance
-
 FROM {{ ref('fact_yellow_green_trips') }}
 GROUP BY 1, 2, 3
