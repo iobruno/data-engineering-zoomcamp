@@ -12,9 +12,20 @@ python = "^3.9"
 faust-streaming = "^0.10.4"
 protobuf = "^4.22.0"
 avro = "^1.11.1"
+pyspark = "^3.3.2"
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "^3.6.1"
+yapf = "^0.32.0"
+
+[tool.yapf]
+based_on_style = "google"
+allow_multiline_lambdas = true
+blank_line_before_nested_class_or_def = true
+coalesce_brackets = true
+column_limit = 100
+split_before_bitwise_operator = true
+split_before_named_assigns = false
 
 [build-system]
 requires = ["poetry-core"]
