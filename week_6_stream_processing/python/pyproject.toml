@@ -13,6 +13,7 @@ faust-streaming = "^0.10.4"
 protobuf = "^4.22.0"
 avro = "^1.11.1"
 pyspark = "^3.3.2"
+omegaconf = "^2.3.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyterlab = "^3.6.1"
