@@ -4,8 +4,8 @@ This subproject builds on top of `faust`, a high-level stream processing framewo
 
 ## Tech Stack
 - Python 3.9 / 3.10
+- PySpark 3.3.2
 - Confluent Kafka
-- [Faust Streaming](https://github.com/faust-streaming/faust)
 - Jupyter Notebook
 - [Poetry](https://python-poetry.org/docs/)
 
@@ -13,10 +13,10 @@ This subproject builds on top of `faust`, a high-level stream processing framewo
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.9 with conda:
+**1.** Create and activate a virtualenv for Python 3.10 with conda:
 ```shell
-conda create -n de-zoomcamp python=3.9 -y
-conda activate de-zoomcamp
+conda create -n pyspark-streaming python=3.10 -y
+conda activate pyspark-streaming
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
