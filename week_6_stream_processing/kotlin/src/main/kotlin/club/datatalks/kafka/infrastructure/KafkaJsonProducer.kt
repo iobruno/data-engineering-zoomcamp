@@ -29,11 +29,13 @@ class KafkaJsonProducer<T : KafkaSerializable> {
         KafkaProducer(producerConfig)
     }
 
-    fun push(entities: Iterable<T>, topic: String): List<Future<RecordMetadata>> {
-        val records: List<ProducerRecord<String, T>> = entities.map { ProducerRecord(topic, it.messageKey(), it) }
-        return records.map {
-            jsonProducer.send(it)
+    fun push(entities: Sequence<T>, topic: String): Sequence<Future<RecordMetadata>> {
+        val producerRecords: Sequence<ProducerRecord<String, T>> = entities.map { ProducerRecord(topic, it.messageKey(), it) }
+        val chunkedProducerRecords: Sequence<List<ProducerRecord<String, T>>> = producerRecords.chunked(100_000)
+        val futures: Sequence<Future<RecordMetadata>> = chunkedProducerRecords.flatMap { records ->
+            records.map { record -> jsonProducer.send(record) }
         }
+        return futures
     }
 
 }

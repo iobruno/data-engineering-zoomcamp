@@ -1,5 +1,6 @@
 package club.datatalks.kafka.infrastructure
 
+import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -9,7 +10,9 @@ import java.io.BufferedReader
 interface CsvDeserializable<T> {
 
     companion object {
-        inline fun <reified T> listFromCsv(reader: BufferedReader, schema: CsvSchema, containsHeader: Boolean = true): List<T> {
+        inline fun <reified T> seqFromCsv(reader: BufferedReader,
+                                          schema: CsvSchema,
+                                          containsHeader: Boolean = true): Sequence<T> {
             val csvSchema = if (containsHeader)
                 schema.withHeader()
             else
@@ -19,11 +22,12 @@ interface CsvDeserializable<T> {
                 .registerModule(KotlinModule.Builder().build())
                 .registerModule(JavaTimeModule())
 
-            return mapper
-                .readerFor(T::class.java)
+            val entries = mapper.readerFor(T::class.java)
                 .with(csvSchema)
                 .readValues<T>(reader)
                 .readAll()!!
+
+            return entries.asSequence()
         }
     }
 

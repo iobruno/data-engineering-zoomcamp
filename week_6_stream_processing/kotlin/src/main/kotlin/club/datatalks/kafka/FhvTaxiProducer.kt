@@ -10,7 +10,7 @@ import kotlin.system.exitProcess
 
 
 fun main() {
-    val topic = "fhv_taxi_rides"
+    val topic = "fhv_tripdata"
 
     logger.info { "Attempting to fetch CSV file..." }
     val csvFilePath: Path = Paths.get("src/main/resources/fhv_tripdata_2019-01.csv")
@@ -22,11 +22,9 @@ fun main() {
 
     logger.info { "Deserializing CSV into a Data Class..." }
     val reader = Files.newBufferedReader(csvFilePath)!!
-    val rides: List<FhvTaxiDTO> = FhvTaxiDTO.listFromCsv(reader)
+    val rides: Sequence<FhvTaxiDTO> = FhvTaxiDTO.fromCsv(reader)
 
     logger.info { "Preparing to push messages to Kafka (topic='${topic}')" }
-    println()
-
     val kafkaJsonProducer = KafkaJsonProducer<FhvTaxiDTO>()
     val futures = kafkaJsonProducer.push(rides, topic = topic)
 

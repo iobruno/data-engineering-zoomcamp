@@ -21,8 +21,8 @@ data class FhvTaxiDTO(
 
     companion object {
 
-        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<FhvTaxiDTO> =
-            CsvDeserializable.listFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
+        fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<FhvTaxiDTO> =
+            CsvDeserializable.seqFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()

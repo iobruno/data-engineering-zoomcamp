@@ -9,7 +9,7 @@ import kotlin.io.path.notExists
 import kotlin.system.exitProcess
 
 fun main() {
-    val topic = "green_taxi_rides"
+    val topic = "green_tripdata"
 
     logger.info { "Attempting to fetch CSV file..." }
     val csvFilePath: Path = Paths.get("src/main/resources/green_tripdata_2019-01.csv")
@@ -21,11 +21,9 @@ fun main() {
 
     logger.info { "Deserializing CSV into a Data Class..." }
     val reader = Files.newBufferedReader(csvFilePath)!!
-    val rides: List<GreenTaxiDTO> = GreenTaxiDTO.listFromCsv(reader)
+    val rides: Sequence<GreenTaxiDTO> = GreenTaxiDTO.fromCsv(reader)
 
     logger.info { "Preparing to push messages to Kafka (topic='${topic}')" }
-    println()
-
     val kafkaJsonProducer = KafkaJsonProducer<GreenTaxiDTO>()
     val futures = kafkaJsonProducer.push(rides, topic = topic)
 

@@ -33,8 +33,8 @@ data class GreenTaxiDTO(
 ) : CsvDeserializable<GreenTaxiDTO>, KafkaSerializable {
 
     companion object {
-        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<GreenTaxiDTO> =
-            CsvDeserializable.listFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
+        fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<GreenTaxiDTO> =
+            CsvDeserializable.seqFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()
