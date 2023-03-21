@@ -5,17 +5,17 @@ In this homework, there will be two sections, the first session focus on theoret
 ### Question 1:
 
 **Please select the statements that are correct**
-- [ ] Kafka Node is responsible to store topics
-- [ ] Zookeeper is removed from Kafka cluster starting from version 4.0
-- [ ] Retention configuration ensures the messages not get lost over specific period of time.
-- [ ] Group-Id ensures the messages are distributed to associated consumers
+- [x] Kafka Node is responsible to store topics
+- [x] Zookeeper is removed from Kafka cluster starting from version 4.0
+- [x] Retention configuration ensures the messages not get lost over specific period of time.
+- [x] Group-Id ensures the messages are distributed to associated consumers
 
 
 ### Question 2:
 
 **Please select the Kafka concepts that support reliability and availability**
 
-- [ ] Topic Replication
+- [x] Topic Replication
 - [ ] Topic Paritioning
 - [ ] Consumer Group Id
 - [ ] Ack All
@@ -26,8 +26,8 @@ In this homework, there will be two sections, the first session focus on theoret
 **Please select the Kafka concepts that support scaling**
 
 - [ ] Topic Replication
-- [ ] Topic Paritioning
-- [ ] Consumer Group Id
+- [x] Topic Paritioning
+- [x] Consumer Group Id
 - [ ] Ack All
 
 
@@ -36,9 +36,9 @@ In this homework, there will be two sections, the first session focus on theoret
 **Please select the attributes that are good candidates for partitioning key.
 Consider cardinality of the field you have selected and scaling aspects of your application**
 
-- [ ] payment_type
-- [ ] vendor_id
-- [ ] passenger_count
+- [x] payment_type
+- [x] vendor_id
+- [x] passenger_count
 - [ ] total_amount
 - [ ] tpep_pickup_datetime
 - [ ] tpep_dropoff_datetime
@@ -48,11 +48,11 @@ Consider cardinality of the field you have selected and scaling aspects of your 
 
 **Which configurations below should be provided for Kafka Consumer but not needed for Kafka Producer**
 
-- [ ] Deserializer Configuration
-- [ ] Topics Subscription
+- [x] Deserializer Configuration
+- [x] Topics Subscription
 - [ ] Bootstrap Server
-- [ ] Group-Id
-- [ ] Offset
+- [x] Group-Id
+- [x] Offset
 - [ ] Cluster Key and Cluster-Secret
 
 
