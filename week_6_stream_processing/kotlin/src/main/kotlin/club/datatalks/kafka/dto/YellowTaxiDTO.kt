@@ -57,7 +57,6 @@ data class YellowTaxiDTO(
                 .build()
     }
 
-    override fun messageKey(): String =
-        pickupLocationId.toString()
+    override fun messageKey(): String = pickupLocationId.toString()
 
 }

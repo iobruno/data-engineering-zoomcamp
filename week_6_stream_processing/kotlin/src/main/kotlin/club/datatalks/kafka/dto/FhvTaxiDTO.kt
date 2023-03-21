@@ -1,6 +1,7 @@
 package club.datatalks.kafka.dto
 
 import club.datatalks.kafka.infrastructure.CsvDeserializable
+import club.datatalks.kafka.infrastructure.KafkaSerializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
@@ -16,7 +17,7 @@ data class FhvTaxiDTO(
     val dropoffLocationId: Int?,
     val srFlag: String?,
     val affiliatedBaseNumber: String
-) : CsvDeserializable<FhvTaxiDTO> {
+) : CsvDeserializable<FhvTaxiDTO>, KafkaSerializable {
 
     companion object {
 
@@ -34,5 +35,8 @@ data class FhvTaxiDTO(
                 .addColumn("affiliated_base_number")
                 .build()
     }
+
+    override fun messageKey(): String = pickupLocationId.toString()
+
 
 }

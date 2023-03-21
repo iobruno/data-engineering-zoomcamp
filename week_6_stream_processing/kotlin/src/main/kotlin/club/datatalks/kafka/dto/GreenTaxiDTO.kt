@@ -1,6 +1,7 @@
 package club.datatalks.kafka.dto
 
 import club.datatalks.kafka.infrastructure.CsvDeserializable
+import club.datatalks.kafka.infrastructure.KafkaSerializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
@@ -29,7 +30,7 @@ data class GreenTaxiDTO(
     val paymentType: Int,
     val tripType: Double?,
     val congestionSurcharge: Double
-) : CsvDeserializable<GreenTaxiDTO> {
+) : CsvDeserializable<GreenTaxiDTO>, KafkaSerializable {
 
     companion object {
         fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<GreenTaxiDTO> =
@@ -59,6 +60,8 @@ data class GreenTaxiDTO(
                 .addColumn("congestion_surcharge")
                 .build()
     }
+
+    override fun messageKey(): String = pickupLocationId.toString()
 
 }
 
