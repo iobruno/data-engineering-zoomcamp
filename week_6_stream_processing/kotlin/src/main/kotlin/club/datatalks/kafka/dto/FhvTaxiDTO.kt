@@ -1,11 +1,9 @@
 package club.datatalks.kafka.dto
 
+import club.datatalks.kafka.infrastructure.CsvDeserializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.BufferedReader
 
 
@@ -18,24 +16,12 @@ data class FhvTaxiDTO(
     val dropoffLocationId: Int?,
     val srFlag: String?,
     val affiliatedBaseNumber: String
-) {
+) : CsvDeserializable<FhvTaxiDTO> {
+
     companion object {
-        fun listFromCsv(reader: BufferedReader, constainsHeader: Boolean = true): List<FhvTaxiDTO> {
-            val schema = if (constainsHeader)
-                csvSchema().withHeader()
-            else
-                csvSchema().withoutHeader()
 
-            val mapper = CsvMapper()
-                .registerModule(KotlinModule.Builder().build())
-                .registerModule(JavaTimeModule())
-
-            return mapper
-                .readerFor(FhvTaxiDTO::class.java)
-                .with(schema)
-                .readValues<FhvTaxiDTO>(reader)
-                .readAll()!!
-        }
+        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<FhvTaxiDTO> =
+            CsvDeserializable.listFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()

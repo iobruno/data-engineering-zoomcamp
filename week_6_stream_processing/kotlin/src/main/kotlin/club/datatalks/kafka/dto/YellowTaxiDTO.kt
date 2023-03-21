@@ -1,12 +1,10 @@
 package club.datatalks.kafka.dto
 
+import club.datatalks.kafka.infrastructure.CsvDeserializable
 import club.datatalks.kafka.infrastructure.KafkaSerializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.BufferedReader
 
 
@@ -30,25 +28,11 @@ data class YellowTaxiDTO(
     val improvementSurcharge: Double,
     val totalAmount: Double,
     val congestionSurcharge: Double
-) : KafkaSerializable {
+) : CsvDeserializable<YellowTaxiDTO>, KafkaSerializable {
 
     companion object {
-        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<YellowTaxiDTO> {
-            val schema = if (containsHeader)
-                csvSchema().withHeader()
-            else
-                csvSchema().withoutHeader()
-
-            val mapper = CsvMapper()
-                .registerModule(KotlinModule.Builder().build())
-                .registerModule(JavaTimeModule())
-
-            return mapper
-                .readerFor(YellowTaxiDTO::class.java)
-                .with(schema)
-                .readValues<YellowTaxiDTO>(reader)
-                .readAll()!!
-        }
+        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<YellowTaxiDTO> =
+            CsvDeserializable.listFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()

@@ -1,11 +1,9 @@
 package club.datatalks.kafka.dto
 
+import club.datatalks.kafka.infrastructure.CsvDeserializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
-import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.BufferedReader
 
 
@@ -31,25 +29,11 @@ data class GreenTaxiDTO(
     val paymentType: Int,
     val tripType: Double?,
     val congestionSurcharge: Double
-) {
+) : CsvDeserializable<GreenTaxiDTO> {
 
     companion object {
-        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<GreenTaxiDTO> {
-            val schema = if (containsHeader)
-                csvSchema().withHeader()
-            else
-                csvSchema().withoutHeader()
-
-            val mapper = CsvMapper()
-                .registerModule(KotlinModule.Builder().build())
-                .registerModule(JavaTimeModule())
-
-            return mapper
-                .readerFor(GreenTaxiDTO::class.java)
-                .with(schema)
-                .readValues<GreenTaxiDTO>(reader)
-                .readAll()!!
-        }
+        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<GreenTaxiDTO> =
+            CsvDeserializable.listFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()
