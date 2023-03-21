@@ -13,7 +13,7 @@ interface KafkaSerializable {
     fun messageKey(): String
 }
 
-class KafkaJsonProducer<T> where T : KafkaSerializable {
+class KafkaJsonProducer<T : KafkaSerializable> {
 
     private val producerConfig: Properties by lazy {
         val properties = Properties()
