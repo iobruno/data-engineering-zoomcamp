@@ -1,9 +1,7 @@
 package club.datatalks.kafka.dto
 
 import club.datatalks.kafka.infrastructure.KafkaSerializable
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.dataformat.csv.CsvMapper
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
@@ -11,8 +9,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.io.BufferedReader
 
+
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class RideDTO(
+data class YellowTaxiDTO(
     val vendorId: Int,
     val pickupDatetime: String,
     val dropoffDatetime: String,
@@ -34,7 +33,7 @@ data class RideDTO(
 ) : KafkaSerializable {
 
     companion object {
-        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<RideDTO> {
+        fun listFromCsv(reader: BufferedReader, containsHeader: Boolean = true): List<YellowTaxiDTO> {
             val schema = if (containsHeader)
                 csvSchema().withHeader()
             else
@@ -45,9 +44,9 @@ data class RideDTO(
                 .registerModule(JavaTimeModule())
 
             return mapper
-                .readerFor(RideDTO::class.java)
+                .readerFor(YellowTaxiDTO::class.java)
                 .with(schema)
-                .readValues<RideDTO>(reader)
+                .readValues<YellowTaxiDTO>(reader)
                 .readAll()!!
         }
 

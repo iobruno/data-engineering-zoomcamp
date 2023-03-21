@@ -1,6 +1,6 @@
 package club.datatalks.kafka.infrastructure
 
-import club.datatalks.kafka.dto.RideDTO
+import club.datatalks.kafka.dto.YellowTaxiDTO
 import io.confluent.kafka.serializers.KafkaJsonDeserializer
 import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig
 import org.apache.kafka.clients.consumer.ConsumerConfig.*
@@ -25,7 +25,7 @@ class KafkaJsonConsumer<T : Any> {
         properties[VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaJsonDeserializer::class.java
 
         //TODO: Switch to reified functions
-        properties[KafkaJsonDeserializerConfig.JSON_KEY_TYPE] = RideDTO::class.java
+        properties[KafkaJsonDeserializerConfig.JSON_KEY_TYPE] = YellowTaxiDTO::class.java
         properties
     }
 
