@@ -1,6 +1,5 @@
 version: "3.9"
 services:
-
   zookeeper:
     container_name: cp-zookeeper
     image: confluentinc/cp-zookeeper:7.3.2
@@ -168,8 +167,10 @@ services:
       - dspn
 
   # Confluent Control Center Docs:
+  # - Comment out/Uncomment lines 174 to 199 to toggle Confluent Control Center on and off
   # - https://docs.confluent.io/platform/current/control-center/installation/configure-control-center.html
   # - https://docs.confluent.io/platform/current/control-center/installation/properties.html
+
   control-center:
     container_name: cp-control-center
     image: confluentinc/cp-enterprise-control-center:7.3.2
@@ -196,6 +197,31 @@ services:
       - '9021:9021'
     networks:
       - dspn
+
+  # kpow Docs:
+  # - Comment out/Uncomment lines 205 to 224 to toggle Kpow on and off
+  # - https://docs.kpow.io/ce/configuration/
+
+  # kpow:
+  #   container_name: kpow
+  #   image: factorhouse/kpow-ce:91.1.1
+  #   platform: linux/arm64
+  #   restart: always
+  #   environment:
+  #     - BOOTSTRAP=kafka_0:29090,kafka_1:29091,kafka_2:29092
+  #     - SECURITY_PROTOCOL=PLAINTEXT
+  #     - SCHEMA_REGISTRY_URL=http://schema-registry:8081
+  #   depends_on:
+  #     - zookeeper
+  #     - kafka_0
+  #     - kafka_1
+  #     - kafka_2
+  #     - ksqldb-server
+  #     - schema-registry
+  #   ports:
+  #     - '3000:3000'
+  #   networks:
+  #     - dspn
 
   # Conduktor Platform Docs:
   # - https://docs.conduktor.io/platform/configuration/env-variables
@@ -225,30 +251,6 @@ services:
       - '8080:8080'
     networks:
       - dspn
-
-  # kpow Docs:
-  # - https://docs.kpow.io/ce/configuration/
-  kpow:
-    container_name: kpow
-    image: factorhouse/kpow-ce:91.1.1
-    platform: linux/arm64
-    restart: always
-    environment:
-      - BOOTSTRAP=kafka_0:29090,kafka_1:29091,kafka_2:29092
-      - SECURITY_PROTOCOL=PLAINTEXT
-      - SCHEMA_REGISTRY_URL=http://schema-registry:8081
-    depends_on:
-      - zookeeper
-      - kafka_0
-      - kafka_1
-      - kafka_2
-      - ksqldb-server
-      - schema-registry
-    ports:
-      - '3000:3000'
-    networks:
-      - dspn
-
 
 networks:
   dspn:
