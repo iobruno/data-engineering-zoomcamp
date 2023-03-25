@@ -12,22 +12,6 @@ import java.util.Properties
 
 class KafkaJsonConsumer<T> {
 
-    private val kafkaJsonConsumer: KafkaConsumer<String, T> by lazy {
-        KafkaConsumer<String, T>(consumerConfig<Class<T>>())
-    }
-
-    fun subscribeTo(
-        topic: String,
-        consumerGroup: String? = null,
-        pollingDuration: Duration = ofSeconds(1L)
-    ): ConsumerRecords<String, T> {
-        kafkaJsonConsumer.subscribe(listOf(topic))
-        return kafkaJsonConsumer.poll(pollingDuration)!!
-    }
-
-    fun commit() =
-        kafkaJsonConsumer.commitSync()
-
     private inline fun <reified T> consumerConfig(): Properties {
         val properties = Properties()
         properties[BOOTSTRAP_SERVERS_CONFIG] = "localhost:9090,localhost:9091,localhost:9092"
@@ -41,4 +25,20 @@ class KafkaJsonConsumer<T> {
         properties[KafkaJsonDeserializerConfig.JSON_KEY_TYPE] = T::class.java
         return properties
     }
+
+    private val jsonConsumer: KafkaConsumer<String, T> by lazy {
+        KafkaConsumer<String, T>(consumerConfig<Class<T>>())
+    }
+
+    fun subscribeTo(
+        topic: String,
+        consumerGroup: String? = null,
+        pollingDuration: Duration = ofSeconds(1L)
+    ): ConsumerRecords<String, T> {
+        jsonConsumer.subscribe(listOf(topic))
+        return jsonConsumer.poll(pollingDuration)!!
+    }
+
+    fun commit() = jsonConsumer.commitSync()
+
 }

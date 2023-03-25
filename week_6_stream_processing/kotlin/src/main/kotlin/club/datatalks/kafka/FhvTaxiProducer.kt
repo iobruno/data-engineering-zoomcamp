@@ -13,7 +13,7 @@ fun main() {
     val topic = "fhv_tripdata"
 
     logger.info { "Attempting to fetch CSV file..." }
-    val csvFilePath: Path = Paths.get("src/main/resources/fhv_tripdata_2019-01.csv")
+        val csvFilePath: Path = Paths.get("src/main/resources/fhv_tripdata_2019-01.csv")
 
     if (csvFilePath.notExists()) {
         logger.error { "Could not load 'fhv_tripdata_2019-01.csv'. File not found!" }

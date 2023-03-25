@@ -20,7 +20,6 @@ data class FhvTaxiDTO(
 ) : CsvDeserializable<FhvTaxiDTO>, KafkaSerializable {
 
     companion object {
-
         fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<FhvTaxiDTO> =
             CsvDeserializable.seqFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
@@ -37,6 +36,5 @@ data class FhvTaxiDTO(
     }
 
     override fun messageKey(): String = pickupLocationId.toString()
-
 
 }

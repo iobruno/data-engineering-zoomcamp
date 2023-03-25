@@ -12,7 +12,7 @@ fun main() {
     logger.info { "Starting Kafka Consumer binding on Topic='${kafkaTopic}'..." }
     val kafkaJsonConsumer = KafkaJsonConsumer<YellowTaxiDTO>()
     while (true) {
-        val records: ConsumerRecords<String, YellowTaxiDTO> = kafkaJsonConsumer.subscribeTo(
+        val records = kafkaJsonConsumer.subscribeTo(
             topic = kafkaTopic,
             pollingDuration = Duration.ofSeconds(5L)
         )
