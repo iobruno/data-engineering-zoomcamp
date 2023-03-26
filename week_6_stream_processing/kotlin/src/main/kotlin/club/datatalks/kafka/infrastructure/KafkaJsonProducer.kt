@@ -15,19 +15,18 @@ interface KafkaSerializable {
 
 class KafkaJsonProducer<T : KafkaSerializable> {
 
-    private val producerConfig: Properties by lazy {
+    private fun producerConfig(): Properties {
         val properties = Properties()
         properties[BOOTSTRAP_SERVERS_CONFIG] = "localhost:9090,localhost:9091,localhost:9092"
         properties[CLIENT_DNS_LOOKUP_CONFIG] = "use_all_dns_ips"
         properties[ACKS_CONFIG] = "1"
         properties[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         properties[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaJsonSerializer::class.java
-        properties
+        return properties
     }
 
-    private val jsonProducer: KafkaProducer<String ,T> by lazy {
-        KafkaProducer(producerConfig)
-    }
+    private val jsonProducer: KafkaProducer<String, T> =
+        KafkaProducer(producerConfig())
 
     fun push(entities: Sequence<T>, topic: String): Sequence<Future<RecordMetadata>> {
         val producerRecords: Sequence<ProducerRecord<String, T>> = entities.map { ProducerRecord(topic, it.messageKey(), it) }
@@ -37,10 +36,5 @@ class KafkaJsonProducer<T : KafkaSerializable> {
         }
         return futures
     }
-
-
-
-
-
 
 }
