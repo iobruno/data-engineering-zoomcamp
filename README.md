@@ -24,7 +24,12 @@
 
 **Week 4: Analytics Engineering**:
 - [Homework - Analytics Engineering](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_4.md)
-- [Data Modeling with dbt](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering)
+- [Data Modeling with dbt + BigQuery](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering/dbt-bigquery)
+
+
+**Week 4.5: Workshop - Data Observability with PipeRider**
+- [Homework - PipeRider](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/workshop_piperider.md)
+- [Data Modeling with dbt + duckDB + PipeRider](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_4_analytics_engineering/workshop-piperider)
 
 
 **Week 5: Batch processing**:
@@ -39,10 +44,11 @@
 **Week 6: Streaming**:
 - [Homework Answers - Stream Processing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_6.md)
 - Kafka for Stream Processing with:
-  - (WIP) [ksqlDB for Stream Processing](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing)
+  - [ksqlDB for Stream Processing](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/ksqldb/)
   - [Kafka for Stream Processing with Kotlin](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/kotlin)
   - (WIP) [Kafka for Stream Processing with Python](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/python)
   - (WIP) [Kafka for Stream Processing with Scala](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/scala)
 
 
-Week 7, 8 & 9: Project
+**Week 7, 8 & 9: Capstone Project**:
+- T.B.D.

@@ -2,7 +2,7 @@
 
 In this homework, there will be two sections, the first session focus on theoretical questions related to Kafka and streaming concepts and the second session asks to create a small streaming application using preferred programming language (Python or Java).
 
-### Question 1:
+## Question 1:
 
 **Please select the statements that are correct**
 - [x] Kafka Node is responsible to store topics
@@ -11,7 +11,7 @@ In this homework, there will be two sections, the first session focus on theoret
 - [x] Group-Id ensures the messages are distributed to associated consumers
 
 
-### Question 2:
+## Question 2:
 
 **Please select the Kafka concepts that support reliability and availability**
 
@@ -21,17 +21,17 @@ In this homework, there will be two sections, the first session focus on theoret
 - [ ] Ack All
 
 
-### Question 3:
+## Question 3:
 
 **Please select the Kafka concepts that support scaling**
 
 - [ ] Topic Replication
 - [x] Topic Paritioning
-- [x] Consumer Group Id
+- [] Consumer Group Id
 - [ ] Ack All
 
 
-### Question 4:
+## Question 4 (WRONG):
 
 **Please select the attributes that are good candidates for partitioning key.
 Consider cardinality of the field you have selected and scaling aspects of your application**
@@ -44,7 +44,7 @@ Consider cardinality of the field you have selected and scaling aspects of your 
 - [ ] tpep_dropoff_datetime
 
 
-### Question 5:
+## Question 5:
 
 **Which configurations below should be provided for Kafka Consumer but not needed for Kafka Producer**
 
@@ -56,7 +56,7 @@ Consider cardinality of the field you have selected and scaling aspects of your 
 - [ ] Cluster Key and Cluster-Secret
 
 
-### Question 6:
+## Question 6:
 
 Please implement a streaming application, for finding out popularity of PUlocationID across green and fhv trip datasets.
 Please use the datasets [fhv_tripdata_2019-01.csv.gz](https://github.com/DataTalksClub/nyc-tlc-data/releases/tag/fhv)
@@ -70,6 +70,13 @@ Your code should include following
 
 2. Pyspark-streaming-application that reads two kafka topics
    and writes both of them in topic rides_all and apply aggregations to find most popular pickup location.
+
+### Solution:
+
+![ksqldb-streams](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week6_ksqldb_streams.png)
+
+**ksqlDB Queries**:
+- [ksqlDB SQL Statements to build Streams](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/ksqldb/homework.sql)
 
 
 ## Submitting the solutions
