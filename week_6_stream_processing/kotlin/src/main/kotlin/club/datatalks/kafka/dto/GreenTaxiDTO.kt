@@ -30,7 +30,7 @@ data class GreenTaxiDTO(
     val paymentType: Int,
     val tripType: Double?,
     val congestionSurcharge: Double
-) : CsvDeserializable<GreenTaxiDTO>, KafkaSerializable {
+) : KafkaSerializable {
 
     companion object {
         fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<GreenTaxiDTO> =

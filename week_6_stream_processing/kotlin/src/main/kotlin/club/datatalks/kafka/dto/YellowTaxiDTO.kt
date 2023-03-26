@@ -28,7 +28,7 @@ data class YellowTaxiDTO(
     val improvementSurcharge: Double,
     val totalAmount: Double,
     val congestionSurcharge: Double
-) : CsvDeserializable<YellowTaxiDTO>, KafkaSerializable {
+) : KafkaSerializable {
 
     companion object {
         fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<YellowTaxiDTO> =

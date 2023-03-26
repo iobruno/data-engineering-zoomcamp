@@ -17,7 +17,7 @@ data class FhvTaxiDTO(
     val dropoffLocationId: Int?,
     val srFlag: String?,
     val affiliatedBaseNumber: String
-) : CsvDeserializable<FhvTaxiDTO>, KafkaSerializable {
+) : KafkaSerializable {
 
     companion object {
         fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<FhvTaxiDTO> =

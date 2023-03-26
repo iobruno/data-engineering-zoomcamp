@@ -1,15 +1,16 @@
 package club.datatalks.kafka
 
-import club.datatalks.kafka.dto.YellowTaxiDTO
+import club.datatalks.kafka.dto.OverallPickupStatsDTO
 import club.datatalks.kafka.infrastructure.KafkaJsonConsumer
 import java.time.Duration
 
 
 fun main() {
-    val kafkaTopic = "yellow_tripdata"
+    val kafkaTopic = "overall_pickup_agg"
 
     logger.info { "Starting Kafka Consumer binding on Topic='${kafkaTopic}'..." }
-    val kafkaJsonConsumer = KafkaJsonConsumer<YellowTaxiDTO>()
+    val kafkaJsonConsumer = KafkaJsonConsumer<OverallPickupStatsDTO>()
+
     while (true) {
         val records = kafkaJsonConsumer.subscribeTo(
             topic = kafkaTopic,
