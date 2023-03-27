@@ -1,7 +1,11 @@
 # Data Engineering Zoomcamp - Cohort 2023
 
+[![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
+
+## Playlist
 - [Course Playlist on Youtube](https://www.youtube.com/playlist?list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb)
 
+## Assignments
 
 **Week 1: Introduction & Prerequisites**:
 - [Homework Part A - Docker & SQL](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_1a.md)
@@ -52,3 +56,15 @@
 
 **Week 7, 8 & 9: Capstone Project**:
 - T.B.D.
+
+
+## License
+
+This work is licensed under a
+[Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
+
+[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
+
+[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
+[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
+[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
