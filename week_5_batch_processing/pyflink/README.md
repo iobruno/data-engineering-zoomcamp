@@ -52,7 +52,7 @@ Flink SQL>
 
 ## Tech Stack
 - Python 3.10 / 3.9
-- JDK 11
+- JDK 11 (JDK 17 does *NOT* work)
 - PyFlink v1.18.dev0 (Python API for Flink)
 - Flink SQL
 - Jupyter Notebook (EDA)
