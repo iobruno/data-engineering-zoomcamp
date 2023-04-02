@@ -9,7 +9,8 @@ import java.nio.file.Path
 import kotlin.io.path.notExists
 import kotlin.system.exitProcess
 
-abstract class AbstractKafkaJsonProducer<T : KafkaSerializable> constructor(private val topic: String) {
+abstract class AbstractKafkaJsonProducer<T> constructor(private val topic: String)
+    where T: KafkaSerializable{
 
     private val logger = KotlinLogging.logger {}
 

@@ -10,7 +10,8 @@ import java.time.Duration
 import java.time.Duration.ofSeconds
 import java.util.Properties
 
-class KafkaJsonConsumer<T>(private val deserializationClass: Class<T>) {
+class KafkaJsonConsumer<T>(private val deserializationClass: Class<T>)
+    where T : KafkaSerializable {
 
     private val consumerConfig: Properties by lazy {
         val properties = Properties()
