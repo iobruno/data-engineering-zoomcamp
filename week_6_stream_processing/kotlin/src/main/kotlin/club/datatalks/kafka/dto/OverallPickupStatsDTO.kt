@@ -1,5 +1,6 @@
 package club.datatalks.kafka.dto
 
+import club.datatalks.kafka.infrastructure.KafkaSerializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 
@@ -10,5 +11,8 @@ data class OverallPickupStatsDTO(
     val totalGreenRecords: Long,
     val totalFhvRecords: Long,
     val overallRecords: Long
-)
+) : KafkaSerializable {
 
+    override fun messageKey(): String? = null
+
+}

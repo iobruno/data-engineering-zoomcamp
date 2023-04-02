@@ -57,6 +57,6 @@ data class FhvTaxiDTO(
                 .build()
     }
 
-    override fun messageKey(): String = pickupLocationId.toString()
+    override fun messageKey(): String? = pickupLocationId?.toString()
 
 }
