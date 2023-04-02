@@ -2,6 +2,8 @@ package club.datatalks.kafka.dto
 
 import club.datatalks.kafka.infrastructure.CsvDeserializable
 import club.datatalks.kafka.infrastructure.KafkaSerializable
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
@@ -33,6 +35,40 @@ data class GreenTaxiDTO(
 ) : KafkaSerializable {
 
     companion object {
+
+        /**
+         * create() is meant for each row from the CsvFile into an GreenTaxiDTO object
+         * using the Jackson's @JsonCreator
+         */
+        @JvmStatic
+        @JsonCreator
+        fun create(
+            @JsonProperty("vendor_id") vendorId: Int,
+            @JsonProperty("pickup_datetime") pickupDatetime: String,
+            @JsonProperty("dropoff_datetime") dropoffDatetime: String,
+            @JsonProperty("store_and_forward") storeAndForward: String,
+            @JsonProperty("rate_code_id") rateCodeId: Int,
+            @JsonProperty("pickup_location_id") pickupLocationId: Int,
+            @JsonProperty("dropoff_location_id") dropoffLocationId: Int,
+            @JsonProperty("passenger_count") passengerCount: Int,
+            @JsonProperty("trip_distance") tripDistance: Double,
+            @JsonProperty("fare_amount") fareAmount: Double,
+            @JsonProperty("extra") extra: Double,
+            @JsonProperty("mta_tax") mtaTax: Double,
+            @JsonProperty("tip_amount") tipAmount: Double,
+            @JsonProperty("tolls_amount") tollsAmount: Double,
+            @JsonProperty("ehail_fee") ehailFee: Double,
+            @JsonProperty("improvement_surcharge") improvementSurcharge: Double,
+            @JsonProperty("total_amount") totalAmount: Double,
+            @JsonProperty("payment_type") paymentType: Int,
+            @JsonProperty("trip_type") tripType: Double?,
+            @JsonProperty("congestion_surcharge") congestionSurcharge: Double
+        ) = GreenTaxiDTO(
+            vendorId, pickupDatetime, dropoffDatetime, storeAndForward, rateCodeId, pickupLocationId,
+            dropoffLocationId, passengerCount, tripDistance, fareAmount, extra, mtaTax, tipAmount, tollsAmount,
+            ehailFee, improvementSurcharge, totalAmount, paymentType, tripType, congestionSurcharge
+        )
+
         fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<GreenTaxiDTO> =
             CsvDeserializable.seqFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
 
