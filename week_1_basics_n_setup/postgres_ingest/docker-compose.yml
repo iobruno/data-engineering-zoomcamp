@@ -10,7 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=ny_taxi
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - ./volumes/pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     networks:
@@ -24,7 +24,7 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=admin
       - PGADMIN_CONFIG_SERVER_MODE=False
     volumes:
-      - ./pgadmin:/var/lib/pgadmin
+      - ./volumes/pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
     ports:
