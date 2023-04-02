@@ -12,19 +12,19 @@ abstract class ConsumerOptions {
     @CommandLine.Option(
         names = ["-t", "--topic"],
         required = true,
-        description = ["Kafka topic where the records will be fetched from"]
+        description = ["Source Kafka topic for records"]
     )
     var topic: String = ""
 
     @CommandLine.Option(
         names = ["-g", "--consumer-group"],
         required = true,
-        description = ["Kafka Consumer Group"]
+        description = ["Consumer group to subscribe to the Source kafka topic"]
     )
     var consumerGroup: String = ""
 }
 
-@Command(name = "green")
+@Command(name = "green", description = ["Deserialize ConsumerRecords from source Kafka topic to GreenTaxiDTO"])
 class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
@@ -33,7 +33,7 @@ class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
     }
 }
 
-@Command(name = "yellow")
+@Command(name = "yellow", description = ["Deserialize ConsumerRecords from source Kafka topic to YellowTaxiDTO"])
 class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
@@ -42,7 +42,7 @@ class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
     }
 }
 
-@Command(name = "fhv")
+@Command(name = "fhv", description = ["Deserialize ConsumerRecords from source Kafka topic to FhvTaxiDTO"])
 class FhvTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {

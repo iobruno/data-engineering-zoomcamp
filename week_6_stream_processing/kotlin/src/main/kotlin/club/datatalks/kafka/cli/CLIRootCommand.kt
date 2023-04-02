@@ -16,7 +16,7 @@ class CLIRootCommand
     GreenTaxiJsonProducerCommand::class,
     YellowTaxiJsonProducerCommand::class,
     FhvTaxiJsonProducerCommand::class
-])
+], description = ["Parse data from source dataset and publish as JSON to Kafka"])
 class KafkaJsonProducerRootCommand
 
 
@@ -24,5 +24,5 @@ class KafkaJsonProducerRootCommand
     GreenTaxiJsonConsumerCommand::class,
     YellowTaxiJsonConsumerCommand::class,
     FhvTaxiJsonConsumerCommand::class
-])
+], description = ["Subscribe and consume records from Kafka topic"])
 class KafkaJsonConsumerRootCommand
