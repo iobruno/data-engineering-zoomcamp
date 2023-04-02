@@ -23,6 +23,7 @@ dependencies {
     val avroVersion = "1.11.1"
     val protobufVersion = "3.22.0"
     val jacksonVersion = "2.14.2"
+    val picocliVersion = "4.7.1"
 
     val kotlinLoggingVersion = "3.0.5"
     val logbackVersion = "1.4.5"
@@ -49,6 +50,9 @@ dependencies {
     implementation("io.confluent:kafka-json-serializer:${confluentKafkaVersion}")
     implementation("io.confluent:kafka-streams-json-schema-serde:${confluentKafkaVersion}")
 
+    /** CLI Builder **/
+    implementation("info.picocli:picocli:$picocliVersion")
+
     /** CSV Parser **/
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
@@ -66,12 +70,15 @@ dependencies {
 }
 
 tasks.withType<ShadowJar> {
-    archiveBaseName.set("${artifactName}-${artifactVersion}")
-    mergeServiceFiles()
     manifest {
-        attributes(mapOf("Main-Class" to "club.datatalks.kafka.ApplicationKt"))
+        attributes(mapOf("Main-Class" to "club.datatalks.kafka.CliApplication"))
     }
+
+    archiveBaseName.set(artifactName)
+    version = "1.0"
+    archiveClassifier.set("")
     isZip64 = true
+    mergeServiceFiles()
 }
 
 tasks.withType<KotlinCompile> {
