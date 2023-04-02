@@ -245,24 +245,20 @@ dbt_modules/
 dbt_packages/
 logs/
 
-### DataTalks Data Engineering Zoomcamp ###
+### Developer Workstation ###
 
-# Docker volume for PostgresSQL
-**/pgdata/**
-
-# Docker volume for pgAdmin
-**/pgadmin/**
-
-# Docker volume for Kafka and ZooKeeper
-**/confluent-data/**
+# Docker volumes for Kafka, ZooKeeper, PostgresSQL, pgAdmin
+**/volumes/**
 
 # Datasets
-**/*datasets/**
+**/datasets/**
+**/*.csv
+**/*.parquet
 
 # GCP Crendeitals
 **/credentials/**
 
-### macOS ###
+# macOS
 **/.DS_Store
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,jupyternotebooks,visualstudiocode,terraform,dbt
