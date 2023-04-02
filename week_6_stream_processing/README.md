@@ -43,25 +43,17 @@ ksql>
 
 ### Developer Setup
 
-**Note for Windows Users**:
+**1.** Start up Kafka Cluster and external dependencies with:
 
-You'll have to ensure that `userid:1000`, `groupid:1000` have read/write permissions for the bind mounts setup on docker-compose.yml
-```shell
-mkdir -p confluent-data/zk-data
-mkdir -p confluent-data/zk-txn-logs
-mkdir -p confluent-data/kafka_0
-mkdir -p confluent-data/kafka_1
-mkdir -p confluent-data/kafka_2
-```
+1.1. For a single-broker setup, without Confluent REST-Proxy, run
 
 ```shell
-chown -R 1000:1000 confluent-data/
+make minimal-setup 
 ```
 
-
-**1.** Fire up the Confluent Platform and the UIs with:
-```
-docker-compose up -d
+1.2. Alternatively, for a multi-broker setup, with all features, run full-setup instead:
+```shell
+make full-setup
 ```
 
 **2.** Start up with the ksqlDB CLI
