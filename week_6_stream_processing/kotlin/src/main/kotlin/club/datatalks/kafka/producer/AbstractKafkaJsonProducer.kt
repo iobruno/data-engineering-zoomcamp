@@ -1,4 +1,4 @@
-package club.datatalks.kafka
+package club.datatalks.kafka.producer
 
 import club.datatalks.kafka.infrastructure.KafkaJsonProducer
 import club.datatalks.kafka.infrastructure.KafkaSerializable
