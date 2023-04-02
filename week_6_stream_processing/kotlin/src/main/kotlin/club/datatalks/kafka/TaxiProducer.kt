@@ -6,11 +6,14 @@ import club.datatalks.kafka.dto.YellowTaxiDTO
 import java.nio.file.Paths
 
 
-class GreenTaxiProducer(private val topic: String) : AbstractKafkaJsonProducer<GreenTaxiDTO>(topic)
+class GreenTaxiProducer(private val topic: String) :
+    AbstractKafkaJsonProducer<GreenTaxiDTO>(topic)
 
-class YellowTaxiProducer(private val topic: String) : AbstractKafkaJsonProducer<YellowTaxiDTO>(topic)
+class YellowTaxiProducer(private val topic: String) :
+    AbstractKafkaJsonProducer<YellowTaxiDTO>(topic)
 
-class FhvTaxiProducer(private val topic: String) : AbstractKafkaJsonProducer<FhvTaxiDTO>(topic)
+class FhvTaxiProducer(private val topic: String) :
+    AbstractKafkaJsonProducer<FhvTaxiDTO>(topic)
 
 
 fun main() {
@@ -20,12 +23,12 @@ fun main() {
     greenTaxiProducer.fromCsv(greenTripDataCsvPath, GreenTaxiDTO::fromCsv)
 
     /** Yellow Taxi Producer **/
-    val yellowTripDataCsvPath = Paths.get("src/main/resources/yellow_tripdata_2019-01.csv")
-    val yellowTaxiProducer = YellowTaxiProducer(topic = "yellow_tripdata")
-    yellowTaxiProducer.fromCsv(yellowTripDataCsvPath, YellowTaxiDTO::fromCsv)
+//    val yellowTripDataCsvPath = Paths.get("src/main/resources/yellow_tripdata_2019-01.csv")
+//    val yellowTaxiProducer = YellowTaxiProducer(topic = "yellow_tripdata")
+//    yellowTaxiProducer.fromCsv(yellowTripDataCsvPath, YellowTaxiDTO::fromCsv)
 
     /** Fhv Taxi Producer **/
-    val fhvTripDataCsvPath = Paths.get("src/main/resources/fhv_tripdata_2019-01.csv")
-    val fhvTaxiProducer = FhvTaxiProducer(topic = "fhv_tripdata")
-    fhvTaxiProducer.fromCsv(fhvTripDataCsvPath, FhvTaxiDTO::fromCsv)
+//    val fhvTripDataCsvPath = Paths.get("src/main/resources/fhv_tripdata_2019-01.csv")
+//    val fhvTaxiProducer = FhvTaxiProducer(topic = "fhv_tripdata")
+//    fhvTaxiProducer.fromCsv(fhvTripDataCsvPath, FhvTaxiDTO::fromCsv)
 }
