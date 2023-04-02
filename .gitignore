@@ -250,8 +250,7 @@ logs/
 # Docker volumes for Kafka, ZooKeeper, PostgresSQL, pgAdmin
 **/volumes/**
 
-# Datasets
-**/datasets/**
+# Dataset Files
 **/*.csv
 **/*.parquet
 
