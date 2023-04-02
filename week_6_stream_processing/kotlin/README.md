@@ -37,14 +37,15 @@ pre-commit install
 gradle clean shadowJar
 ```
 
-**5.** Run the application with:
+**5.** Run the application with and check the subcommands:
 ```shell
-java -jar build/libs/kafka-stream-processing-1.0-SNAPSHOT-all.jar
+java -jar java -jar build/libs/kafka-stream-processing-1.0.jar
 ```
 
 ## TODO:
 - [x] Set up an environment for Kotlin, Kafka Client and KafkaStreams
+- [x] Set up a Schema Registry
+- [x] Build a Cli Application for Producer and Consumer
 - [x] Explore serialization with JSON
 - [ ] Explore serialization with Avro
 - [ ] Explore KafkaStreams as built-in library in the App
-- [ ] Set up a Schema Registry
