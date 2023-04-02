@@ -51,7 +51,7 @@ fun main() {
 
     /** Fhv Taxi Producer **/
 //    val fhvTaxiConsumer = FhvTaxiConsumer(
-//        kafkaTopic = "green_tripdata",
+//        kafkaTopic = "fhv_tripdata",
 //        consumerGroup = "default"
 //    )
 //    fhvTaxiConsumer.start()
