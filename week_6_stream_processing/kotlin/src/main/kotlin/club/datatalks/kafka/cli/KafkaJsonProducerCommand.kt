@@ -13,19 +13,19 @@ abstract class ProducerOptions {
     @CommandLine.Option(
         names = ["-i", "--csv-file"],
         required = true,
-        description = ["Path to the .csv file"]
+        description = ["CSV file path"]
     )
     var csvFilePath: String = ""
 
     @CommandLine.Option(
         names = ["-t", "--topic"],
         required = true,
-        description = ["Kafka topic where the records will be sent to"]
+        description = ["Target Kafka topic for records"]
     )
     var topic: String = ""
 }
 
-@Command(name = "green")
+@Command(name = "green", description = ["Process GreenTaxiDTO data from CSV file and publish to Kafka topic"])
 class GreenTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
@@ -35,7 +35,7 @@ class GreenTaxiJsonProducerCommand : ProducerOptions(), Runnable {
     }
 }
 
-@Command(name = "yellow")
+@Command(name = "yellow", description = ["Process YellowTaxiDTO data from CSV file and publish to Kafka topic"])
 class YellowTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
@@ -45,7 +45,7 @@ class YellowTaxiJsonProducerCommand : ProducerOptions(), Runnable {
     }
 }
 
-@Command(name = "fhv")
+@Command(name = "fhv", description = ["Process FhvTaxiDTO data from CSV file and publish to Kafka topic"])
 class FhvTaxiJsonProducerCommand :ProducerOptions(), Runnable {
 
     override fun run() {
