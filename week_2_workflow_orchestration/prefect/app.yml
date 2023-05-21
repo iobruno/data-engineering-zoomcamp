@@ -1,3 +1,10 @@
+prefect_block:
+
+  sqlalchemy:
+    ny_taxi:
+      alias: "postgres-docker"
+      database: "ny_taxi"
+
 datasets:
   green:
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2020-12.csv.gz
