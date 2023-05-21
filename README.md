@@ -42,7 +42,14 @@
   - [Homework Answers - Batch Processing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_5.md)
 
 
-Week 6: Streaming
+**Week 6: Streaming**:
+- Kafka for Stream Processing with:
+  - [ksqlDB for Stream Processing](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/ksqldb/)
+  - [Kafka for Stream Processing with Kotlin](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing/kotlin)
+  - Kafka for Stream Processing with Python
+  - Kafka for Stream Processing with Scala
+- [Homework Answers - Stream Processing](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/homework/week_6.md)
 
-Week 7, 8 & 9: Project
 
+**Week 7, 8 & 9: Capstone Project**:
+- T.B.D.
