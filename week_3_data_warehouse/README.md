@@ -15,5 +15,5 @@ You can use the [`web_csv_to_gcs.py`](https://github.com/iobruno/data-engineerin
 
 ## TODO:
 - [x] Create External tables for Federated Queries on BQ
-- [ ] Create Native tables based on the External tables
-- [ ] Implement Partitioning and Clustering on Internal Tables
+- [x] Create Native tables based on the External tables
+- [x] Implement Partitioning and Clustering on Internal Tables
