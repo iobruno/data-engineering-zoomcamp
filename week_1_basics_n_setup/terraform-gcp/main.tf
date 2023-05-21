@@ -1,6 +1,12 @@
 terraform {
   required_version = "~> 1.0"
 
+  # Ref.: https://cloud.google.com/docs/terraform/resource-management/store-state
+  backend "gcs" {
+    bucket = "iobruno-gcp-labs-tfstate"
+    prefix = "terraform/state"
+  }
+
   required_providers {
     google = {
       source  = "hashicorp/google"
