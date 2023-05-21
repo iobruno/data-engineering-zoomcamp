@@ -11,6 +11,7 @@ python = "^3.9"
 omegaconf = "^2.3.0"
 pandas = "^2.0.0"
 prefect = "^2.10.2"
+prefect-sqlalchemy = "^0.2.4"
 greenlet = "^2.0.2"
 pyarrow = "^11.0.0"
 psycopg2 = { version = "2.9.5", markers = "platform_system == 'Linux'" }

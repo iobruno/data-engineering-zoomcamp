@@ -2268,6 +2268,25 @@ websockets = ">=10.4"
 dev = ["cairosvg", "flaky", "ipython", "ipython (>=8.12.0,<8.13.0)", "jinja2", "mike", "mkdocs", "mkdocs-gen-files", "mkdocs-material", "mkdocstrings-python", "mock", "moto", "mypy", "numpy", "pillow", "pre-commit", "pytest (>7)", "pytest-asyncio (>=0.18.2)", "pytest-benchmark", "pytest-cov", "pytest-env", "pytest-flakefinder", "pytest-timeout", "pytest-xdist", "pytkdocs (>=0.14.2)", "pyyaml", "requests", "respx", "ruff", "setuptools (!=60.9.0)", "virtualenv", "watchfiles"]
 
 [[package]]
+name = "prefect-sqlalchemy"
+version = "0.2.4"
+description = "Prefect integrations for interacting with SQLAlchemy."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "prefect-sqlalchemy-0.2.4.tar.gz", hash = "sha256:d248810f3414f3e13d9a5505d8771620bf3152036e355f0d8ce8d4bab23980cd"},
+    {file = "prefect_sqlalchemy-0.2.4-py3-none-any.whl", hash = "sha256:b16030533bfa8486f831eb3776c2494bf40adb7634d703536aee99458008e4e9"},
+]
+
+[package.dependencies]
+prefect = ">=2.7.0"
+sqlalchemy = ">=1.4.31"
+
+[package.extras]
+dev = ["aiosqlite", "asyncpg", "black", "coverage", "flake8", "interrogate", "isort", "mkdocs", "mkdocs-gen-files", "mkdocs-material", "mkdocstrings[python]", "mock", "mypy", "pillow", "pre-commit", "psycopg2", "pytest", "pytest-asyncio"]
+
+[[package]]
 name = "prometheus-client"
 version = "0.16.0"
 description = "Python client for the Prometheus monitoring system."
@@ -3673,4 +3692,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b8274990ef89defb0f44acd28bbf19c85406cae0c3e71a3f598a3fcecac54a8e"
+content-hash = "64b46c9e5eac62209d3166492117bcce39a365b364468ec00b30c7beb7e8e0ee"
