@@ -1,10 +1,10 @@
-version: "3.6"
-
+version: "3.9"
 services:
   spark-master:
     container_name: spark-master
-    image: bitnami/spark:3.3.2
-    restart: always
+    image: bitnami/spark:3.5.0
+    hostname: spark-master
+    restart: on-failure
     environment:
       - SPARK_MODE=master
       - SPARK_MASTER_PORT=7077
@@ -14,12 +14,13 @@ services:
       - '9090:9090'
       - '7077:7077'
     networks:
-      - sdn
+      - spark
 
-  spark-worker:
-    container_name: spark-worker
-    image: bitnami/spark:3.3.2
-    restart: always
+  spark-worker-node1:
+    container_name: spark-worker-node1
+    image: bitnami/spark:3.5.0
+    hostname: spark-worker-node1
+    restart: on-failure
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -27,12 +28,30 @@ services:
       - SPARK_WORKER_MEMORY=24g
       - SPARK_WORKER_WEBUI_PORT=9091
     ports:
-      - '9091:9091'
+      - '9191:9091'
     networks:
-      - sdn
+      - spark
+    depends_on:
+      - spark-master
+
+  spark-worker-node2:
+    container_name: spark-worker-node2
+    image: bitnami/spark:3.5.0
+    hostname: spark-worker-node2
+    restart: on-failure
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=24g
+      - SPARK_WORKER_WEBUI_PORT=9091
+    ports:
+      - '9291:9091'
+    networks:
+      - spark
     depends_on:
       - spark-master
 
 networks:
-  sdn:
+  spark:
     name: spark-network
