@@ -1,20 +1,25 @@
-[tool.poetry]
-name = "dbt-analytics"
+[project]
+name = ""
 version = "1.0"
-description = "Analytics Engineering with dbt"
-authors = ["iobruno <bruno.ariev@gmail.com>"]
-license = "MIT"
+description = "Analytics Engineering with dbt, duckdb and piperider"
+license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
-packages = [{include = "analytics_engineering"}]
+authors = [
+    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-dbt-duckdb = "^1.4.0"
-piperider = {extras = ["duckdb"], version = "^0.20.1"}
+requires-python = ">=3.9,<3.12"
 
-[tool.poetry.group.dev.dependencies]
-isort = "^5.12.0"
+dependencies = [
+    "dbt-duckdb>=1.7.0",
+    "piperider[duckdb]>=0.41.0",
+    "duckdb>=0.9.2",
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.6",
+]
+
+[tool.ruff]
+line-length = 100
