@@ -1,16 +1,17 @@
-# dbt and PipeRider for Data Observability
+# Data Observability with PipeRider, dbt, and DuckDB Project:
 
-This subproject is designed to build a `dbt` model on top of DuckDB, and have some PipeRider pipelines for Data Observability
+![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-![workshop-piperider-workflow](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/workshop_piperider_workflow.png)
+Enhance data observability with dbt, DuckDB, and PipeRider. This project focuses on building a dbt model on DuckDB and integrating PipeRider pipelines for robust data observability.
 
 
 ## Tech Stack
-- Python 3.9 / 3.10
-- DuckDB
-- PipeRider
+- [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-duckdb](https://docs.getdbt.com/reference/warehouse-setups/duckdb-setup)
-- [Poetry](https://python-poetry.org/docs/)
+- [PipeRider](https://github.com/InfuseAI/piperider)
+- [PDM](https://pdm-project.org/latest/#installation)
+- [Ruff](https://github.com/astral-sh/ruff)
 
 
 ## Up and Running
@@ -19,13 +20,13 @@ This subproject is designed to build a `dbt` model on top of DuckDB, and have so
 
 **1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-conda create -n dbt-duckdb python=3.10 -y
+conda create -n dbt-duckdb python=3.11 -y
 conda activate dbt-duckdb
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-poetry install --no-root
+pdm sync
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -48,23 +49,11 @@ piperider init
 piperider run
 ```
 
-T.B.D.
-
-## Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 ## TODO:
-<<<<<<<< HEAD:week_4_analytics_engineering/piperider_duckdb/README.md
-- [ ] Bootstrap dbt with DuckDB Adapter
-- [ ] Integrate with PipeRider
-========
 - [x] Bootstrap dbt with DuckDB Adapter for NY Tripdata
 - [x] Integrate with PipeRider and generate reports
 - [x] Modify the dbt models, generate a new report and compare
 - [x] Utilize the comparison on a [GitHub Pull Request](https://github.com/iobruno/data-engineering-zoomcamp/pull/2)
+- [x] Replace Poetry with PDM
 - [ ] Set up a CI Pipeline with GitHub Actions
->>>>>>>> eafa4b6d ([PipeRider] Update foldername, update README):week_4_analytics_engineering/workshop-piperider/README.md
