@@ -5,7 +5,8 @@ from pyspark.sql.types import *
 
 
 def join_dfs_with_spark_sql(spark: SparkSession) -> DataFrame:
-    return (spark.sql("""
+    return spark.sql(
+        """
         WITH t_fhv AS (
             SELECT 
                 dispatching_base_num,
@@ -41,51 +42,56 @@ def join_dfs_with_spark_sql(spark: SparkSession) -> DataFrame:
             t_fhv f
         INNER JOIN t_zones pu ON f.pickup_location_id  = pu.location_id
         INNER JOIN t_zones do ON f.dropoff_location_id = do.location_id
-    """))
+    """
+    )
 
 
 def config_spark_session(name: str, master: str = "local[*]") -> SparkSession:
-    spark = (SparkSession.builder
-             .config("spark.sql.execution.arrow.pyspark.enabled", "true")
-             .config("spark.driver.memory", "2g")
-             .config("spark.executor.memory", "8g")
-             .config("spark.cores.max", 8)
-             .appName(name)
-             .master(master)
-             .getOrCreate())
-
-    (spark._jsc
-     .hadoopConfiguration()
-     .set("google.cloud.auth.service.account.json.keyfile", env["GOOGLE_APPLICATION_CREDENTIALS"]))
-
+    spark = (
+        SparkSession.builder.config("spark.sql.execution.arrow.pyspark.enabled", "true")
+        .config("spark.driver.memory", "2g")
+        .config("spark.executor.memory", "8g")
+        .config("spark.cores.max", 8)
+        .appName(name)
+        .master(master)
+        .getOrCreate()
+    )
+    spark._jsc.hadoopConfiguration().set(
+        "google.cloud.auth.service.account.json.keyfile", env["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
     return spark
 
 
 def main():
-    spark_master = getenv(key='SPARK_MASTER', default="local[*]")
+    spark_master = getenv(key="SPARK_MASTER", default="local[*]")
     spark = config_spark_session(name="pyspark-playground", master=spark_master)
 
     fhv_gcs_path = getenv(
-        key='FHV_GCS_PATH', default=
-        "gs://iobruno-datalake-raw/dtc_ny_taxi_tripdata/fhv/fhv_tripdata_2019-01.snappy.parquet")
-
+        key="FHV_GCS_PATH",
+        default="gs://iobruno-datalake-raw/dtc_ny_taxi_tripdata/fhv/fhv_tripdata_2019-01.snappy.parquet",
+    )
     zone_lookup_gcs_path = getenv(
-        key='ZONE_LOOKUP_PATH',
-        default="gs://iobruno-datalake-raw/dtc_ny_taxi_tripdata/zone_lookup/taxi_zone_lookup.csv.gz")
-
+        key="ZONE_LOOKUP_PATH",
+        default="gs://iobruno-datalake-raw/dtc_ny_taxi_tripdata/zone_lookup/taxi_zone_lookup.csv.gz",
+    )
+    
     print(f"Now fetching 'FHV' Dataset: {fhv_gcs_path}")
+    
     fhv: DataFrame = spark.read.parquet(fhv_gcs_path)
-
     print(f"Now fetching 'Zone Lookup' Dataset: {zone_lookup_gcs_path}")
+
     zones: DataFrame = (
-        spark.read
-        .option("header", True)
-        .schema(StructType([
-            StructField("LocationID", IntegerType(), True),
-            StructField("Borough", StringType(), True),
-            StructField("Zone", StringType(), True),
-            StructField("service_zone", StringType(), True),
-        ]))
+        spark.read.option("header", True)
+        .schema(
+            StructType(
+                [
+                    StructField("LocationID", IntegerType(), True),
+                    StructField("Borough", StringType(), True),
+                    StructField("Zone", StringType(), True),
+                    StructField("service_zone", StringType(), True),
+                ]
+            )
+        )
         .csv(path=zone_lookup_gcs_path)
     )
 
@@ -98,10 +104,10 @@ def main():
     sdf = join_dfs_with_spark_sql(spark)
 
     print("Preparing to write resulting DataFrame...")
-    (sdf.write
-     .option("compression", "snappy")
-     .mode("overwrite")
-     .parquet("gs://iobruno-datalake-raw/spark-warehouse/"))
+    sdf.write\
+        .option("compression", "snappy")\
+        .mode("overwrite")\
+        .parquet("gs://iobruno-datalake-raw/spark-warehouse/")
 
     print("All done!")
 
