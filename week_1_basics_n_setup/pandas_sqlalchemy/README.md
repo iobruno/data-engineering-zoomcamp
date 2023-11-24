@@ -1,7 +1,11 @@
-# Postgres Ingest
+# pandas-SQLAlchemy
+
+![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
 
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
-based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/app.yml).
+based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
 - `python pg_ingest.py -g` or `--with-green`:
   - fetches the datasets under the key `green_trip_data` only,
@@ -22,12 +26,16 @@ Check the details on how to run with Docker or Locally on the `Up and Running` s
 
 ![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_pg_ingest_cli.gif)
 
+
 ## Tech Stack
-- Python 3.9 / 3.10
+- Python 3.9 / 3.10 / 3.11
 - pandas, numpy
-- [Click](https://click.palletsprojects.com/en/latest/) and [Rich CLI](https://github.com/Textualize/rich)
-- [Poetry](https://python-poetry.org/docs/)
-- Docker, docker-compose
+- [Click](https://click.palletsprojects.com/en/latest/) 
+- [Rich CLI](https://github.com/Textualize/rich)
+- [PDM](https://pdm-project.org/latest/#installation)
+- [Ruff](https://github.com/astral-sh/ruff)
+- Docker
+
 
 ## Up and Running
 
@@ -45,6 +53,7 @@ fetch on [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/mas
 ```shell
 docker build -t taxi_ingest .
 ```
+
 **3.** Run the script:
 ```shell
 docker run --network pg-network -d taxi_ingest
@@ -60,14 +69,16 @@ conda activate de-zoomcamp
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-poetry install --no-root
+pdm sync
 ```
 
 **3.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
+```
 
 # From root folder where `.pre-commit-config.yaml` is located, run:
+```shell
 pre-commit install
 ```
 
@@ -89,4 +100,4 @@ python pg_ingest.py --help
 - [x] Externalize endpoints to config file
 - [x] Build a CLI app with `click`
 - [x] Progress Bars to keep track of the execution with `rich`
-- [x] Replace requirement.txt files with Poetry and `pyproject.toml`
+- [x] Replace poetry with PDM
