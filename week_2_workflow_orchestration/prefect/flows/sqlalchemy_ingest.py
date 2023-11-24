@@ -78,7 +78,7 @@ def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
         print(f"SqlAlchemy Block not found. Working on creating it...")
         conn_block = SqlAlchemyConnector(
             connection_info=ConnectionComponents(
-                driver=SyncDriver.POSTGRESQL_PSYCOPG2,
+                driver=SyncDriver.Po,
                 database=sqlalchemy.get("database"),
                 host=os.environ["DATABASE_HOST"],
                 port=os.environ["DATABASE_PORT"],
