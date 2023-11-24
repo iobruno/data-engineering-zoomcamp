@@ -1,25 +1,27 @@
-FROM python:3.10
+# Builder stage
+FROM python:3.11.6-slim AS builder
 
-WORKDIR /app
+## COPY project files
+ADD pyproject.toml pdm.lock /app/
+WORKDIR /app/
 
-ADD pyproject.toml pyproject.toml
-ADD poetry.lock poetry.lock
-ADD app.yml app.yml
-ADD pg_ingest.py pg_ingest.py
+## Install dependencies
+RUN pip install -U pip setuptools wheel && \
+    pip install pdm && \
+    mkdir -p __pypackages__ && \
+    pdm sync --prod --no-editable
+
+# Runner stage
+FROM python:3.11.6-slim AS runner
 
 ENV DATABASE_USERNAME=postgres
 ENV DATABASE_PASSWORD=postgres
 ENV DATABASE_HOST=postgres
 ENV DATABASE_PORT=5432
-ENV DATABASE_NAME=ny_taxi
-ENV POETRY_VIRTUALENVS_CREATE=false
+ENV DATABASE_NAME=nyc_taxi
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PYTHONPATH=/app/pkgs
+COPY --from=builder /app/__pypackages__/3.11/lib /app/pkgs
+COPY pg_ingest.py app.yml README.md /app/
 
-RUN $HOME/.local/bin/poetry install --without dev --no-root && \
-    rm -Rf /root/.local && \
-    rm -Rf /usr/share/doc/ &&  \
-    rm -Rf /tmp/ && \
-    rm -Rf /var/cache
-
-ENTRYPOINT ["python", "pg_ingest.py", "-zyg"]
+ENTRYPOINT ["python", "/app/pg_ingest.py", "-zyg"]
