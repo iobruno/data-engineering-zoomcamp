@@ -1,14 +1,18 @@
 # dbt for Analytics Engineering
 
-This subproject is designed to build a `dbt` models from the `NY Taxi Tripdata Datasets` on BigQuery,
-and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visualizations
+![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in BigQuery. Additionally, it involves developing Dashboards in `Looker Studio` (formerly known as `Google Data Studio`) for data visualizations.
+
 
 ## Tech Stack
-- Python 3.9 / 3.10
-- BigQuery
+- [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-bigquery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
+- [PDM](https://pdm-project.org/latest/#installation)
+- [Ruff](https://github.com/astral-sh/ruff)
 - Looker Studio
-- [Poetry](https://python-poetry.org/docs/)
+
 
 ## Up and Running
 
@@ -16,13 +20,13 @@ and Dashboards on `Looker Studio` (formerly: `Google Data Studio`) for Data Visu
 
 **1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-conda create -n dbt-bigquery python=3.10 -y
+conda create -n dbt-bigquery python=3.11 -y
 conda activate dbt-bigquery
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-poetry install --no-root
+pdm sync
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -56,15 +60,10 @@ dbt docs serve
 open http://localhost:8080
 ```
 
-## Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 
 ## TODO:
-- [x] Getting Started with dbt
+- [x] Bootstrap dbt with BigQuery Adapter for NYC Tripdata
 - [x] Generate and serve docs and Data Lineage Graphs locally
-- [ ] Orchestrate the dbt execution with Airflow/Prefect
-- [ ] Integrate it with a Data Quality/Observability
+- [x] Replace Poetry with PDM
+- [ ] Implement Data Observability with [elementary-data](https://github.com/elementary-data/elementary)
+- [ ] Implement Data Quality metrics it with [dbt-expectations](https://github.com/calogica/dbt-expectations)
