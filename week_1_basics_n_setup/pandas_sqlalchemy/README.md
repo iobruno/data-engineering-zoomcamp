@@ -1,7 +1,14 @@
-# Postgres Ingest
+# pandas-SQLAlchemy
+
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
-based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/app.yml).
+based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
 - `python pg_ingest.py -g` or `--with-green`:
   - fetches the datasets under the key `green_trip_data` only,
@@ -18,16 +25,15 @@ based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-
 You can use any combination of the three above to fetch more than dataset group at a time.
 For instance: `python pg_ingest.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
-Check the details on how to run with Docker or Locally on the `Up and Running` section
-
-![data-eng-zoomcamp-postgres-ingest](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_pg_ingest_cli.gif)
 
 ## Tech Stack
-- Python 3.9 / 3.10
-- pandas, numpy
-- [Click](https://click.palletsprojects.com/en/latest/) and [Rich CLI](https://github.com/Textualize/rich)
-- [Poetry](https://python-poetry.org/docs/)
-- Docker, docker-compose
+- [pandas](https://pandas.pydata.org/docs/user_guide/)
+- [Click](https://click.palletsprojects.com/en/latest/) 
+- [Rich CLI](https://github.com/Textualize/rich)
+- [PDM](https://pdm-project.org/latest/usage/dependency/)
+- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [Docker](https://docs.docker.com/get-docker/)
+
 
 ## Up and Running
 
@@ -45,6 +51,7 @@ fetch on [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/mas
 ```shell
 docker build -t taxi_ingest .
 ```
+
 **3.** Run the script:
 ```shell
 docker run --network pg-network -d taxi_ingest
@@ -52,32 +59,34 @@ docker run --network pg-network -d taxi_ingest
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.9 with conda:
+**1.** Create and activate a virtualenv for Python 3.11 with conda:
 ```shell
-conda create -n de-zoomcamp python=3.9 -y
-conda activate de-zoomcamp
+conda create -n pandas-sqlalchemy python=3.11 -y
+conda activate pandas-sqlalchemy
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-poetry install --no-root
+pdm sync
 ```
 
 **3.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
+```
 
 # From root folder where `.pre-commit-config.yaml` is located, run:
+```shell
 pre-commit install
 ```
 
 **4.** Export ENV VARS to connect to DB:
 ```shell
-export DATABASE_USERNAME=postgres
-export DATABASE_PASSWORD=postgres
-export DATABASE_HOST=localhost
-export DATABASE_PORT=5433
-export DATABASE_NAME=ny_taxi
+export DATABASE_USERNAME=postgres \
+export DATABASE_PASSWORD=postgres \
+export DATABASE_HOST=localhost \
+export DATABASE_PORT=5433 \
+export DATABASE_NAME=nyc_taxi
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
@@ -86,7 +95,8 @@ python pg_ingest.py --help
 ```
 
 ## TODO:
-- [x] Externalize endpoints to config file
+- [x] PEP-517: Packaging and dependency management with PDM
+- [x] Code format/lint with Ruff
 - [x] Build a CLI app with `click`
 - [x] Progress Bars to keep track of the execution with `rich`
-- [x] Replace requirement.txt files with Poetry and `pyproject.toml`
+- [x] Run/Deploy the project on Docker
