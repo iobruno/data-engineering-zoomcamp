@@ -1,24 +1,30 @@
-# Spark for Batch Processing Pipelines
+# pySpark Playground
+
+![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Apache Spark](https://img.shields.io/badge/pySpark-FDEE21?style=flat-square&logo=apachespark&logoColor=orange)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+
+PySpark Playground for NY Taxi Tripdata Batch Processing Pipeline
 
 ```
+Welcome to
       ____              __
      / __/__  ___ _____/ /__
     _\ \/ _ \/ _ `/ __/  '_/
-   /__ / .__/\_,_/_/ /_/\_\   version 3.3.2
+   /___/ .__/\_,_/_/ /_/\_\   version 3.5.0
       /_/
 
-spark-sql>
+Using Scala version 2.12.18 (OpenJDK 64-Bit Server VM, Java 17.0.9)
+Type in expressions to have them evaluated.
+Type :help for more information.
 ```
 
-This subproject builds `pyspark` playground to develop Batch Processing Pipeline Playground for `NY Taxi Tripdata Datasets`
 
 ## Tech Stack
-- Python 3.9 / 3.10
-- JDK 11 / 17
-- PySpark (Python API for Spark)
-- Spark SQL
-- Jupyter Notebook
-- [Poetry](https://python-poetry.org/docs/)
+- PySpark with SparkSQL
+- Jupyter
+- [PDM](https://pdm-project.org/latest/#installation)
+
 
 ## Up and Running
 
@@ -27,13 +33,13 @@ This subproject builds `pyspark` playground to develop Batch Processing Pipeline
 **1.** Install `JDK` 11 or 17. You can do so easily with [SDKMAN!](https://sdkman.io/):
 
 ```shell
-sdk i java 17.0.6-librca
+sdk i java 17.0.9-librca
 ```
 
-**2.** Install `Spark` version `3.3.x` with:
+**2.** Install `Spark` version `3.5.x` with:
 
 ```shell
-sdk i spark 3.3.2
+sdk i spark 3.5.0
 ```
 
 **3.** Install `Hadoop` version `3.3.5` with:
@@ -43,16 +49,14 @@ sdk i hadoop 3.3.5
 
 **4.** Install the project dependencies with:
 ```shell
-poetry install --no-root
+pdm sync
 ```
 
 **5.** Finally, to enable integration with google-cloud-storage as an HDFS-compliant,
-- download the `gcs-connector-for-hadoop`:
-- and copy binary to $SPARK_HOME/jars
+- Download and copy the `gcs-connector-for-hadoop` binary to $SPARK_HOME/jars
 
 ```shell
-cd $SPARK_HOME/jars/
-
+cd $SPARK_HOME/jars/ && \
 wget https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar
 ```
 
@@ -95,5 +99,5 @@ python spark_gcs_to_gcs.py
 - [X] Explore the SparkSQL API
 - [X] Enable Spark to read from Google Cloud Storage
 - [ ] Submit a PySpark job to the Google Dataproc
-- [ ] Set up a Standalone Cluster for Spark in [kind](https://kind.sigs.k8s.io/)
-- [ ] Submit a PySpark job to the Spark Cluster
+- [ ] Set up a Spark Cluster for Spark on Kubernetes: [minikube](https://minikube.sigs.k8s.io/docs/start/) or [kind](https://kind.sigs.k8s.io/)
+- [ ] Submit a PySpark job to the K8s Spark Cluster
