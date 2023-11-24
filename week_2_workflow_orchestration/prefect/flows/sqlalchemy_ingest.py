@@ -7,7 +7,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 from omegaconf import DictConfig, OmegaConf
-from prefect_sqlalchemy import (ConnectionComponents, SqlAlchemyConnector, SyncDriver)
+from prefect_sqlalchemy import ConnectionComponents, SqlAlchemyConnector, SyncDriver
 
 from prefect import flow, task
 
@@ -23,15 +23,16 @@ logging.basicConfig(
 log = logging.getLogger("flow_pg_ingest")
 
 
-def split_df_in_chunks_with(df: pd.DataFrame,
-                            chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+def split_df_in_chunks_with(
+    df: pd.DataFrame, chunk_size: int = 100_000
+) -> (List[pd.DataFrame], int):
     chunks_qty = math.ceil(len(df) / chunk_size)
     return np.array_split(df, chunks_qty), chunks_qty
 
 
 @task(log_prints=True, retries=3)
 def load_db_with(
-        sqlalchemy: SqlAlchemyConnector, pandas_df: pd.DataFrame, tbl_name: str, label: str
+    sqlalchemy: SqlAlchemyConnector, pandas_df: pd.DataFrame, tbl_name: str, label: str
 ):
     dfs, qty = split_df_in_chunks_with(pandas_df)
     with sqlalchemy.get_connection(begin=False) as engine:
@@ -78,7 +79,7 @@ def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
         print(f"SqlAlchemy Block not found. Working on creating it...")
         conn_block = SqlAlchemyConnector(
             connection_info=ConnectionComponents(
-                driver=SyncDriver.Po,
+                driver=SyncDriver.POSTGRESQL_PSYCOPG2,
                 database=sqlalchemy.get("database"),
                 host=os.environ["DATABASE_HOST"],
                 port=os.environ["DATABASE_PORT"],

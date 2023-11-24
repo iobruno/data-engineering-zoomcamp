@@ -3,7 +3,7 @@ prefect_block:
   sqlalchemy:
     ny_taxi:
       alias: "postgres-docker"
-      database: "ny_taxi"
+      database: "nyc_taxi"
 
   gcs:
     dtc_datalake_raw:

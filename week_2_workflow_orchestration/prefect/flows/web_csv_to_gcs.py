@@ -18,10 +18,7 @@ schemas = OmegaConf.load(schema_file)
 
 @task(log_prints=True)
 def upload_from_dataframe(
-        gcs_bucket: GcsBucket,
-        pandas_df: pd.DataFrame,
-        to_path: str,
-        serialization_format: str
+    gcs_bucket: GcsBucket, pandas_df: pd.DataFrame, to_path: str, serialization_format: str
 ):
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
     GitHub PR> https://github.com/PrefectHQ/prefect-gcp/pull/140
@@ -53,7 +50,7 @@ def fix_datatypes_for(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
 @task(log_prints=True, retries=3)
 def fetch_csv_from(url: str) -> pd.DataFrame:
     print(f"Now fetching: {url}")
-    return pd.read_csv(url, engine='pyarrow')
+    return pd.read_csv(url, engine="pyarrow")
 
 
 def prepare_gcs_block(prefect) -> (GcsBucket, str):
@@ -71,8 +68,9 @@ def prepare_gcs_block(prefect) -> (GcsBucket, str):
         credentials_file = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
         credentials_connector = GcpCredentials(service_account_file=credentials_file)
         credentials_connector.save(gcp_credentials_alias, overwrite=True)
-        gcs_bucket = GcsBucket(bucket=gcs_block_config.bucket,
-                               gcp_credentials=credentials_connector)
+        gcs_bucket = GcsBucket(
+            bucket=gcs_block_config.bucket, gcp_credentials=credentials_connector
+        )
         gcs_bucket.save(gcs_block_config.alias, overwrite=True)
         print(
             f"GcsBucket {gcs_block_config.alias} created successfully. "
@@ -111,14 +109,14 @@ def ingest_csv_to_gcs():
                     gcs_bucket=gcs_bucket,
                     pandas_df=cleansed_df,
                     to_path=str(gcs_path),
-                    serialization_format='parquet_snappy'
+                    serialization_format="parquet_snappy",
                 )
             else:
                 upload_from_dataframe(
                     gcs_bucket=gcs_bucket,
                     pandas_df=raw_df,
                     to_path=str(gcs_path),
-                    serialization_format='csv_gzip'
+                    serialization_format="csv_gzip",
                 )
 
 
