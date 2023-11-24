@@ -1,13 +1,13 @@
 # Prefect Workflow Orchestration
 
-This subproject is designed for `Prefect Flows` to fetch the CSV datasets for NYC Taxi Tripdata,
-based on the endpoints provided on `app.yml` and sink them into:
-- Postgres
-- Google Cloud Storage
+![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
+This GitHub project streamlines Prefect Flows to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
+
+*Note*: The `Prefect Orion` server is now called `Prefect Server`
 
 ## Tech Stack
-- Python 3.9 / 3.10 / 3.11
 - pandas
 - [Prefect](https://www.prefect.io/opensource/)
 - [PDM](https://pdm-project.org/latest/#installation)
@@ -21,7 +21,7 @@ based on the endpoints provided on `app.yml` and sink them into:
 
 **1.** Create and activate a virtualenv for Python 3.9 with conda:
 ```shell
-conda create -n prefect python=3.9 -y
+conda create -n prefect python=3.11 -y
 conda activate prefect
 ```
 
@@ -78,5 +78,4 @@ python flows/sqlalchemy_ingest.py
 
 ## TODO:
 - [x] Externalize configurations to config file (app.yml)
-- [x] Handle dependency management with Poetry
-- [x] Implement a python fmt with [yapf](https://github.com/google/yapf)
+- [x] Replace poetry with PDM
