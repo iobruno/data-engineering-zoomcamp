@@ -16,16 +16,22 @@ config_file = Path(__file__).parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
 
 logging.basicConfig(
-    level="INFO", format="%(message)s", datefmt="[%X]",
-    handlers=[RichHandler(rich_tracebacks=True, tracebacks_show_locals=True)]
+    level="INFO",
+    format="%(message)s",
+    datefmt="[%X]",
+    handlers=[RichHandler(rich_tracebacks=True, tracebacks_show_locals=True)],
 )
 
 log = logging.getLogger("postgres_ingest")
 
 progress = Progress(
-    TextColumn("[bold blue]{task.description}"), BarColumn(),
-    "Chunk: {task.completed}/{task.total}", "•", "[progress.percentage]{task.percentage:>3.1f}%",
-    "•", TimeElapsedColumn()
+    TextColumn("[bold blue]{task.description}"),
+    BarColumn(),
+    "Chunk: {task.completed}/{task.total}",
+    "•",
+    "[progress.percentage]{task.percentage:>3.1f}%",
+    "•",
+    TimeElapsedColumn(),
 )
 
 
@@ -39,7 +45,7 @@ def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str
     task_ids = [progress.add_task(name, start=False, total=0) for name in filenames]
 
     for idx, url in enumerate(dataset_endpoints):
-        df = pd.read_csv(url, engine='pyarrow')
+        df = pd.read_csv(url, engine="pyarrow")
         dfs, qty = split_df_in_chunks_with(df)
 
         progress.update(task_id=task_ids[idx], completed=0, total=qty)
