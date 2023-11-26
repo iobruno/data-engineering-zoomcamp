@@ -11,8 +11,8 @@ services:
       - SPARK_MASTER_WEBUI_PORT=9090
       - SPARK_LOCAL_IP=spark-master
     ports:
-      - '9090:9090'
       - '7077:7077'
+      - '9090:9090'
     networks:
       - spark
 
@@ -24,11 +24,11 @@ services:
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=4
-      - SPARK_WORKER_MEMORY=24g
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=8g
       - SPARK_WORKER_WEBUI_PORT=9091
     ports:
-      - '9191:9091'
+      - '9091:9091'
     networks:
       - spark
     depends_on:
@@ -42,11 +42,11 @@ services:
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=4
-      - SPARK_WORKER_MEMORY=24g
-      - SPARK_WORKER_WEBUI_PORT=9091
+      - SPARK_WORKER_CORES=2
+      - SPARK_WORKER_MEMORY=8g
+      - SPARK_WORKER_WEBUI_PORT=9092
     ports:
-      - '9291:9091'
+      - '9092:9092'
     networks:
       - spark
     depends_on:
