@@ -46,6 +46,6 @@ resource "google_storage_bucket" "dtc_datalake_raw" {
 
 # Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
 resource "google_bigquery_dataset" "dtc_dw_staging" {
-  dataset_id = var.bq_staging_dataset
+  dataset_id = var.bq_stg_nyc_dataset
   location   = var.gcp_region
 }

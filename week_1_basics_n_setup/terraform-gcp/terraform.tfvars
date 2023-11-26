@@ -3,6 +3,6 @@
 
 gcp_project_id = "iobruno-gcp-labs"
 
-gcs_datalake_raw_bucket = "iobruno-datalake-raw"
+bq_stg_nyc_dataset = "stg_nyc_trip_record_data"
 
-bq_staging_dataset = "dtc_ny_taxi_tripdata_staging"
+gcs_datalake_raw_bucket = "iobruno-lakehouse-raw"
