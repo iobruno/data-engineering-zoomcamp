@@ -7,7 +7,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 from omegaconf import DictConfig, OmegaConf
-from prefect_sqlalchemy import (ConnectionComponents, SqlAlchemyConnector, SyncDriver)
+from prefect_sqlalchemy import ConnectionComponents, SqlAlchemyConnector, SyncDriver
 
 from prefect import flow, task
 
@@ -23,15 +23,16 @@ logging.basicConfig(
 log = logging.getLogger("flow_pg_ingest")
 
 
-def split_df_in_chunks_with(df: pd.DataFrame,
-                            chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+def split_df_in_chunks_with(
+    df: pd.DataFrame, chunk_size: int = 100_000
+) -> (List[pd.DataFrame], int):
     chunks_qty = math.ceil(len(df) / chunk_size)
     return np.array_split(df, chunks_qty), chunks_qty
 
 
 @task(log_prints=True, retries=3)
 def load_db_with(
-        sqlalchemy: SqlAlchemyConnector, pandas_df: pd.DataFrame, tbl_name: str, label: str
+    sqlalchemy: SqlAlchemyConnector, pandas_df: pd.DataFrame, tbl_name: str, label: str
 ):
     dfs, qty = split_df_in_chunks_with(pandas_df)
     with sqlalchemy.get_connection(begin=False) as engine:
@@ -57,7 +58,7 @@ def extract_nyc_trip_data_with(url: str) -> pd.DataFrame:
 @task(log_prints=True)
 def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
     """
-    This attempt to load SqlAlchemy Prefect Block configured for Postgres
+    This attempts to load SqlAlchemy Prefect Block configured for Postgres
     with the name defined in app.yml under the key prefect_block.sqlalchemy.ny_taxi.alias
 
     If it fails to fetch such block, it will attempt to create one
@@ -95,7 +96,7 @@ def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
 def sqlalchemy_ingest():
     print("Fetching URL Datasets from .yml")
     datasets: DictConfig = cfg.datasets
-    sqlalchemy: DictConfig = cfg.prefect_block.sqlalchemy.get("ny_taxi")
+    sqlalchemy: DictConfig = cfg.prefect.sqlalchemy.nyc_taxi
 
     print("Preparing Prefect Block...")
     conn_block = prepare_sqlalchemy_block(sqlalchemy)
