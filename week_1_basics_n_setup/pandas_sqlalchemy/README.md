@@ -75,10 +75,9 @@ pdm sync
 **3.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
-```
 
 # From root folder where `.pre-commit-config.yaml` is located, run:
-```shell
+
 pre-commit install
 ```
 
