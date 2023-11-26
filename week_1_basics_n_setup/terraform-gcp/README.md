@@ -1,13 +1,20 @@
-# Terraform Setup for GCP
+# Terraform for Google Cloud Platform
+
+![Terraform](https://img.shields.io/badge/Terraform-1.4-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
+![GCP](https://img.shields.io/badge/Google_Cloud-3772FF?style=flat&logo=googlecloud&logoColor=white&labelColor=3772FF)
+
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
+
 
 ## Initial Setup
 
 Download and install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk) for your platform, following the instructions on the page
 
 On the GCP Console in the web, create a new `Service Account` with the roles below, and export the key with JSON format:
-    - `BigQuery Admin`
-    - `Storage Admin`
-    - `Storage Object Admin`
+
+- BigQuery Admin
+- Storage Admin
+- Storage Object Admin
 
 Export an environment variables named `GOOGLE_APPLICATION_CREDENTIALS` pointing to the full path where the .json credentials file is located:
 

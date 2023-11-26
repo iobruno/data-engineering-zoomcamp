@@ -1,8 +1,8 @@
 # This is for educational purposes ONLY for the Data Engineering Zoomcamp on DataTalks.Club
 # For real-world scenarios, DO. NOT. EVER. commit *.tfvars files to version control
 
-gcp_project_id = "iobruno-gcp-labs"
+project_id = "iobruno-gcp-labs"
 
-gcs_datalake_raw_bucket = "iobruno-datalake-raw"
+bqds_raw_nyc_trip_record_data = "raw_nyc_trip_record_data"
 
-bq_staging_dataset = "dtc_ny_taxi_tripdata_staging"
+lakehouse_raw_bucket = "iobruno-lakehouse-raw"

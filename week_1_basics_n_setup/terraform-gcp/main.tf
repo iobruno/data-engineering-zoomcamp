@@ -10,25 +10,31 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 4.50.0"
+      version = "~> 5.7.0"
     }
   }
 }
 
 provider "google" {
-  project = var.gcp_project_id
-  region  = var.gcp_region
+  project = var.project_id
+  region  = var.data_region
+}
+
+# Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
+resource "google_bigquery_dataset" "stg_nyc_dataset" {
+  dataset_id = var.bqds_raw_nyc_trip_record_data
+  location   = var.data_region
 }
 
 # Ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
-resource "google_storage_bucket" "dtc_datalake_raw" {
-  name     = var.gcs_datalake_raw_bucket
-  location = var.gcp_region
+resource "google_storage_bucket" "iobruno_lakehouse_raw" {
+  name     = var.lakehouse_raw_bucket
+  location = var.data_region
 
   # Cascade delete all objects within when the bucket is deleted
   force_destroy               = true
   uniform_bucket_level_access = true
-  storage_class               = var.gcs_storage_class
+  storage_class               = var.lakehouse_storage_class
 
   versioning {
     enabled = true
@@ -36,16 +42,10 @@ resource "google_storage_bucket" "dtc_datalake_raw" {
 
   lifecycle_rule {
     condition {
-      age = var.gcs_blob_lifecycle_expiration_in_days
+      age = var.lakehouse_blob_expiration
     }
     action {
       type = "Delete"
     }
   }
-}
-
-# Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
-resource "google_bigquery_dataset" "dtc_dw_staging" {
-  dataset_id = var.bq_staging_dataset
-  location   = var.gcp_region
 }
