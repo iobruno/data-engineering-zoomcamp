@@ -1,35 +1,30 @@
-[tool.poetry]
-name = "prefect-workflow"
+[project]
+name = ""
 version = "1.0"
-description = "Prefect Workflow Orchestration"
-authors = ["iobruno <bruno.ariev@gmail.com>"]
-license = "CC-BY-SA 4.0"
+description = "Workflow Orchestration playground with Prefect"
+license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
+authors = [
+    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-omegaconf = "^2.3.0"
-pandas = "^2.0.0"
-prefect = "^2.10.2"
-prefect-gcp = {extras = ["cloud-storage"], version = "^0.4.0"}
-prefect-sqlalchemy = "^0.2.4"
-greenlet = "^2.0.2"
-pyarrow = "^11.0.0"
-psycopg2 = { version = "2.9.5", markers = "platform_system == 'Linux'" }
-psycopg2-binary = { version = "^2.9.5", markers = "platform_system == 'Darwin'" }
-sqlalchemy = "1.4.46"
+requires-python = ">=3.10,<3.12"
 
-[tool.poetry.group.dev.dependencies]
-jupyterlab = "3.5.3"
-isort = "^5.12.0"
-yapf = "^0.32.0"
-toml = "^0.10.2"
+dependencies = [
+    "pandas>=2.1.3",
+    "pyarrow>=14.0.1",
+    "sqlalchemy>=1.4.50",
+    "psycopg2-binary>=2.9.9",
+    "prefect>=2.14.6",
+    "prefect-gcp>=0.5.2",
+    "prefect-sqlalchemy>=0.3.1",
+    "omegaconf>=2.3.0",
+]
 
-[tool.yapf]
-based_on_style = "facebook"
-indent_width = 4
-column_limit = 100
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.6",
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff]
+line-length = 100

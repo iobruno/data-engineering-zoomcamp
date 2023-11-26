@@ -1,14 +1,14 @@
 version: "3.9"
 services:
-
   postgres:
-    container_name: postgres-db
-    image: postgres:15.1-alpine
-    restart: always
+    container_name: postgres
+    image: postgres:15-alpine
+    restart: on-failure:5
+    hostname: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=ny_taxi
+      - POSTGRES_USER=sqlalchemy
+      - POSTGRES_PASSWORD=sqlalchemy
+      - POSTGRES_DB=nyc_taxi
     volumes:
       - ./volumes/pgdata:/var/lib/postgresql/data
     ports:
@@ -16,22 +16,20 @@ services:
     networks:
       - internal
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
+  pgweb:
+    container_name: pgweb
+    image: sosedoff/pgweb:0.14.2
+    restart: on-failure:5
+    hostname: pgweb
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=admin
-      - PGADMIN_CONFIG_SERVER_MODE=False
-    volumes:
-      - ./volumes/pgadmin:/var/lib/pgadmin
+      - PGWEB_DATABASE_URL=postgres://sqlalchemy:sqlalchemy@postgres:5432/nyc_taxi?sslmode=disable
     depends_on:
       - postgres
     ports:
-      - "8080:80"
+      - 8081:8081
     networks:
       - internal
 
 networks:
   internal:
-    name: pg-network
+    name: workflow-orchestration

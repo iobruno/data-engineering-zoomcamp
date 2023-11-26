@@ -7,7 +7,7 @@ from typing import List
 import numpy as np
 import pandas as pd
 from omegaconf import DictConfig, OmegaConf
-from prefect_sqlalchemy import (ConnectionComponents, SqlAlchemyConnector, SyncDriver)
+from prefect_sqlalchemy import ConnectionComponents, SqlAlchemyConnector, SyncDriver
 
 from prefect import flow, task
 
@@ -23,19 +23,16 @@ logging.basicConfig(
 log = logging.getLogger("flow_pg_ingest")
 
 
-def split_df_in_chunks_with(df: pd.DataFrame,
-                            chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+def split_df_in_chunks_with(df, chunk_size: int = 1_000_000) -> (List[pd.DataFrame], int):
     chunks_qty = math.ceil(len(df) / chunk_size)
     return np.array_split(df, chunks_qty), chunks_qty
 
 
 @task(log_prints=True, retries=3)
-def load_db_with(
-        sqlalchemy: SqlAlchemyConnector, pandas_df: pd.DataFrame, tbl_name: str, label: str
-):
-    dfs, qty = split_df_in_chunks_with(pandas_df)
+def load_db_with(sqlalchemy: SqlAlchemyConnector, df: pd.DataFrame, tbl_name: str, label: str):
+    chunks, qty = split_df_in_chunks_with(df)
     with sqlalchemy.get_connection(begin=False) as engine:
-        for chunk_id, df_chunk in enumerate(dfs):
+        for chunk_id, df_chunk in enumerate(chunks):
             print(f"[{label}] Now saving: Chunk {chunk_id+1}/{qty}")
             df_chunk.to_sql(tbl_name, con=engine, if_exists="append", index=False)
 
@@ -57,7 +54,7 @@ def extract_nyc_trip_data_with(url: str) -> pd.DataFrame:
 @task(log_prints=True)
 def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
     """
-    This attempt to load SqlAlchemy Prefect Block configured for Postgres
+    This attempts to load SqlAlchemy Prefect Block configured for Postgres
     with the name defined in app.yml under the key prefect_block.sqlalchemy.ny_taxi.alias
 
     If it fails to fetch such block, it will attempt to create one
@@ -95,32 +92,31 @@ def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
 def sqlalchemy_ingest():
     print("Fetching URL Datasets from .yml")
     datasets: DictConfig = cfg.datasets
-    sqlalchemy: DictConfig = cfg.prefect_block.sqlalchemy.get("ny_taxi")
+    sqlalchemy: DictConfig = cfg.prefect.sqlalchemy.nyc_taxi
 
     print("Preparing Prefect Block...")
     conn_block = prepare_sqlalchemy_block(sqlalchemy)
 
-    for endpoint in datasets.green:
-        filename = Path(endpoint).name
-        df = extract_nyc_trip_data_with(url=endpoint)
-        cleansed_df = drop_trips_with_no_passengers(df)
-        load_db_with(
-            sqlalchemy=conn_block,
-            pandas_df=cleansed_df,
-            tbl_name="ntl_green_taxi",
-            label=filename,
-        )
+    for dataset, endpoints in datasets.items():
+        if endpoints is None:
+            print(f"Dataset '{dataset}' contains no valid endpoints entries. Skipping...")
+            endpoints = []
 
-    for endpoint in datasets.zone_lookup:
-        filename = Path(endpoint).name
-        df = extract_nyc_trip_data_with(url=endpoint)
-        load_db_with(
-            sqlalchemy=conn_block,
-            pandas_df=df,
-            tbl_name="ntl_lookup_zones",
-            label=filename,
-        )
+        for endpoint in endpoints:
+            filename = Path(endpoint).name
+            df = extract_nyc_trip_data_with(url=endpoint)
 
+            if dataset in {"yellow", "green"}:
+                persisting_df = drop_trips_with_no_passengers(df)
+            else:
+                persisting_df = df
+
+            load_db_with(
+                sqlalchemy=conn_block,
+                df=persisting_df,
+                tbl_name=dataset,
+                label=filename,
+            )
 
 if __name__ == "__main__":
     sqlalchemy_ingest()
