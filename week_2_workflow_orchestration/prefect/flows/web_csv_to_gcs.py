@@ -2,10 +2,12 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from omegaconf import DictConfig, OmegaConf
-from prefect_gcp import GcpCredentials, GcsBucket
 
+from omegaconf import DictConfig, OmegaConf
 from prefect import flow, task
+from prefect_gcp import GcpCredentials, GcsBucket
+from pandas import DataFrame
+
 
 root_dir = Path(__file__).parent.parent
 
@@ -17,28 +19,26 @@ schemas = OmegaConf.load(schema_file)
 
 
 @task(log_prints=True)
-def upload_from_dataframe(
-    gcs_bucket: GcsBucket, pandas_df: pd.DataFrame, to_path: str, serialization_format: str
-):
+def upload_from_df(gcs_bucket: GcsBucket, df: DataFrame, to_path: str, serialization_fmt: str):
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
     GitHub PR> https://github.com/PrefectHQ/prefect-gcp/pull/140
 
-    This uploads the data in a Pandas DataFrame to GCS in a specified format, 
+    This uploads the data in a Pandas DataFrame to GCS in a specified format,
     such as .csv, .csv.gz, .parquet, .snappy.parquet, and .gz.parquet
 
     Args:
         gcs_bucket: The Prefect GcsBucket Block
-        pandas_df: The Pandas DataFrame to be uploaded.
+        df: The Pandas DataFrame to be uploaded.
         to_path: The destination path for the uploaded DataFrame.
-        serialization_format: The format to serialize the DataFrame into.
+        serialization_fmt: The format to serialize the DataFrame into.
             The valid options are: 'csv', 'csv_gzip', 'parquet', 'parquet_snappy', 'parquet_gz'
             Defaults to `DataFrameSerializationFormat.CSV_GZIP`
 
     Returns:
         The path that the object was uploaded to.
     """
-    gcs_bucket.upload_from_dataframe(
-        df=pandas_df, to_path=to_path, serialization_format=serialization_format
+    return gcs_bucket.upload_from_dataframe(
+        df, to_path=to_path, serialization_format=serialization_fmt
     )
 
 
@@ -87,35 +87,33 @@ def ingest_csv_to_gcs():
     print("Preparing Prefect Block...")
     gcs_bucket, blob_prefix = prepare_gcs_block(cfg.prefect)
 
-    for dataset_name, endpoints in datasets.items():
+    for dataset, endpoints in datasets.items():
         if endpoints is None:
-            print(
-                f"Dataset '{dataset_name}' found in config file, "
-                f"but it contains no valid endpoints entries. Skipping..."
-            )
+            print(f"Dataset '{dataset}' contains no valid endpoints entries. Skipping...")
             endpoints = []
 
         for endpoint in endpoints:
             filename = Path(endpoint).name
-            gcs_path = Path(blob_prefix, dataset_name, filename)
+            expected_blob_name = Path(blob_prefix, dataset, filename)
             raw_df = fetch_csv_from(url=endpoint)
-            df_schema = schemas.get(dataset_name)
+            df_schema = schemas.get(dataset)
 
             if df_schema:
                 cleansed_df = fix_datatypes_for(df=raw_df, schema=df_schema)
-                upload_from_dataframe(
+                blob_name = upload_from_df(
                     gcs_bucket=gcs_bucket,
-                    pandas_df=cleansed_df,
-                    to_path=str(gcs_path),
-                    serialization_format="parquet_snappy",
+                    df=cleansed_df,
+                    to_path=str(expected_blob_name),
+                    serialization_fmt="parquet_snappy",
                 )
             else:
-                upload_from_dataframe(
+                blob_name = upload_from_df(
                     gcs_bucket=gcs_bucket,
-                    pandas_df=raw_df,
-                    to_path=str(gcs_path),
-                    serialization_format="csv_gzip",
+                    df=raw_df,
+                    to_path=str(expected_blob_name),
+                    serialization_fmt="csv_gzip",
                 )
+            print(f"Upload complete: 'gs://{gcs_bucket.bucket}/{blob_name}'")
 
 
 if __name__ == "__main__":
