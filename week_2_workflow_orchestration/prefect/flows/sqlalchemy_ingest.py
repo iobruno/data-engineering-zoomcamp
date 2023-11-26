@@ -58,7 +58,7 @@ def extract_nyc_trip_data_with(url: str) -> pd.DataFrame:
 @task(log_prints=True)
 def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
     """
-    This attempt to load SqlAlchemy Prefect Block configured for Postgres
+    This attempts to load SqlAlchemy Prefect Block configured for Postgres
     with the name defined in app.yml under the key prefect_block.sqlalchemy.ny_taxi.alias
 
     If it fails to fetch such block, it will attempt to create one
@@ -96,7 +96,7 @@ def prepare_sqlalchemy_block(sqlalchemy: DictConfig) -> SqlAlchemyConnector:
 def sqlalchemy_ingest():
     print("Fetching URL Datasets from .yml")
     datasets: DictConfig = cfg.datasets
-    sqlalchemy: DictConfig = cfg.prefect_block.sqlalchemy.get("ny_taxi")
+    sqlalchemy: DictConfig = cfg.prefect.sqlalchemy.nyc_taxi
 
     print("Preparing Prefect Block...")
     conn_block = prepare_sqlalchemy_block(sqlalchemy)

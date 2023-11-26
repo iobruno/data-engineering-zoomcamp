@@ -1,19 +1,17 @@
-prefect_block:
-
+prefect:
   sqlalchemy:
-    ny_taxi:
+    nyc_taxi:
       alias: "postgres-docker"
       database: "nyc_taxi"
 
-  gcs:
-    dtc_datalake_raw:
-      alias: "dtc-datalake-raw"
-      bucket: "iobruno-datalake-raw"
-      blob_prefix: "dtc_ny_taxi_tripdata/"
-
   gcp_credentials:
-    gcs_bigquery: "prefect-gcs-bigquery"
+    alias: "prefect-gcs-bigquery"
 
+  gcs:
+    lakehouse_raw:
+      alias: "gcs-lakehouse-raw"
+      bucket: "iobruno-lakehouse-raw"
+      blob_prefix: "nyc_trip_record_data/"
 
 datasets:
   green:
@@ -64,9 +62,9 @@ datasets:
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-06.csv.gz
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-05.csv.gz
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-04.csv.gz
-    - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-01.csv.gz
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-03.csv.gz
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-02.csv.gz
+    - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-01.csv.gz
 
   fhv:
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_2019-12.csv.gz

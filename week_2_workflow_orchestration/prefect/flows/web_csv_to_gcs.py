@@ -23,8 +23,8 @@ def upload_from_dataframe(
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
     GitHub PR> https://github.com/PrefectHQ/prefect-gcp/pull/140
 
-    This function uploads the data in a Pandas DataFrame to Google Cloud Storage
-    in a specified format, such as .csv, .csv.gz, .parquet, .snappy.parquet, and .gz.parquet
+    This uploads the data in a Pandas DataFrame to GCS in a specified format, 
+    such as .csv, .csv.gz, .parquet, .snappy.parquet, and .gz.parquet
 
     Args:
         gcs_bucket: The Prefect GcsBucket Block
@@ -54,40 +54,38 @@ def fetch_csv_from(url: str) -> pd.DataFrame:
 
 
 def prepare_gcs_block(prefect) -> (GcsBucket, str):
-    gcp_credentials_config = prefect.gcp_credentials
-    gcp_credentials_alias = gcp_credentials_config.get("gcs_bigquery")
-    gcs_block_config = prefect.gcs.get("dtc_datalake_raw")
+    gcp_credentials = prefect.gcp_credentials.alias
+    lakehouse_raw_block = prefect.gcs.lakehouse_raw
 
     try:
-        print(f"Attempting to load GcsBucket Block '{gcs_block_config.alias}'")
-        gcs_bucket = GcsBucket.load(gcs_block_config.alias)
+        print(f"Attempting to load GcsBucket Block '{lakehouse_raw_block.alias}'")
+        gcs_bucket = GcsBucket.load(lakehouse_raw_block.alias)
         print(f"GcsBucket loaded successfully!")
     except (ValueError, RuntimeError):
         print(f"GcsBucket Block not found. Working on creating it...")
         print(f"Fetching GcpCredentials from 'GOOGLE_APPLICATION_CREDENTIALS' env var")
         credentials_file = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
         credentials_connector = GcpCredentials(service_account_file=credentials_file)
-        credentials_connector.save(gcp_credentials_alias, overwrite=True)
+        credentials_connector.save(gcp_credentials, overwrite=True)
         gcs_bucket = GcsBucket(
-            bucket=gcs_block_config.bucket, gcp_credentials=credentials_connector
+            bucket=lakehouse_raw_block.bucket, gcp_credentials=credentials_connector
         )
-        gcs_bucket.save(gcs_block_config.alias, overwrite=True)
+        gcs_bucket.save(lakehouse_raw_block.alias, overwrite=True)
         print(
-            f"GcsBucket {gcs_block_config.alias} created successfully. "
+            f"GcsBucket {lakehouse_raw_block.alias} created successfully. "
             f"Next runs will use this block instead."
         )
 
-    return gcs_bucket, gcs_block_config.get("blob_prefix", "")
+    return gcs_bucket, lakehouse_raw_block.get("blob_prefix", "")
 
 
 @flow(name="Web CSV Dataset to GCS", log_prints=True)
 def ingest_csv_to_gcs():
     print("Fetching URL Datasets from .yml")
     datasets: DictConfig = cfg.datasets
-    prefect = cfg.prefect_block
 
     print("Preparing Prefect Block...")
-    gcs_bucket, blob_prefix = prepare_gcs_block(prefect)
+    gcs_bucket, blob_prefix = prepare_gcs_block(cfg.prefect)
 
     for dataset_name, endpoints in datasets.items():
         if endpoints is None:
