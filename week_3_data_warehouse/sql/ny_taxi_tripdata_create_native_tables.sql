@@ -1,38 +1,38 @@
 -- PARTITIONED TABLES
-CREATE OR REPLACE TABLE `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.green_tripdata`
+CREATE OR REPLACE TABLE `iobruno-gcp-labs.stg_nyc_trip_record_data.green`
 PARTITION BY DATE(lpep_pickup_datetime)
 AS (
     SELECT *
-    FROM `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.ext_green_tripdata`
+    FROM `iobruno-gcp-labs.stg_nyc_trip_record_data.ext_green`
 );
 
 
-CREATE OR REPLACE TABLE `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.yellow_tripdata`
+CREATE OR REPLACE TABLE `iobruno-gcp-labs.stg_nyc_trip_record_data.yellow`
 PARTITION BY DATE(tpep_pickup_datetime)
 AS (
     SELECT *
-    FROM `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.ext_yellow_tripdata`
+    FROM `iobruno-gcp-labs.stg_nyc_trip_record_data.ext_yellow`
 );
 
 
-CREATE OR REPLACE TABLE `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.fhv_tripdata`
+CREATE OR REPLACE TABLE `iobruno-gcp-labs.stg_nyc_trip_record_data.fhv`
 PARTITION BY DATE(pickup_datetime)
 AS (
     SELECT *
-    FROM `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.ext_fhv_tripdata`
+    FROM `iobruno-gcp-labs.stg_nyc_trip_record_data.ext_fhv`
 );
 
 
 -- NON-PARTITIONED TABLES
-CREATE OR REPLACE TABLE `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.fhvhv_tripdata`
+CREATE OR REPLACE TABLE `iobruno-gcp-labs.stg_nyc_trip_record_data.fhvhv`
 AS (
     SELECT *
-    FROM `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.ext_fhvhv_tripdata`
+    FROM `iobruno-gcp-labs.stg_nyc_trip_record_data.ext_fhvhv`
 );
 
 
-CREATE OR REPLACE TABLE `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.zone_lookup`
+CREATE OR REPLACE TABLE `iobruno-gcp-labs.stg_nyc_trip_record_data.zone_lookup`
 AS (
     SELECT *
-    FROM `iobruno-gcp-labs.dtc_ny_taxi_tripdata_staging.ext_zone_lookup`
+    FROM `iobruno-gcp-labs.stg_nyc_trip_record_data.ext_zone_lookup`
 );
