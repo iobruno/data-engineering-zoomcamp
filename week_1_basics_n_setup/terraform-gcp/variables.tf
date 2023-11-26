@@ -1,31 +1,31 @@
-variable "gcp_project_id" {
+variable "project_id" {
   description = "GCP Project ID"
   type        = string
 }
 
-variable "gcp_region" {
+variable "data_region" {
   description = "Region for GCP Resources. Ref.: https://cloud.google.com/about/locations"
   type        = string
   default     = "us-central1"
 }
 
-variable "bq_stg_nyc_dataset" {
-  description = "BigQuery Dataset name for the Staging area of the Warehouse"
+variable "bqds_stg_nyc" {
+  description = "BigQuery Dataset for the Staging area of the NYC Tripdata"
   type        = string
 }
 
-variable "gcs_datalake_raw_bucket" {
+variable "lakehouse_raw_bucket" {
   description = "Bucket name for storing data in Raw Layer of the Datalake"
   type        = string
 }
 
-variable "gcs_storage_class" {
+variable "lakehouse_storage_class" {
   description = "Google Cloud Storage Storage Class"
   type        = string
   default     = "STANDARD"
 }
 
-variable "gcs_blob_lifecycle_expiration_in_days" {
+variable "lakehouse_blob_expiration" {
   description = "Number of days in the object lifecycle before expiration"
   type        = number
   default     = 30
