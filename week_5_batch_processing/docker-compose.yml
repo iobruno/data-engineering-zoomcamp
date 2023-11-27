@@ -3,30 +3,36 @@ services:
   spark-master:
     container_name: spark-master
     image: bitnami/spark:3.5.0
+    restart: on-failure:5
     hostname: spark-master
-    restart: on-failure
     environment:
       - SPARK_MODE=master
       - SPARK_MASTER_PORT=7077
       - SPARK_MASTER_WEBUI_PORT=9090
       - SPARK_LOCAL_IP=spark-master
+    volumes:
+      - ./jars:/opt/spark-jars
+      - ~/.credentials/gcp-credentials.json:/opt/gcp-credentials.json
     ports:
       - '7077:7077'
       - '9090:9090'
     networks:
       - spark
 
-  spark-worker-node1:
-    container_name: spark-worker-node1
+  spark-worker1:
+    container_name: spark-worker1
     image: bitnami/spark:3.5.0
-    hostname: spark-worker-node1
-    restart: on-failure
+    restart: on-failure:5
+    hostname: spark-worker1
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_CORES=2
       - SPARK_WORKER_MEMORY=8g
       - SPARK_WORKER_WEBUI_PORT=9091
+    volumes:
+      - ./jars:/opt/spark-jars
+      - ~/.credentials/gcp-credentials.json:/opt/gcp-credentials.json
     ports:
       - '9091:9091'
     networks:
@@ -34,17 +40,20 @@ services:
     depends_on:
       - spark-master
 
-  spark-worker-node2:
-    container_name: spark-worker-node2
+  spark-worker2:
+    container_name: spark-worker2
     image: bitnami/spark:3.5.0
-    hostname: spark-worker-node2
-    restart: on-failure
+    restart: on-failure:5
+    hostname: spark-worker2
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_CORES=2
       - SPARK_WORKER_MEMORY=8g
       - SPARK_WORKER_WEBUI_PORT=9092
+    volumes:
+      - ./jars:/opt/spark-jars
+      - ~/.credentials/gcp-credentials.json:/opt/gcp-credentials.json
     ports:
       - '9092:9092'
     networks:
