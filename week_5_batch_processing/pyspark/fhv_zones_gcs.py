@@ -74,9 +74,9 @@ def main():
         key="ZONE_LOOKUP_PATH",
         default="gs://iobruno-datalake-raw/dtc_ny_taxi_tripdata/zone_lookup/taxi_zone_lookup.csv.gz",
     )
-    
+
     print(f"Now fetching 'FHV' Dataset: {fhv_gcs_path}")
-    
+
     fhv: DataFrame = spark.read.parquet(fhv_gcs_path)
     print(f"Now fetching 'Zone Lookup' Dataset: {zone_lookup_gcs_path}")
 
@@ -104,10 +104,9 @@ def main():
     sdf = join_dfs_with_spark_sql(spark)
 
     print("Preparing to write resulting DataFrame...")
-    sdf.write\
-        .option("compression", "snappy")\
-        .mode("overwrite")\
-        .parquet("gs://iobruno-datalake-raw/spark-warehouse/")
+    sdf.write.option("compression", "snappy").mode("overwrite").parquet(
+        "gs://iobruno-datalake-raw/spark-warehouse/"
+    )
 
     print("All done!")
 
