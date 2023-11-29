@@ -108,7 +108,5 @@ Credentials:
 - [x] Set up Confluent Schema Registry
 - [x] Set up Confluent Rest Proxy
 - [x] Set up ksqlDB Server and CLI
-- [x] Set up `kpow` Web UI
 - [x] Set up `Conduktor Platform` Web UI
-- [x] Set up a `UI for Kafka` Web UI
-- [ ] Switch Kafka to use KRaft instead
+- [ ] Deploy Kafka Cluster on K8s with Helm Charts
