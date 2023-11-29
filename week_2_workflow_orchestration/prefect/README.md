@@ -1,7 +1,12 @@
 # Prefect Workflow Orchestration
 
-![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-FFD43B.svg?style=flat&logo=python&logoColor=white&labelColor=306998)
+![Prefect](https://img.shields.io/badge/Prefect-2.14-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
+![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-grey?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This GitHub project streamlines Prefect Flows to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
 
@@ -64,10 +69,10 @@ For the very first run:
 - Make sure to set the environment variables: `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`,
 - Also, configure the database name it should connect to on `app.yml` under the key: `prefect_block.sqlalchemy.ny_taxi.database`
 ```shell
-export DATABASE_USERNAME=postgres && \
-export DATABASE_PASSWORD=postgres && \
-export DATABASE_HOST=localhost && \
-export DATABASE_PORT=5433 && \
+export DATABASE_USERNAME=postgres \
+export DATABASE_PASSWORD=postgres \
+export DATABASE_HOST=localhost \
+export DATABASE_PORT=5433 \
 export DATABASE_NAME=nyc_taxi
 ```
 
@@ -77,5 +82,6 @@ python flows/sqlalchemy_ingest.py
 
 
 ## TODO:
-- [x] Externalize configurations to config file (app.yml)
-- [x] Replace poetry with PDM
+- [x] PEP-517: Packaging and dependency management with PDM
+- [x] Code format/lint with Ruff
+- [ ] Run Prefect flows on Docker

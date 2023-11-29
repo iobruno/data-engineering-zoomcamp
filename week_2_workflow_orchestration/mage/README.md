@@ -1,7 +1,12 @@
 # Mage.ai Workflow Orchestration
 
-![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-FFD43B.svg?style=flat&logo=python&logoColor=white&labelColor=306998)
+![Mage.ai](https://img.shields.io/badge/Mage.ai-0.9-111113?style=flat&logoColor=white&labelColor=111113)
+![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-grey?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This GitHub project streamlines `Mage pipelines` to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
 
@@ -50,6 +55,8 @@ pre-commit install
 
 
 ## TODO:
-- [ ] Implement Pipelines with Mage on Docker
 - [ ] PEP-517: Packaging and dependency management with PDM
 - [ ] Code format/lint with Ruff
+- [ ] Run Mage pipelines on Docker
+- [ ] Deploy [Mage to Kubernetes with Helm](https://docs.mage.ai/production/deploying-to-cloud/using-helm)
+- [ ] Run/Deploy Mage pipelines on Kubernetes
