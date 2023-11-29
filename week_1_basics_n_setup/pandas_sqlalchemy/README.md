@@ -1,8 +1,9 @@
 # pandas-SQLAlchemy
 
-![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-FFD43B.svg?style=flat&logo=python&logoColor=white&labelColor=306998)
+![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
@@ -28,8 +29,7 @@ Check the details on how to run with Docker or Locally on the `Up and Running` s
 
 
 ## Tech Stack
-- Python 3.9 / 3.10 / 3.11
-- pandas, numpy
+- pandas
 - [Click](https://click.palletsprojects.com/en/latest/) 
 - [Rich CLI](https://github.com/Textualize/rich)
 - [PDM](https://pdm-project.org/latest/#installation)
@@ -61,10 +61,10 @@ docker run --network pg-network -d taxi_ingest
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.9 with conda:
+**1.** Create and activate a virtualenv for Python 3.11 with conda:
 ```shell
-conda create -n de-zoomcamp python=3.9 -y
-conda activate de-zoomcamp
+conda create -n pandas-sqlalchemy python=3.11 -y
+conda activate pandas-sqlalchemy
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
@@ -83,11 +83,11 @@ pre-commit install
 
 **4.** Export ENV VARS to connect to DB:
 ```shell
-export DATABASE_USERNAME=postgres
-export DATABASE_PASSWORD=postgres
-export DATABASE_HOST=localhost
-export DATABASE_PORT=5433
-export DATABASE_NAME=ny_taxi
+export DATABASE_USERNAME=postgres \
+export DATABASE_PASSWORD=postgres \
+export DATABASE_HOST=localhost \
+export DATABASE_PORT=5433 \
+export DATABASE_NAME=nyc_taxi
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
@@ -96,7 +96,8 @@ python pg_ingest.py --help
 ```
 
 ## TODO:
-- [x] Externalize endpoints to config file
+- [x] PEP-517: Packaging and dependency management with PDM
+- [x] Code format/lint with Ruff
 - [x] Build a CLI app with `click`
 - [x] Progress Bars to keep track of the execution with `rich`
-- [x] Replace poetry with PDM
+- [x] Run/Deploy the project on Docker
