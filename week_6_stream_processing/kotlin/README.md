@@ -21,7 +21,7 @@ sdk i java 17.0.6-librca
 **2.** (Optional) Install `Gradle` version `8.x` with:
 
 ```shell
-sdk i gradle 8.0.2
+sdk i gradle 8.4
 ```
 
 **3.** (Optional) Install pre-commit:
