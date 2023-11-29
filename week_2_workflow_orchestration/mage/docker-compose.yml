@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  mageai:
+    container_name: mageai
+    image: mageai/mageai:latest
+    restart: on-failure
+    environment:
+      - USER_CODE_PATH=/home/src/demo-pipeline
+    volumes:
+      - ./pipelines:/home/src
+    ports:
+      - "6789:6789"
+    command: "mage start demo-pipeline"
