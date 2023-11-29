@@ -1,6 +1,6 @@
 # pySpark Playground
 
-![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
 ![Apache Spark](https://img.shields.io/badge/pySpark-FDEE21?style=flat-square&logo=apachespark&logoColor=orange)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
@@ -94,10 +94,12 @@ Service Account with Read Access to GCS, and run:
 python spark_gcs_to_gcs.py
 ```
 
+
 ## TODO:
+- [x] PEP-517: Packaging and dependency management with PDM
+- [x] Code format/lint with Ruff
 - [X] Set up a Jupyter Playground for PySpark
-- [X] Explore the SparkSQL API
 - [X] Enable Spark to read from Google Cloud Storage
 - [ ] Submit a PySpark job to the Google Dataproc
-- [ ] Set up a Spark Cluster for Spark on Kubernetes: [minikube](https://minikube.sigs.k8s.io/docs/start/) or [kind](https://kind.sigs.k8s.io/)
+- [ ] Deploy [Spark to Kubernetes with Helm](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator) using: [minikube](https://minikube.sigs.k8s.io/docs/start/) or [kind](https://kind.sigs.k8s.io/)
 - [ ] Submit a PySpark job to the K8s Spark Cluster
