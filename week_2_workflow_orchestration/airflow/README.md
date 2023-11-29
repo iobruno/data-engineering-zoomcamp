@@ -1,9 +1,12 @@
 # Airflow Workflow Orchestration
 
-![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-FFD43B.svg?style=flat&logo=python&logoColor=white&labelColor=306998)
+![Airflow](https://img.shields.io/badge/Airflow-2.7-3772FF?style=flat&logo=apacheairflow&logoColor=white&labelColor=3772FF)
+![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
-![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=for-the-badge&logo=Apache%20Airflow&logoColor=white)
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-grey?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This GitHub project streamlines `Airflow DAGs` to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
 
@@ -46,8 +49,9 @@ pre-commit install
 
 
 ## TODO:
-- [ ] Implement DAGs with Airflow on Docker
 - [ ] PEP-517: Packaging and dependency management with PDM
 - [ ] Code format/lint with Ruff
+- [ ] Run Airflow DAGs on Docker
 - [ ] Complete [Astronomer Academy's Airflow 101](https://academy.astronomer.io/path/airflow-101)
-- [ ] Deploy on K8s with [KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html)
+- [ ] Deploy [Airflow to Kubernetes with Helm](https://airflow.apache.org/docs/helm-chart/stable/index.html)
+- [ ] Run/Deploy [Airflow DAGs on Kubernetes with KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html)

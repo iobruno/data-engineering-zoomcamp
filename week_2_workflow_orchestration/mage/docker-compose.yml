@@ -2,8 +2,9 @@ version: "3.9"
 services:
   mageai:
     container_name: mageai
-    image: mageai/mageai:latest
-    restart: on-failure
+    image: mageai/mageai:0.9.46
+    restart: on-failure:5
+    hostname: mageai
     environment:
       - USER_CODE_PATH=/home/src/demo-pipeline
     volumes:
