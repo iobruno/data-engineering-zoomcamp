@@ -1,6 +1,6 @@
 # Data Observability with PipeRider, dbt, and DuckDB Project:
 
-![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 Enhance data observability with dbt, DuckDB, and PipeRider. This project focuses on building a dbt model on DuckDB and integrating PipeRider pipelines for robust data observability.
@@ -51,9 +51,9 @@ piperider run
 
 
 ## TODO:
-- [x] Bootstrap dbt with DuckDB Adapter for NY Tripdata
+- [x] PEP-517: Packaging and dependency management with PDM
+- [x] Bootstrap dbt with DuckDB Adapter
 - [x] Integrate with PipeRider and generate reports
 - [x] Modify the dbt models, generate a new report and compare
 - [x] Utilize the comparison on a [GitHub Pull Request](https://github.com/iobruno/data-engineering-zoomcamp/pull/2)
-- [x] Replace Poetry with PDM
 - [ ] Set up a CI Pipeline with GitHub Actions
