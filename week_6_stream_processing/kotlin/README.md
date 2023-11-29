@@ -1,30 +1,33 @@
-# Kafka for Stream Processing with Kotlin
+# Stream Processing with Kafka, ksqlDB and Kotlin
 
-This subproject builds on top of `kafka` and `kafka-streams` to develop Stream Processing Playground
+![Kotlin](https://img.shields.io/badge/Kotlin-1.9-7F52FF.svg?style=flat&logo=kotlin&logoColor=white)
+![JDK](https://img.shields.io/badge/JDK-17%20|%2011-red.svg?style=flat&logo=openjdk&logoColor=white)
+![Kafka](https://img.shields.io/badge/Confluent%20Kafka-7.4.3-1C3461?style=flat&logo=apachekafka&logoColor=white&labelColor=black)
+![Gradle](https://img.shields.io/badge/gradle-8.5-02303A?style=flat&logo=gradle&logoColor=white&labelColor=02303A)
+
+
+This project aims to experiment with stream processing using `Kotlin`, `Kafka`, and `ksqlDB`, providing a playground for seamless data integration and analysis
+
 
 ## Tech Stack
-- Kotlin (JDK 11 / 17)
+- Kotlin (JDK 17 / 11)
 - Confluent Kafka
-- Kafka Streams
+- Confluent Schema Registry
+- ksqlDB
 - Gradle
+
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Install `JDK` 11 or 17. You can do so easily with [SDKMAN!](https://sdkman.io/):
+**1.** Install `JDK` 17 (or 11). You can do so easily with [SDKMAN!](https://sdkman.io/):
 
 ```shell
-sdk i java 17.0.6-librca
+sdk i java 17.0.9-librca
 ```
 
-**2.** (Optional) Install `Gradle` version `8.x` with:
-
-```shell
-sdk i gradle 8.4
-```
-
-**3.** (Optional) Install pre-commit:
+**2.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
 
@@ -32,9 +35,14 @@ brew install pre-commit
 pre-commit install
 ```
 
-**4.** Build and generate the application artifact:
+**3.** Build and generate the application artifact:
 ```shell
-gradle clean shadowJar
+./gradlew clean shadowJar
+```
+
+**4.** Start Kafka, Schema Registry and others from the parent directory:
+```shell
+docker compose -f ../docker-compose.yml up -d
 ```
 
 **5.** Run the application with and check the subcommands:
@@ -70,7 +78,6 @@ Process [GreenTaxiDTO|YellowTaxiDTO|FhvTaxiDTO] data from CSV file and publish t
   -t, --topic=<topic>   Target Kafka topic for records
 ```
 
-
 **5.2.** CLI for ConsumerApp
 ```shell
 java -jar build/libs/kafka-stream-processing-1.0.jar consumer
@@ -97,6 +104,6 @@ Deserialize ConsumerRecords from source Kafka topic to [GreenTaxiDTO|YellowTaxiD
 - [x] Set up an environment for Kotlin, Kafka Client and KafkaStreams
 - [x] Set up a Schema Registry
 - [x] Build a Cli Application for Producer and Consumer
-- [x] Explore serialization with JSON
-- [ ] Explore serialization with Avro
-- [ ] Explore KafkaStreams as built-in library in the App
+- [x] Explore serialization with `JSON`
+- [ ] Explore serialization with `Protobuf`
+- [ ] Static code analysis with [detekt](https://detekt.dev/)
