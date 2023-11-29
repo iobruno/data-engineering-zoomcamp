@@ -3,7 +3,8 @@ services:
   mageai:
     container_name: mageai
     image: mageai/mageai:latest
-    restart: on-failure
+    restart: on-failure:5
+    hostname: mageai
     environment:
       - USER_CODE_PATH=/home/src/demo-pipeline
     volumes:

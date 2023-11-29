@@ -50,6 +50,8 @@ pre-commit install
 
 
 ## TODO:
-- [ ] Implement Pipelines with Mage on Docker
 - [ ] PEP-517: Packaging and dependency management with PDM
 - [ ] Code format/lint with Ruff
+- [ ] Run Mage pipelines on Docker
+- [ ] Deploy [Mage to Kubernetes with Helm](https://docs.mage.ai/production/deploying-to-cloud/using-helm)
+- [ ] Run/Deploy Mage pipelines on Kubernetes

@@ -46,8 +46,9 @@ pre-commit install
 
 
 ## TODO:
-- [ ] Implement DAGs with Airflow on Docker
 - [ ] PEP-517: Packaging and dependency management with PDM
 - [ ] Code format/lint with Ruff
+- [ ] Run Airflow DAGs on Docker
 - [ ] Complete [Astronomer Academy's Airflow 101](https://academy.astronomer.io/path/airflow-101)
-- [ ] Deploy on K8s with [KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html)
+- [ ] Deploy [Airflow to Kubernetes with Helm](https://airflow.apache.org/docs/helm-chart/stable/index.html)
+- [ ] Run/Deploy [Airflow DAGs on Kubernetes with KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html)
