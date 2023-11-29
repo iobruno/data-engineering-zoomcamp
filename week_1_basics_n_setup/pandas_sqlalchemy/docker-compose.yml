@@ -3,8 +3,8 @@ services:
   postgres:
     container_name: postgres
     image: postgres:15-alpine
+    restart: on-failure:5
     hostname: postgres
-    restart: on-failure
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -19,8 +19,8 @@ services:
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
+    restart: on-failure:5
     hostname: pgadmin
-    restart: on-failure
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
       - PGADMIN_DEFAULT_PASSWORD=admin
