@@ -1,7 +1,11 @@
 # dbt for Analytics Engineering
 
-![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![dbt](https://img.shields.io/badge/dbt-1.0-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)
+![Looker](https://img.shields.io/badge/Looker_Studio-3772FF?style=flat&logo=looker&logoColor=white&labelColor=3772FF)
+
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in BigQuery. Additionally, it involves developing Dashboards in `Looker Studio` (formerly known as `Google Data Studio`) for data visualizations
 
@@ -9,16 +13,16 @@ This project focuses on creating dbt models using the NY Taxi Tripdata Datasets 
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-bigquery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
-- [PDM](https://pdm-project.org/latest/#installation)
-- [Ruff](https://github.com/astral-sh/ruff)
-- Looker Studio
+- [PDM](https://pdm-project.org/latest/usage/dependency/)
+- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [Looker Studio](https://lookerstudio.google.com/)
 
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.9 with conda:
+**1.** Create and activate a virtualenv for Python 3.10 / 3.11 with conda:
 ```shell
 conda create -n dbt-bigquery python=3.11 -y
 conda activate dbt-bigquery
@@ -29,25 +33,51 @@ conda activate dbt-bigquery
 pdm sync
 ```
 
-**3.** (Optional) Install pre-commit:
+**3. (Optional)**  Install pre-commit:
 ```shell
 brew install pre-commit
+```
 
-# From root folder where `.pre-commit-config.yaml` is located, run:
+From root folder where `.pre-commit-config.yaml` is located, run:
+```shell
 pre-commit install
 ```
 
-**5.** Run `dbt deps` to install dbt plugins
+**4.** Setup dbt profiles.yaml accordingly (use the `profiles.tmpl.yaml` as template)
+
+4.1. By default, the profiles_dir is the user '$HOME/.dbt/'
+```shell
+cp profiles.tmpl.yaml ~/.dbt/profiles.yml
+```
+
+4.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
+
+```yaml
+  path: '/tmp/piperider.duckdb'
+  filesystems:
+  - fs: gcs
+    project: iobruno-gcp-labs
+```
+
+4.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
+```
+
+**5.** Update the `profile` to used by this project on `dbt_project.yml`
+
+Make sure to point to an existing profile name set on profiles.yaml. In this case:
+```yaml
+profile: 'duckdb-local'
+```
+
+**6.** Run `dbt deps` and `dbt build`:
 ```shell
 dbt deps
+dbt build
 ```
 
-**5.** Run `dbt run` to trigger the dbt models to run:
-```shell
-dbt run
-```
-
-**6.** Generate the Docs and the Data Lineage graph with:
+**7.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
 ```
@@ -55,7 +85,7 @@ dbt docs generate
 dbt docs serve
 ```
 
-**7.** Access the generated docs on a web browser at the URL:
+**8.** Access the generated docs on a web browser at the URL:
 ```shell
 open http://localhost:8080
 ```
@@ -65,6 +95,7 @@ open http://localhost:8080
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with BigQuery Adapter
 - [x] Generate and serve docs and Data Lineage Graphs locally
+- [ ] Run `dbt-core` in Docker
 - [ ] Complete dbt Labs Learning Path for `dbt-core`
   - [ ] [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)
   - [ ] [Jinja, Macros, Packages](https://courses.getdbt.com/courses/jinja-macros-packages)
