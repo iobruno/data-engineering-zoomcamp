@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,intellij,visualstudiocode,terraform
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,jupyternotebooks,intellij,visualstudiocode,terraform
+# Created by https://www.toptal.com/developers/gitignore/api/intellij,python,jupyternotebooks,kotlin,gradle,terraform,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=intellij,python,jupyternotebooks,kotlin,gradle,terraform,visualstudiocode
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -18,20 +18,6 @@ cmake-build-*/
 *.iws
 *.ipr
 modules.xml
-
-### JupyterNotebooks ###
-# gitignore template for Jupyter Notebooks
-# website: http://jupyter.org/
-
-.ipynb_checkpoints
-*/.ipynb_checkpoints/*
-
-# IPython
-profile_default/
-ipython_config.py
-
-# Remove previous ipynb_checkpoints
-#   git rm -r .ipynb_checkpoints/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -153,14 +139,6 @@ dmypy.json
 # pytype static type analyzer
 .pytype/
 
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
 ### Python Patch ###
 # Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
 poetry.toml
@@ -171,6 +149,66 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+### JupyterNotebooks ###
+# gitignore template for Jupyter Notebooks
+# website: http://jupyter.org/
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Remove previous ipynb_checkpoints
+#   git rm -r .ipynb_checkpoints/
+
+### Kotlin ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+### Gradle ###
+.gradle
+**/build/
+!src/**/build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Avoid ignore Gradle wrappper properties
+!gradle-wrapper.properties
+
+# Cache of project
+.gradletasknamecache
+
+# Eclipse Gradle plugin generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+### Gradle Patch ###
+# Java heap dump
+*.hprof
 
 ### Terraform ###
 # Local .terraform directories
@@ -209,7 +247,6 @@ override.tf.json
 terraform.rc
 .terraform.lock.hcl
 
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -239,4 +276,4 @@ terraform.rc
 # macOS
 **/.DS_Store
 
-# End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,intellij,visualstudiocode,terraform
+# End of https://www.toptal.com/developers/gitignore/api/intellij,jupyternotebooks,python,kotlin,gradle,terraform,visualstudiocode
