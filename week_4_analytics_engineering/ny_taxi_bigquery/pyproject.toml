@@ -8,7 +8,7 @@ authors = [
     {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-requires-python = ">=3.9,<3.12"
+requires-python = ">=3.10,<3.12"
 
 dependencies = [
     "dbt>=1.0.0.34.14",

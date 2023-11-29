@@ -1,9 +1,9 @@
 # dbt for Analytics Engineering
 
-![Python](https://img.shields.io/badge/Python-3.9%20|%203.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%20|%203.11-3776AB.svg?style=flat&logo=python&logoColor=white)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in BigQuery. Additionally, it involves developing Dashboards in `Looker Studio` (formerly known as `Google Data Studio`) for data visualizations.
+This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in BigQuery. Additionally, it involves developing Dashboards in `Looker Studio` (formerly known as `Google Data Studio`) for data visualizations
 
 
 ## Tech Stack
@@ -62,8 +62,15 @@ open http://localhost:8080
 
 
 ## TODO:
-- [x] Bootstrap dbt with BigQuery Adapter for NYC Tripdata
+- [x] PEP-517: Packaging and dependency management with PDM
+- [x] Bootstrap dbt with BigQuery Adapter
 - [x] Generate and serve docs and Data Lineage Graphs locally
-- [x] Replace Poetry with PDM
-- [ ] Implement Data Observability with [elementary-data](https://github.com/elementary-data/elementary)
+- [ ] Complete dbt Labs Learning Path for `dbt-core`
+  - [ ] [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)
+  - [ ] [Jinja, Macros, Packages](https://courses.getdbt.com/courses/jinja-macros-packages)
+  - [ ] [Advanced Materializations](https://courses.getdbt.com/courses/advanced-materializations)
+  - [ ] [Refactoring SQL for Modularity](https://courses.getdbt.com/courses/refactoring-sql-for-modularity)
+  - [ ] [Analyses and Seeds](https://courses.getdbt.com/courses/analyses-seeds)
+  - [ ] [Advanced Testing](https://courses.getdbt.com/courses/advanced-testing)
 - [ ] Implement Data Quality metrics it with [dbt-expectations](https://github.com/calogica/dbt-expectations)
+- [ ] Implement Data Observability with [elementary-data](https://github.com/elementary-data/elementary)
