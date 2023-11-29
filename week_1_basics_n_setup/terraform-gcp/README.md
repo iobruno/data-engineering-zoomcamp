@@ -1,4 +1,8 @@
-# Terraform Setup for GCP
+# Terraform for Google Cloud Platform
+
+![Terraform](https://img.shields.io/badge/Terraform-1.4-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
+![GCP](https://img.shields.io/badge/Google_Cloud-3772FF?style=flat&logo=googlecloud&logoColor=white&labelColor=3772FF)
+
 
 ## Initial Setup
 
