@@ -1,0 +1,27 @@
+[project]
+name = ""
+version = "1.0"
+description = "Analytics Engineering with dbt, duckdb and piperider"
+license = {text = "CC-BY-SA-4.0"}
+readme = "README.md"
+authors = [
+    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
+]
+
+requires-python = ">=3.10,<3.12"
+
+dependencies = [
+    "dbt>=1.0.0.34.16",
+    "dbt-duckdb>=1.7.0",
+    "duckdb>=0.9.2",
+    "gcsfs>=2023.10.0",
+    "piperider[duckdb]>=0.41.0",
+]
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.6",
+]
+
+[tool.ruff]
+line-length = 100
