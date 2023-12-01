@@ -32,35 +32,55 @@ conda activate dbt-duckdb
 pdm sync
 ```
 
-**3.** (Optional) Install pre-commit:
-```shell
-brew install pre-commit
+**3.** Setup dbt profiles.yaml accordingly (use the `profiles.tmpl.yaml` as template)
 
-# From root folder where `.pre-commit-config.yaml` is located, run:
-pre-commit install
+3.1. By default, the profiles_dir is the user '$HOME/.dbt/'
+```shell
+cp profiles.tmpl.yaml ~/.dbt/profiles.yml
 ```
 
-**4.** Run `dbt deps` and `dbt build`:
+3.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
+
+```yaml
+  path: '/tmp/piperider.duckdb'
+  filesystems:
+  - fs: gcs
+    project: iobruno-gcp-labs
+```
+
+3.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
+```
+
+**4.** Update the `profile` to used by this project on `dbt_project.yml`
+
+Make sure to point to an existing profile name set on profiles.yaml. In this case:
+```yaml
+profile: 'duckdb-local'
+```
+
+**5.** Run `dbt deps` and `dbt build`:
 ```shell
 dbt deps
 dbt build
 ```
 
-**Note:**
-
-**5.** Initialize the PipeRider setup and run it for the first time:
+**6.** Initialize the PipeRider setup and run it for the first time:
 ```shell
 piperider init 
 piperider run
 ```
 
+**7. (Optional)**  Install pre-commit:
+```shell
+brew install pre-commit
+```
 
-## Com
-mon Mistakes
-
-`dbt build` returns: 
-> Error: Invalid value for '--profiles-dir': Path '/Users/iobruno/.dbt' does not exist.
-
+From root folder where `.pre-commit-config.yaml` is located, run:
+```shell
+pre-commit install
+```
 
 
 ## TODO:
