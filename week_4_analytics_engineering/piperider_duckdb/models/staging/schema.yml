@@ -1,19 +1,21 @@
 version: 2
-
 sources:
-
-  - name: parquet
+  - name: nyc_trip_record_data_parquet
     meta:
-      external_location: "read_parquet('/Users/iobruno/Vault/datasets/{name}/*.parquet.snappy')"
+      external_location: "read_parquet('gs://iobruno-lakehouse-raw/nyc_trip_record_data/{name}/*.parquet')"
     tables:
       - name: fhv
       - name: fhvhv
       - name: green
       - name: yellow
+
+  - name: nyc_trip_record_data_csv
+    meta:
+      external_location: "read_csv('gs://iobruno-lakehouse-raw/nyc_trip_record_data/{name}/*.csv.gz', auto_detect=true)"
+    tables:
       - name: zone_lookup
 
 models:
-
   - name: stg_green_tripdata
     description: >
       Trip made by green taxis, also known as boro taxis and street-hail liveries.
