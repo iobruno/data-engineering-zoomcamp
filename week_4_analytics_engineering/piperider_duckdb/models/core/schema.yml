@@ -1,5 +1,4 @@
 version: 2
-
 models:
   - name: dim_zone_lookup
     description: >
@@ -23,18 +22,3 @@ models:
         tests:
           - not_null:
               severity: error
-
-metrics:
-  - name: average_distance
-    label: Average Distance
-    model: ref('fact_yellow_green_trips')
-    description: "The average trip distance"
-
-    calculation_method: average
-    expression: trip_distance
-
-    timestamp: pickup_datetime
-    time_grains: [month, quarter, year]
-
-    tags:
-    - piperider
