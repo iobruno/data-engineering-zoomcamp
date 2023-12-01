@@ -1,12 +1,11 @@
-{{ config(materialized='view') }}
-
 SELECT
-    -- identifier
-    LocationID                              AS location_id,
-
-    -- location
-    Borough                                 AS borough,
-    Zone                                    AS zone,
-    REPLACE(service_zone, 'Boro', 'Green')  AS service_zone
-
-FROM {{ source('parquet', 'zone_lookup') }}
+    LocationID          as location_id,
+    Borough             as borough,
+    Zone                as zone,
+    REPLACE(
+        service_zone,
+        'Boro',
+        'Green'
+    )                   as service_zone
+FROM
+    {{ source('nyc_trip_record_data_csv', 'zone_lookup') }}

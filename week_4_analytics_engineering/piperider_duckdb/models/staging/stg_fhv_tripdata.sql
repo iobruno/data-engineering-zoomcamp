@@ -1,23 +1,19 @@
-{{ config(materialized='view') }}
-
 SELECT
     -- identifiers
-    {{
+    {{ 
         dbt_utils.generate_surrogate_key([
             'dispatching_base_num',
             'pickup_datetime'
-        ])
-    }}                      AS trip_id,
-    dispatching_base_num    AS dispatching_base_num,
-    Affiliated_base_number  AS affiliated_base_num,
-
+        ]) 
+    }}                      as trip_id,
+    dispatching_base_num    as dispatching_base_num,
+    Affiliated_base_number  as affiliated_base_num,
     -- pickup and dropoff timestamps
     pickup_datetime,
-    dropOff_datetime        AS dropoff_datetime,
-
+    dropOff_datetime        as dropoff_datetime,
     -- trip info
-    PUlocationID            AS pickup_location_id,
-    DOlocationID            AS dropoff_location_id,
-    SR_Flag                 AS shared_ride_flag
-
-FROM {{ source('parquet', 'fhv') }}
+    PUlocationID            as pickup_location_id,
+    DOlocationID            as dropoff_location_id,
+    SR_Flag                 as shared_ride_flag
+FROM
+    {{ source('nyc_trip_record_data_parquet', 'fhv') }}
