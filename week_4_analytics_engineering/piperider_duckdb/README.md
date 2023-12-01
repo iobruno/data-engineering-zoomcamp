@@ -32,47 +32,7 @@ conda activate dbt-duckdb
 pdm sync
 ```
 
-**3.** Setup dbt profiles.yaml accordingly (use the `profiles.tmpl.yaml` as template)
-
-3.1. By default, the profiles_dir is the user '$HOME/.dbt/'
-```shell
-cp profiles.tmpl.yaml ~/.dbt/profiles.yml
-```
-
-3.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
-
-```yaml
-  path: '/tmp/piperider.duckdb'
-  filesystems:
-  - fs: gcs
-    project: iobruno-gcp-labs
-```
-
-3.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
-```shell
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
-```
-
-**4.** Update the `profile` to used by this project on `dbt_project.yml`
-
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
-```yaml
-profile: 'duckdb-local'
-```
-
-**5.** Run `dbt deps` and `dbt build`:
-```shell
-dbt deps
-dbt build
-```
-
-**6.** Initialize the PipeRider setup and run it for the first time:
-```shell
-piperider init 
-piperider run
-```
-
-**7. (Optional)**  Install pre-commit:
+**3. (Optional)**  Install pre-commit:
 ```shell
 brew install pre-commit
 ```
@@ -82,10 +42,84 @@ From root folder where `.pre-commit-config.yaml` is located, run:
 pre-commit install
 ```
 
+**4.** Setup dbt profiles.yaml accordingly (use the `profiles.tmpl.yaml` as template)
+
+4.1. By default, the profiles_dir is the user '$HOME/.dbt/'
+```shell
+cp profiles.tmpl.yaml ~/.dbt/profiles.yml
+```
+
+4.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
+
+```yaml
+  path: '/tmp/piperider.duckdb'
+  filesystems:
+  - fs: gcs
+    project: iobruno-gcp-labs
+```
+
+4.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
+```
+
+**5.** Update the `profile` to used by this project on `dbt_project.yml`
+
+Make sure to point to an existing profile name set on profiles.yaml. In this case:
+```yaml
+profile: 'duckdb-local'
+```
+
+**6.** Run `dbt deps` and `dbt build`:
+```shell
+dbt deps
+dbt build
+```
+
+**7.** Setup and run PipeRider:
+
+Initialize the PipeRider 
+```shell
+piperider init 
+```
+
+Next, run `diagnose`
+```shell
+piperider diagnose
+```
+The output should be similar to:
+```shell
+Diagnosing...
+
+Check format of data sources:
+  dev: [OK]
+✅ PASS
+
+Check connections:
+  DBT: [OK]
+    Version: 1.7.2
+    Adapter: duckdb
+    Profile: duckdb-local
+    Target:  dev 
+  Name: dev
+  Type: duckdb
+  Connector: [OK]
+  Connection: [OK]
+✅ PASS
+
+🎉 You are all set!
+```
+
+Finally, run piperider itself:
+```shell
+piperider run
+```
+
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
-- [x] Bootstrap dbt with DuckDB Adapter
+- [x] Bootstrap dbt with DuckDB Adapter ([dbt-duckdb](https://github.com/duckdb/dbt-duckdb))
+- [x] Configure [dbt-duckdb](https://github.com/duckdb/dbt-duckdb) to use `fsspec` and [read directly from GCS](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
 - [x] Integrate with PipeRider and generate reports
 - [x] Modify the dbt models, generate a new report and compare
 - [x] Utilize the comparison on a [GitHub Pull Request](https://github.com/iobruno/data-engineering-zoomcamp/pull/2)
