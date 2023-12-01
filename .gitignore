@@ -169,6 +169,9 @@ dbt_modules/
 dbt_packages/
 logs/
 
+### piperider ###
+.piperider/
+
 ### Kotlin ###
 # Compiled class file
 *.class
