@@ -1,12 +1,12 @@
 # Prefect Workflow Orchestration
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-FFD43B.svg?style=flat&logo=python&logoColor=white&labelColor=306998)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Prefect](https://img.shields.io/badge/Prefect-2.14-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
-![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-grey?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This GitHub project streamlines Prefect Flows to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
 
