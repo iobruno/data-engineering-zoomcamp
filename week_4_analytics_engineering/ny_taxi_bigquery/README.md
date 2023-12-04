@@ -50,25 +50,25 @@ pre-commit install
 cp profiles.tmpl.yaml ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
+4.2. Configure the gcp `project_id`, the `dataset`, and `location` where BigQuery should create its tables in (on `profiles.yml`)
 
 ```yaml
-  path: '/tmp/piperider.duckdb'
-  filesystems:
-  - fs: gcs
-    project: iobruno-gcp-labs
+  method: oauth
+  project: iobruno-gcp-labs
+  dataset: nyc_trip_record_staging
+  location: us-central1
 ```
 
-4.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
+4.3. Since we're doing `oauth` authentication for development, run:
 ```shell
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
+gcloud auth login
 ```
 
 **5.** Update the `profile` to used by this project on `dbt_project.yml`
 
 Make sure to point to an existing profile name set on profiles.yaml. In this case:
 ```yaml
-profile: 'duckdb-local'
+profile: 'iobruno-gcp-labs-bigquery'
 ```
 
 **6.** Run `dbt deps` and `dbt build`:
