@@ -3,6 +3,8 @@
 ![Terraform](https://img.shields.io/badge/Terraform-1.4-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
 ![GCP](https://img.shields.io/badge/Google_Cloud-3772FF?style=flat&logo=googlecloud&logoColor=white&labelColor=3772FF)
 
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
+
 
 ## Initial Setup
 
