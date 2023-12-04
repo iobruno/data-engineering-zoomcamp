@@ -12,11 +12,10 @@ This project aims to experiment with stream processing using `Kotlin`, `Kafka`, 
 
 
 ## Tech Stack
-- Kotlin (JDK 17 / 11)
-- Confluent Kafka
-- Confluent Schema Registry
-- ksqlDB
-- Gradle
+- [Confluent Kafka](https://docs.confluent.io/platform/current/installation/overview.html)
+- [Confluent Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)
+- [ksqlDB](https://docs.ksqldb.io/en/latest/)
+- [Gradle with Kotlin DSL](https://docs.gradle.org/current/userguide/userguide.html)
 - [Docker](https://docs.docker.com/get-docker/)
 
 
