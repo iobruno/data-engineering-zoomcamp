@@ -14,9 +14,9 @@ SELECT
     tpep_pickup_datetime    as pickup_datetime,
     tpep_dropoff_datetime   as dropoff_datetime,
     -- trip info
-    store_and_fwd_flag,
-    passenger_count,
-    trip_distance,
+    store_and_fwd_flag      as store_and_fwd_flag,
+    passenger_count         as passenger_count,
+    trip_distance           as trip_distance,
     1                       as trip_type, -- yellow cabs are always street-hail
     -- payment info
     fare_amount             as fare_amount,
@@ -29,7 +29,9 @@ SELECT
     congestion_surcharge    as congestion_surcharge,
     total_amount            as total_amount,
     payment_type            as payment_type,
-    {{ payment_type_desc_for('payment_type') }} as payment_type_desc
+    {{ 
+        payment_type_desc_for('payment_type')
+    }}                      as payment_type_desc
 FROM 
     {{ source('bq-staging-nyc-trip_record', 'yellow') }}
 

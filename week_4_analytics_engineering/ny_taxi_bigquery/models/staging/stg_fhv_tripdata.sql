@@ -9,7 +9,7 @@ SELECT
     dispatching_base_num    as dispatching_base_num,
     Affiliated_base_number  as affiliated_base_num,
     -- pickup and dropoff timestamps
-    pickup_datetime,
+    pickup_datetime         as pickup_datetime,
     dropOff_datetime        as dropoff_datetime,
     -- trip info
     PUlocationID            as pickup_location_id,

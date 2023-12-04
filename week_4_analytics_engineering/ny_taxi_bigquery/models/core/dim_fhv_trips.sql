@@ -18,8 +18,8 @@ lookup_zones AS (
 )
 
 SELECT
-    t.dispatching_base_num,
-    t.affiliated_base_num,
+    t.dispatching_base_num  as dispatching_base_num,
+    t.affiliated_base_num   as affiliated_base_num,
     t.pickup_location_id    as pickup_location_id,
     pickup.borough          as pickup_borough,
     pickup.zone             as pickup_zone,
@@ -28,9 +28,9 @@ SELECT
     dropoff.borough         as dropoff_borough,
     dropoff.zone            as dropoff_zone,
     dropoff.service_zone    as dropoff_service_zone,
-    t.shared_ride_flag,
-    t.pickup_datetime,
-    t.dropoff_datetime
+    t.shared_ride_flag      as shared_ride_flag,
+    t.pickup_datetime       as pickup_datetime,
+    t.dropoff_datetime      as dropoff_datetime
 FROM 
     fhv_tripdata t
 INNER JOIN lookup_zones pickup  

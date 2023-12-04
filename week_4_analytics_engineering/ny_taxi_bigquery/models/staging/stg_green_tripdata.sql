@@ -14,10 +14,10 @@ SELECT
     lpep_pickup_datetime    as pickup_datetime,
     lpep_dropoff_datetime   as dropoff_datetime,
     -- trip info
-    store_and_fwd_flag,
-    passenger_count,
-    trip_distance,
-    trip_type,
+    store_and_fwd_flag      as store_and_fwd_flag,
+    passenger_count         as passenger_count,
+    trip_distance           as trip_distance,
+    trip_type               as trip_type,
     -- payment info
     fare_amount             as fare_amount,
     extra                   as extra,
@@ -29,7 +29,9 @@ SELECT
     congestion_surcharge    as congestion_surcharge,
     total_amount            as total_amount,
     payment_type            as payment_type,
-    {{ payment_type_desc_for('payment_type') }} as payment_type_desc
+    {{ 
+        payment_type_desc_for('payment_type')
+    }}                      as payment_type_desc
 FROM 
     {{ source('bq-staging-nyc-trip_record', 'green') }}
 
