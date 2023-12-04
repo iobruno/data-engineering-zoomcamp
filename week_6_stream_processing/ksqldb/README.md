@@ -11,8 +11,8 @@ This contains the SQL statements to build the KStreams and KTables for ksqlDB to
 
 
 ## Tech Stack
-- Confluent Kafka
-- ksqlDB
+- [Confluent Kafka](https://docs.confluent.io/platform/current/installation/overview.html)
+- [ksqlDB](https://docs.ksqldb.io/en/latest/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 
