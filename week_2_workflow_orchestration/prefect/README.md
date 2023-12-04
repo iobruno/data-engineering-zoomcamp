@@ -8,7 +8,7 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-grey?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This GitHub project streamlines Prefect Flows to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
+This GitHub project streamlines `Prefect Flows` to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
 
 *Note*: The `Prefect Orion` server is now called `Prefect Server`
 
