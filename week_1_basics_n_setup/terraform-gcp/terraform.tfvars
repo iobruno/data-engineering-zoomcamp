@@ -3,6 +3,6 @@
 
 project_id = "iobruno-gcp-labs"
 
-bqds_stg_nyc = "stg_nyc_trip_record_data"
+bqds_raw_nyc_trip_record_data = "raw_nyc_trip_record_data"
 
 lakehouse_raw_bucket = "iobruno-lakehouse-raw"
