@@ -1,13 +1,14 @@
-ny_taxi_tripdata@iobruno-gcp-labs:
-  target: ny_taxi
+iobruno-gcp-labs-bigquery:
   outputs:
-    ny_taxi:
+    staging:
       type: bigquery
-      project: iobruno-gcp-labs
-      dataset: ny_taxi_staging
-      location: us-central1
-      threads: 4
-      priority: interactive
       method: oauth
+      project: iobruno-gcp-labs
+      dataset: stg_nyc_trip_record_data
+      location: us-central1
+      priority: interactive
+      threads: 4
       job_execution_timeout_seconds: 300
       job_retries: 1
+
+  target: staging
