@@ -31,12 +31,12 @@ Check the details on how to run with Docker or Locally on the `Up and Running` s
 
 
 ## Tech Stack
-- pandas
+- [pandas](https://pandas.pydata.org/docs/user_guide/)
 - [Click](https://click.palletsprojects.com/en/latest/) 
 - [Rich CLI](https://github.com/Textualize/rich)
-- [PDM](https://pdm-project.org/latest/#installation)
-- [Ruff](https://github.com/astral-sh/ruff)
-- Docker
+- [PDM](https://pdm-project.org/latest/usage/dependency/)
+- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [Docker](https://docs.docker.com/get-docker/)
 
 
 ## Up and Running
