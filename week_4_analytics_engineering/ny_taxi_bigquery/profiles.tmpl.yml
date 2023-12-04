@@ -10,16 +10,5 @@ iobruno-gcp-labs-bigquery:
       threads: 4
       job_execution_timeout_seconds: 300
       job_retries: 1
-    core:
-      type: bigquery
-      method: oauth
-      project: iobruno-gcp-labs
-      dataset: nyc_trip_record_data
-      location: us-central1
-      priority: interactive
-      threads: 4
-      job_execution_timeout_seconds: 300
-      job_retries: 1
-
 
   target: staging
