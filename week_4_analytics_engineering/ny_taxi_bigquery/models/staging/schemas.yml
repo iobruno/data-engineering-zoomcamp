@@ -6,7 +6,7 @@ sources:
     database: iobruno-gcp-labs
 
     # BigQuery Dataset name
-    schema: stg_nyc_trip_record_data
+    schema: raw_nyc_trip_record_data
 
     # Tables to source data from
     tables:

@@ -4,7 +4,7 @@ iobruno-gcp-labs-bigquery:
       type: bigquery
       method: oauth
       project: iobruno-gcp-labs
-      dataset: nyc_trip_record_staging_data
+      dataset: stg_nyc_trip_record_data
       location: us-central1
       priority: interactive
       threads: 4
