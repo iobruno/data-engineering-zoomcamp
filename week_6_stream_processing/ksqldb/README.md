@@ -1,5 +1,10 @@
 # ksqlDB Stream Processing with KStreams and KTables
 
+![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.4.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
+
 This contains the SQL statements to build the KStreams and KTables for ksqlDB to allow an overview of Green and FHV Trips distribution
 
 ![ksqldb-streams](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week6_ksqldb_streams.png)
@@ -7,9 +12,9 @@ This contains the SQL statements to build the KStreams and KTables for ksqlDB to
 
 ## Tech Stack
 - Confluent Kafka
-- ksqlDB Server
-- ksqlDB CLI
-- Docker / Docker-compose
+- ksqlDB
+- [Docker](https://docs.docker.com/get-docker/)
+
 
 ## Up & Running
 
