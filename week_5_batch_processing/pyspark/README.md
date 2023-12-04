@@ -1,11 +1,12 @@
 # PySpark Playground
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-FFD43B.svg?style=flat&logo=python&logoColor=white&labelColor=306998)
+![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![PySpark](https://img.shields.io/badge/pySpark-3.5-E36B22?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=3C3A3E)
+![Jupyter](https://img.shields.io/badge/Jupyter-31393F.svg?style=flat&logo=jupyter&logoColor=F37726&labelColor=31393F)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
-![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-grey?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 PySpark Playground for NY Taxi Tripdata Batch Processing Pipeline
 
@@ -24,9 +25,10 @@ Type :help for more information.
 
 
 ## Tech Stack
-- PySpark with SparkSQL
-- Jupyter
-- [PDM](https://pdm-project.org/latest/#installation)
+- [PySpark with SparkSQL](https://spark.apache.org/docs/latest/api/python/user_guide)
+- [PDM](https://pdm-project.org/latest/usage/dependency/)
+- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [Docker](https://docs.docker.com/get-docker/)
 
 
 ## Up and Running
