@@ -15,6 +15,7 @@ This project focuses on creating dbt models using the NY Taxi Tripdata Datasets 
 - [dbt-bigquery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [Docker](https://docs.docker.com/get-docker/)
 - [Looker Studio](https://lookerstudio.google.com/)
 
 
@@ -64,20 +65,41 @@ cp profiles.tmpl.yaml ~/.dbt/profiles.yml
 gcloud auth login
 ```
 
-**5.** Update the `profile` to used by this project on `dbt_project.yml`
+4.4. Update the `profile` to used by this project on `dbt_project.yml`
 
 Make sure to point to an existing profile name set on profiles.yaml. In this case:
 ```yaml
 profile: 'iobruno-gcp-labs-bigquery'
 ```
 
-**6.** Run `dbt deps` and `dbt build`:
+**5.** Install dbt dependencies and trigger the pipeline
+
+5.1. Run `dbt deps` to install  dbt plugins
 ```shell
 dbt deps
-dbt build
 ```
 
-**7.** Generate the Docs and the Data Lineage graph with:
+5.2. Run `dbt seed` to push/create the tables from the .csv seed files to the target schema
+```shell
+dbt seed
+```
+
+5.3. Run dbt run to trigger the dbt models to run
+```shell
+dbt build
+
+# Alternatively you can run only a subset of the models with:
+
+## +models/staging: Runs the dependencies/preceding models first that lead 
+## to 'models/staging', and then the target models
+dbt [build|run] --select +models/staging
+
+## models/staging+: Runs the target models first, and then all models that depend on it
+dbt [build|run] --select models/staging+
+```
+
+
+**6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
 ```
@@ -85,7 +107,7 @@ dbt docs generate
 dbt docs serve
 ```
 
-**8.** Access the generated docs on a web browser at the URL:
+**7.** Access the generated docs on a web browser at the URL:
 ```shell
 open http://localhost:8080
 ```
@@ -93,7 +115,7 @@ open http://localhost:8080
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
-- [x] Bootstrap dbt with BigQuery Adapter
+- [x] Bootstrap dbt with BigQuery Adapter ([dbt-bigquery](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
 - [ ] Run `dbt-core` in Docker
 - [ ] Complete dbt Labs Learning Path for `dbt-core`
