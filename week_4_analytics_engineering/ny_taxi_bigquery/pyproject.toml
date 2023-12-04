@@ -1,19 +1,24 @@
-[tool.poetry]
-name = "dbt-bigquery-analytics"
+[project]
+name = ""
 version = "1.0"
-description = "Analytics Engineering with dbt"
-authors = ["iobruno <bruno.ariev@gmail.com>"]
-license = "MIT"
+description = "Analytics Engineering with dbt and BigQuery"
+license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
-packages = [{include = "analytics_engineering"}]
+authors = [
+    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-dbt-bigquery = "^1.5.1"
+requires-python = ">=3.10,<3.12"
 
-[tool.poetry.group.dev.dependencies]
-isort = "^5.12.0"
+dependencies = [
+    "dbt>=1.0.0.34.14",
+    "dbt-bigquery>=1.7.2",
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.6",
+]
+
+[tool.ruff]
+line-length = 100
