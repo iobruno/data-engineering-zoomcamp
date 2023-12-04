@@ -1,8 +1,8 @@
-name: 'piperider_duckdb'
+name: 'dbt_bigquery_analytics'
 version: '1.0.0'
 config-version: 2
 
-profile: 'dbt_duckdb_piperider'
+profile: 'iobruno-gcp-labs-bigquery'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -16,7 +16,6 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
-
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
@@ -24,11 +23,11 @@ clean-targets:         # directories to be removed by `dbt clean`
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
 models:
-  piperider_duckdb:
+  dbt_bigquery_analytics:
     staging:
       materialized: view
     core:
-      materialized: table
+      materialized: table   
 
 vars:
   payment_type_values: [1, 2, 3, 4, 5, 6]
