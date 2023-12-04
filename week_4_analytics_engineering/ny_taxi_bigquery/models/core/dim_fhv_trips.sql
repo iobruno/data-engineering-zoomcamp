@@ -1,3 +1,5 @@
+{{ config(schema='nyc_trip_record_data') }}
+
 WITH fhv_tripdata as (
     SELECT
         dispatching_base_num,

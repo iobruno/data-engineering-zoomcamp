@@ -1,3 +1,5 @@
+{{ config(schema='nyc_trip_record_data') }}
+
 WITH green_tripdata AS (
     SELECT
         row_number() OVER(PARTITION BY vendor_id, pickup_datetime) as row_num,

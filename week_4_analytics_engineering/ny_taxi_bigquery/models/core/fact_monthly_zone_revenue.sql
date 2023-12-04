@@ -1,3 +1,5 @@
+{{ config(schema='nyc_trip_record_data') }}
+
 SELECT
     -- Revenue Grouping
     pickup_zone                         as revenue_zone,

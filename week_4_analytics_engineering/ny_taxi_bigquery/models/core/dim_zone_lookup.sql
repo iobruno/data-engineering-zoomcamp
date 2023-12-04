@@ -1,3 +1,5 @@
+{{ config(schema='nyc_trip_record_data') }}
+
 SELECT
     LocationID      as location_id,
     Borough         as borough,
