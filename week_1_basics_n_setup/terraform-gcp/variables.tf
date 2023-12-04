@@ -9,8 +9,8 @@ variable "data_region" {
   default     = "us-central1"
 }
 
-variable "bqds_stg_nyc" {
-  description = "BigQuery Dataset for the Staging area of the NYC Tripdata"
+variable "bqds_raw_nyc_trip_record_data" {
+  description = "BigQuery Dataset for the raw data from NYC trip record data"
   type        = string
 }
 

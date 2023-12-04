@@ -22,7 +22,7 @@ provider "google" {
 
 # Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
 resource "google_bigquery_dataset" "stg_nyc_dataset" {
-  dataset_id = var.bqds_stg_nyc
+  dataset_id = var.bqds_raw_nyc_trip_record_data
   location   = var.data_region
 }
 
