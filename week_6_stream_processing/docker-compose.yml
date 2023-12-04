@@ -10,8 +10,8 @@ services:
       - ZOOKEEPER_TICK_TIME=2000
       - ZOOKEEPER_SYNC_LIMIT=5
     volumes:
-      - ./volumes/confluent-multi-broker/zk-data:/var/lib/zookeeper/data
-      - ./volumes/confluent-multi-broker/zk-txn-logs:/var/lib/zookeeper/log
+      - ./volumes/zk-data:/var/lib/zookeeper/data
+      - ./volumes/zk-txn-logs:/var/lib/zookeeper/log
     ports:
       - '2181:2181'
     networks:
@@ -25,19 +25,19 @@ services:
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://kafka0:29090,EXTERNAL://:9090
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka0:29090,EXTERNAL://127.0.0.1:9090
+      - KAFKA_LISTENERS=INTERNAL://kafka0:29092,EXTERNAL://:9092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka0:29092,EXTERNAL://127.0.0.1:9092
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_DELETE_TOPIC_ENABLE=true
     volumes:
-      - ./volumes/confluent-multi-broker/kafka0:/var/lib/kafka/data
+      - ./volumes/kafka0:/var/lib/kafka/data
     depends_on:
       - zookeeper
     ports:
-      - '9090:9090'
+      - '9092:9092'
     networks:
       - sdn
 
@@ -49,19 +49,19 @@ services:
     environment:
       - KAFKA_BROKER_ID=2
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://kafka1:29091,EXTERNAL://:9091
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka1:29091,EXTERNAL://127.0.0.1:9091
+      - KAFKA_LISTENERS=INTERNAL://kafka1:29192,EXTERNAL://:9192
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka1:29192,EXTERNAL://127.0.0.1:9192
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_DELETE_TOPIC_ENABLE=true
     volumes:
-      - ./volumes/confluent-multi-broker/kafka1:/var/lib/kafka/data
+      - ./volumes/kafka1:/var/lib/kafka/data
     depends_on:
       - zookeeper
     ports:
-      - '9091:9091'
+      - '9192:9192'
     networks:
       - sdn
 
@@ -73,19 +73,19 @@ services:
     environment:
       - KAFKA_BROKER_ID=3
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://kafka2:29092,EXTERNAL://:9092
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka2:29092,EXTERNAL://127.0.0.1:9092
+      - KAFKA_LISTENERS=INTERNAL://kafka2:29292,EXTERNAL://:9292
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka2:29292,EXTERNAL://127.0.0.1:9292
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
       - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
       - KAFKA_DELETE_TOPIC_ENABLE=true
     volumes:
-      - ./volumes/confluent-multi-broker/kafka2:/var/lib/kafka/data
+      - ./volumes/kafka2:/var/lib/kafka/data
     depends_on:
       - zookeeper
     ports:
-      - '9092:9092'
+      - '9292:9292'
     networks:
       - sdn
 
@@ -96,7 +96,7 @@ services:
     hostname: ksqldb-server
     environment:
       KSQL_LISTENERS: http://0.0.0.0:8088
-      KSQL_BOOTSTRAP_SERVERS: kafka0:29090,kafka1:29091,kafka2:29092
+      KSQL_BOOTSTRAP_SERVERS: kafka0:29092,kafka1:29192,kafka2:29292
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
     depends_on:
@@ -132,7 +132,7 @@ services:
     hostname: schemaregistry
     environment:
       - SCHEMA_REGISTRY_HOST_NAME=schemaregistry
-      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka0:29090,PLAINTEXT://kafka1:29091,PLAINTEXT://kafka2:29092
+      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka0:29092,PLAINTEXT://kafka1:29192,PLAINTEXT://kafka2:29292
       - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:8081
       - SCHEMA_REGISTRY_DEBUG=true
     depends_on:
@@ -152,7 +152,7 @@ services:
     hostname: restproxy
     environment:
       - KAFKA_REST_HOST_NAME=restproxy
-      - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka0:29090,PLAINTEXT://kafka1:29091,PLAINTEXT://kafka2:29092
+      - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka0:29092,PLAINTEXT://kafka1:29192,PLAINTEXT://kafka2:29292
       - KAFKA_REST_SCHEMA_REGISTRY_URL=http://schemaregistry:8081
       - KAFKA_REST_LISTENERS=http://restproxy:8082
     depends_on:
@@ -169,21 +169,20 @@ services:
   # Conduktor Platform Docs:
   # - https://docs.conduktor.io/platform/configuration/env-variables
   # - https://docs.conduktor.io/platform/installation/hardware
-  conduktor-platform:
-    container_name: conduktor-platform
-    image: conduktor/conduktor-platform:1.15.0
+  conduktor:
+    container_name: conduktor
+    image: conduktor/conduktor-platform:1.17.3
     restart: on-failure:5
     hostname: conduktor
     environment:
       - CDK_CLUSTERS_0_ID=warp
       - CDK_CLUSTERS_0_NAME=kafka-in-docker-cluster
-      - CDK_CLUSTERS_0_BOOTSTRAPSERVERS=kafka0:29090,kafka1:29091,kafka2:29092
+      - CDK_CLUSTERS_0_BOOTSTRAPSERVERS=kafka0:29092,kafka1:29192,kafka2:29292
       - CDK_CLUSTERS_0_SCHEMAREGISTRY_ID=warp-registry
       - CDK_CLUSTERS_0_SCHEMAREGISTRY_URL=http://schemaregistry:8081
       - CDK_ADMIN_EMAIL=admin@conduktor.io
       - CDK_ADMIN_PASSWORD=admin
       - CDK_LISTENING_PORT=8080
-      # - CDK_DATABASE_URL="postgresql://postgres:postgres@postgresql:5432/conduktor-platform"
       - RUN_MODE=nano
     depends_on:
       - zookeeper
