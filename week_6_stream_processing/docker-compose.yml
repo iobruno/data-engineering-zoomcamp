@@ -111,7 +111,7 @@ services:
 
   ksqldb-cli:
     container_name: cp-ksqldb-cli
-    image: confluentinc/cp-ksqldb-cli:7.4.0
+    image: confluentinc/cp-ksqldb-cli:7.4.3
     restart: on-failure:5
     hostname: ksqldb-cli
     depends_on:
