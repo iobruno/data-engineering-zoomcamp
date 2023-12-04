@@ -46,7 +46,7 @@ pre-commit install
 
 4.1. By default, the profiles_dir is the user '$HOME/.dbt/'
 ```shell
-cp profiles.tmpl.yaml ~/.dbt/profiles.yml
+cat profiles.tmpl.yaml >> ~/.dbt/profiles.yml
 ```
 
 4.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
