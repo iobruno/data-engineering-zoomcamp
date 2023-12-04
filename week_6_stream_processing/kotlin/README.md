@@ -3,10 +3,10 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-1.9-7F52FF.svg?style=flat&logo=kotlin&logoColor=white&labelColor=7F52FF)
 ![JDK](https://img.shields.io/badge/JDK-17_|_11-3F90BD.svg?style=flat&logo=openjdk&logoColor=white&labelColor=3F90BD)
 ![Gradle](https://img.shields.io/badge/gradle-8.5-02303A?style=flat&logo=gradle&logoColor=white&labelColor=02303A)
-![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.4.3-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.4.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
-![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-gray?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This project aims to experiment with stream processing using `Kotlin`, `Kafka`, and `ksqlDB`, providing a playground for seamless data integration and analysis
 
@@ -17,6 +17,7 @@ This project aims to experiment with stream processing using `Kotlin`, `Kafka`, 
 - Confluent Schema Registry
 - ksqlDB
 - Gradle
+- [Docker](https://docs.docker.com/get-docker/)
 
 
 ## Up and Running
