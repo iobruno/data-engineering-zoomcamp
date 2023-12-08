@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform"]
 lock_version = "4.4"
-content_hash = "sha256:0ccfbb60d3f6ba36884af0fe516360009d635fbdb7d0de032ea5614f38de1c53"
+content_hash = "sha256:ef9ab84edf1212b64b23a36ecfba6553a03ad69692690c358fea7fef1459e423"
 
 [[package]]
 name = "antlr4-python3-runtime"
@@ -849,6 +849,29 @@ files = [
 ]
 
 [[package]]
+name = "mysql-connector-python"
+version = "8.2.0"
+requires_python = ">=3.8"
+summary = "MySQL driver written in Python"
+dependencies = [
+    "protobuf<=4.21.12,>=4.21.1",
+]
+files = [
+    {file = "mysql-connector-python-8.2.0.tar.gz", hash = "sha256:884eba07b4c97edf552a03f5fdca145e0ab4afc3d8677cca20276effca1bea54"},
+    {file = "mysql_connector_python-8.2.0-cp310-cp310-macosx_12_0_arm64.whl", hash = "sha256:37ca26d7b10580b836f038d42f21ba9e6c88542868d50f55defdbd2dc8e0c0e6"},
+    {file = "mysql_connector_python-8.2.0-cp310-cp310-macosx_12_0_x86_64.whl", hash = "sha256:9d598cc854d1b61eabad7cbf003cfe59970aae80384f5ff18a5cc3fba7becdcc"},
+    {file = "mysql_connector_python-8.2.0-cp310-cp310-manylinux_2_17_aarch64.whl", hash = "sha256:4828a08b738174cacb0985df01120e0a2f0ba534c9d2f67d6613b0930a0fe3cd"},
+    {file = "mysql_connector_python-8.2.0-cp310-cp310-manylinux_2_17_x86_64.whl", hash = "sha256:4b2de9dd56de4874c30364023b59991399222cf73ec744da590cf9eef2623c26"},
+    {file = "mysql_connector_python-8.2.0-cp310-cp310-win_amd64.whl", hash = "sha256:858490bb450b6ae45f415d2205d65a12e84e3445c7b9736e1d1552b685bf237a"},
+    {file = "mysql_connector_python-8.2.0-cp311-cp311-macosx_12_0_arm64.whl", hash = "sha256:5d1e1399a9feb45fc8caca6168ff35d31a8124693f24391153764bccc61d15ad"},
+    {file = "mysql_connector_python-8.2.0-cp311-cp311-macosx_12_0_x86_64.whl", hash = "sha256:a0308455462d4078baf516255662a46611eb12fc8d83d40dea38df3032d2566d"},
+    {file = "mysql_connector_python-8.2.0-cp311-cp311-manylinux_2_17_aarch64.whl", hash = "sha256:539300944c36566e91d131e106dbf0a90cde697ba88247a820f5af9caea2e5c2"},
+    {file = "mysql_connector_python-8.2.0-cp311-cp311-manylinux_2_17_x86_64.whl", hash = "sha256:66d755b94f547d6fcdee9f2256805a4534103363e35d185d3800bfc5274e1f4f"},
+    {file = "mysql_connector_python-8.2.0-cp311-cp311-win_amd64.whl", hash = "sha256:877076f2d71d268fb1b334c85a20ef1d42096ceb6580b25229be4510ebf5a0c5"},
+    {file = "mysql_connector_python-8.2.0-py2.py3-none-any.whl", hash = "sha256:59d4ea8253edbca7cbd1ac25ed524fcf5d8e34ee7ef5fb1be9e3026852b88126"},
+]
+
+[[package]]
 name = "nbclient"
 version = "0.9.0"
 requires_python = ">=3.8.0"
@@ -1091,6 +1114,22 @@ dependencies = [
 files = [
     {file = "prompt_toolkit-3.0.41-py3-none-any.whl", hash = "sha256:f36fe301fafb7470e86aaf90f036eef600a3210be4decf461a5b1ca8403d3cb2"},
     {file = "prompt_toolkit-3.0.41.tar.gz", hash = "sha256:941367d97fc815548822aa26c2a269fdc4eb21e9ec05fc5d447cf09bad5d75f0"},
+]
+
+[[package]]
+name = "protobuf"
+version = "4.21.12"
+requires_python = ">=3.7"
+summary = ""
+files = [
+    {file = "protobuf-4.21.12-cp310-abi3-win32.whl", hash = "sha256:b135410244ebe777db80298297a97fbb4c862c881b4403b71bac9d4107d61fd1"},
+    {file = "protobuf-4.21.12-cp310-abi3-win_amd64.whl", hash = "sha256:89f9149e4a0169cddfc44c74f230d7743002e3aa0b9472d8c28f0388102fc4c2"},
+    {file = "protobuf-4.21.12-cp37-abi3-macosx_10_9_universal2.whl", hash = "sha256:299ea899484ee6f44604deb71f424234f654606b983cb496ea2a53e3c63ab791"},
+    {file = "protobuf-4.21.12-cp37-abi3-manylinux2014_aarch64.whl", hash = "sha256:d1736130bce8cf131ac7957fa26880ca19227d4ad68b4888b3be0dea1f95df97"},
+    {file = "protobuf-4.21.12-cp37-abi3-manylinux2014_x86_64.whl", hash = "sha256:78a28c9fa223998472886c77042e9b9afb6fe4242bd2a2a5aced88e3f4422aa7"},
+    {file = "protobuf-4.21.12-py2.py3-none-any.whl", hash = "sha256:a53fd3f03e578553623272dc46ac2f189de23862e68565e83dde203d41b76fc5"},
+    {file = "protobuf-4.21.12-py3-none-any.whl", hash = "sha256:b98d0148f84e3a3c569e19f52103ca1feacdac0d2df8d6533cf983d1fda28462"},
+    {file = "protobuf-4.21.12.tar.gz", hash = "sha256:7cd532c4566d0e6feafecc1059d04c7915aec8e182d1cf7adee8b24ef1e2e6ab"},
 ]
 
 [[package]]
