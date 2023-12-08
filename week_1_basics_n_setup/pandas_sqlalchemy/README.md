@@ -10,15 +10,15 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
-- `python pg_ingest.py -g` or `--with-green`:
+- `python pg_ingest.py -g` or `--fetch-green`:
   - fetches the datasets under the key `green_trip_data` only,
   - persists to Postgres, on table `green_trip_data`
 
-- `python pg_ingest.py -y` or `--with-yellow`:
+- `python pg_ingest.py -y` or `--fetch-yellow`:
   - fetches the datasets under the key `yellow_trip_data` only
   - persists to Postgres, on table `ntl_yellow_taxi`
 
-- `python pg_ingest.py -z` or `--with-lookup-zones`:
+- `python pg_ingest.py -z` or `--fetch-lookup-zones`:
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `ntl_lookup_zones`
 
