@@ -58,44 +58,50 @@ def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str
         progress.stop_task(task_id=task_ids[idx])
 
 
-def setup_db_conn() -> sqlalchemy.Engine:
+def setup_db_conn(db: str) -> sqlalchemy.Engine:
     db_user = os.getenv("DATABASE_USERNAME")
     db_passwd = os.getenv("DATABASE_PASSWORD")
     db_host = os.getenv("DATABASE_HOST")
     db_port = os.getenv("DATABASE_PORT", 5432)
     db_name = os.getenv("DATABASE_NAME")
-    conn_string = f"postgresql+psycopg://{db_user}:{db_passwd}@{db_host}:{db_port}/{db_name}"
+    
+    if db == "mysql":
+        conn_string = f"mysql+mysqlconnector://{db_user}:{db_passwd}@{db_host}:{db_port}/{db_name}"
+    else:
+        conn_string = f"postgresql+psycopg://{db_user}:{db_passwd}@{db_host}:{db_port}/{db_name}"
+
     return sqlalchemy.create_engine(conn_string)
 
 
 @click.command(help="CLI app to extract NYC Trips data and load into Postgres")
-@click.option("--with-yellow", "-y", count=True, help="Fetch datasets from 'NYC Yellow Trip'")
-@click.option("--with-green", "-g", count=True, help="Fetch datasets from: 'NYC Green Trip'")
-@click.option("--with-lookup-zones", "-z", count=True, help="Fetch datasets from: 'Lookup Zones'")
-def ingest(with_yellow, with_green, with_lookup_zones):
+@click.option("--fetch-yellow", "-y", count=True, help="Fetch datasets from 'NYC Yellow Trip'")
+@click.option("--fetch-green", "-g", count=True, help="Fetch datasets from: 'NYC Green Trip'")
+@click.option("--fetch-lookup-zones", "-z", count=True, help="Fetch datasets from: 'Lookup Zones'")
+@click.option("--db", "-d", default="postgres", help="Set whether to use postgres or mysql")
+def ingest(fetch_yellow, fetch_green, fetch_lookup_zones, db):
     log.info("Attempting to connect to Postgres with provided credentials on ENV VARs...")
-    conn = setup_db_conn()
+    conn = setup_db_conn(db)
     conn.connect()
     log.info("Connection successfully established!")
 
     with progress:
         datasets = cfg.datasets
 
-        if with_yellow:
+        if fetch_yellow:
             if datasets.yellow_trip_data:
                 ingest_nyc_trip_data_with(conn, "ntl_yellow_taxi", datasets.yellow_trip_data)
                 log.info("Done persisting the NYC Yellow Taxi trip data into DB")
             else:
                 log.warning("Skipping Yellow trip data. The endpoint list is empty")
 
-        if with_green:
+        if fetch_green:
             if datasets.green_trip_data:
                 ingest_nyc_trip_data_with(conn, "ntl_green_taxi", datasets.green_trip_data)
                 log.info("Done persisting the NYC Green Taxi trip data into DB")
             else:
                 log.warning("Skipping Green trip data. The endpoint list is empty")
 
-        if with_lookup_zones:
+        if fetch_lookup_zones:
             if datasets.zone_lookups:
                 ingest_nyc_trip_data_with(conn, "ntl_lookup_zones", datasets.zone_lookups)
                 log.info("Done persisting the NYC Lookup Zones")
