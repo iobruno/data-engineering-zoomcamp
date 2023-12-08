@@ -16,7 +16,7 @@ SELECT
     DOlocationID            as dropoff_location_id,
     SR_Flag                 as shared_ride_flag
 FROM 
-    {{ source('bq-staging-nyc-trip_record', 'fhv') }}
+    {{ source('bq-staging-nyc-trip_record', 'ext_fhv') }}
 
 
 -- Run as:

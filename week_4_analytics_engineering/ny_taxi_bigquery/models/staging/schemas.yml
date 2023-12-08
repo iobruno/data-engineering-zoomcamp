@@ -10,6 +10,6 @@ sources:
 
     # Tables to source data from
     tables:
-      - name: fhv
-      - name: green
-      - name: yellow
+      - name: ext_fhv
+      - name: ext_green
+      - name: ext_yellow

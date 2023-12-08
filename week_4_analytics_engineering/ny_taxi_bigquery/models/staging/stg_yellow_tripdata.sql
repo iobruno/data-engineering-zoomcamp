@@ -33,7 +33,7 @@ SELECT
         payment_type_desc_for('payment_type')
     }}                      as payment_type_desc
 FROM 
-    {{ source('bq-staging-nyc-trip_record', 'yellow') }}
+    {{ source('bq-staging-nyc-trip_record', 'ext_yellow') }}
 
 
 -- Run as:
