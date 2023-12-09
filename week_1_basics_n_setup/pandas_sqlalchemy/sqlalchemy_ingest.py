@@ -70,10 +70,6 @@ def setup_db_conn(*db_settings) -> sqlalchemy.Engine:
     return sqlalchemy.create_engine(conn_string)
 
 
-def db_drivers():
-    return []
-
-
 # fmt: off
 @app.command(help="CLI app to extract NYC Trips data and load into Postgres")
 def ingest(
@@ -106,7 +102,7 @@ def ingest(
     )] = False,
 ):
     # fmt: on
-    log.info(f"Attempting to connect to '{db_driver}' with provided credentials on ENV VARs...")
+    log.info(f"Attempting to connect to '{db_driver}' with credentials on ENV VARs...")
     conn = setup_db_conn(db_driver, db_host, db_port, db_username, db_password, db_name)
     conn.connect()
     log.info("Connection successfully established!")
