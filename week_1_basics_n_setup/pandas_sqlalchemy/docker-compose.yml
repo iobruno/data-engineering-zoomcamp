@@ -6,8 +6,8 @@ services:
     restart: on-failure:5
     hostname: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=sqlalchemy
+      - POSTGRES_PASSWORD=sqlalchemy
       - POSTGRES_DB=nyc_taxi
     volumes:
       - ./volumes/pgdata:/var/lib/postgresql/data
@@ -22,7 +22,7 @@ services:
     restart: on-failure:5
     hostname: pgweb
     environment:
-      - PGWEB_DATABASE_URL=postgres://postgres:postgres@postgres:5432/nyc_taxi?sslmode=disable
+      - PGWEB_DATABASE_URL=postgres://sqlalchemy:sqlalchemy@postgres:5432/nyc_taxi?sslmode=disable
     depends_on:
       - postgres
     ports:
