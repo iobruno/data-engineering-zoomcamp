@@ -10,25 +10,26 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
-- `python pg_ingest.py -g` or `--with-green`:
+- `python sqlalchemy_ingest.py -g` or `--green`:
   - fetches the datasets under the key `green_trip_data` only,
   - persists to Postgres, on table `green_trip_data`
 
-- `python pg_ingest.py -y` or `--with-yellow`:
+- `python sqlalchemy_ingest.py -y` or `--yellow`:
   - fetches the datasets under the key `yellow_trip_data` only
   - persists to Postgres, on table `ntl_yellow_taxi`
 
-- `python pg_ingest.py -z` or `--with-lookup-zones`:
+- `python sqlalchemy_ingest.py -z` or `--zones`:
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `ntl_lookup_zones`
 
 You can use any combination of the three above to fetch more than dataset group at a time.
-For instance: `python pg_ingest.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
+
+For instance: `python sqlalchemy_ingest.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
 
 ## Tech Stack
 - [pandas](https://pandas.pydata.org/docs/user_guide/)
-- [Click](https://click.palletsprojects.com/en/latest/) 
+- [Typer](https://typer.tiangolo.com/tutorial/)
 - [Rich CLI](https://github.com/Textualize/rich)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
@@ -80,22 +81,35 @@ pre-commit install
 ```
 
 **4.** Export ENV VARS to connect to DB:
+
+4.1.: To connect to Postgres:
 ```shell
-export DATABASE_USERNAME=postgres \
-export DATABASE_PASSWORD=postgres \
+export DATABASE_DRIVER=postgres \
+export DATABASE_USERNAME=sqlalchemy \
+export DATABASE_PASSWORD=sqlalchemy \
 export DATABASE_HOST=localhost \
 export DATABASE_PORT=5433 \
 export DATABASE_NAME=nyc_taxi
 ```
 
+4.2.: To connect to MySQL:
+```shell
+export DATABASE_DRIVER=mysql \
+export DATABASE_USERNAME=sqlalchemy \
+export DATABASE_PASSWORD=sqlalchemy \
+export DATABASE_HOST=localhost \
+export DATABASE_PORT=3307 \
+export DATABASE_NAME=nyc_taxi
+```
+
 **5.** Run the script with the intended flags or use `--help`:
 ```shell
-python pg_ingest.py --help
+python sqlalchemy_ingest.py --help
 ```
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Code format/lint with Ruff
-- [x] Build a CLI app with `click`
+- [x] Build a CLI app with `Typer`
 - [x] Progress Bars to keep track of the execution with `rich`
 - [x] Run/Deploy the project on Docker
