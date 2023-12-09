@@ -6,13 +6,31 @@ services:
     restart: on-failure:5
     hostname: postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=sqlalchemy
+      - POSTGRES_PASSWORD=sqlalchemy
       - POSTGRES_DB=nyc_taxi
     volumes:
       - ./volumes/pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    networks:
+      - internal
+
+  mysql:
+    container_name: mysql-db
+    image: mysql:8.2
+    hostname: mysql
+    restart: always
+    environment:
+      - MYSQL_USER=sqlalchemy
+      - MYSQL_PASSWORD=sqlalchemy
+      - MYSQL_DATABASE=nyc_taxi
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+    ports:
+      - "3307:3306"
     networks:
       - internal
 
