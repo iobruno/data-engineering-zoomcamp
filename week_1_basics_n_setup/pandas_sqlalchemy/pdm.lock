@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform"]
 lock_version = "4.4"
-content_hash = "sha256:f94fc6149c05073fd50ca5d96db22bafa97e34982d4cadc31ec3694c80fc4806"
+content_hash = "sha256:48c48e204039e553f5d47a83c3922ae6788bcaed98710cb4cbd76aeeb7deaa97"
 
 [[package]]
 name = "antlr4-python3-runtime"
