@@ -1,7 +1,7 @@
 # dbt and BigQuery for Analytics Engineering
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.0-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)
 ![Looker](https://img.shields.io/badge/Looker_Studio-3772FF?style=flat&logo=looker&logoColor=white&labelColor=3772FF)
 
