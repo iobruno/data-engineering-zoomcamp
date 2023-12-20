@@ -6,7 +6,7 @@ duckdb-local:
   outputs:
     dev:
       type: duckdb
-      path: '/tmp/piperider.duckdb'
+      path: '/tmp/dbt_duckdb.duckdb'
       filesystems:
       - fs: gcs
         project: iobruno-gcp-labs
