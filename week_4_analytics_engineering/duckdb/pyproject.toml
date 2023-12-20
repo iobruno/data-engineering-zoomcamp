@@ -11,11 +11,10 @@ authors = [
 requires-python = ">=3.10,<3.12"
 
 dependencies = [
-    "dbt>=1.0.0.34.16",
-    "dbt-duckdb>=1.7.0",
-    "duckdb>=0.9.2",
-    "gcsfs>=2023.10.0",
-    "piperider[duckdb]>=0.41.0",
+    "dbt-duckdb>=1.7.0,<2.0",
+    "duckdb>=0.9.2,<1.0",
+    "gcsfs>=2023.12.1,<2024.1.0",
+    "piperider[duckdb]>=0.41.0,<1.0",
 ]
 
 [tool.pdm.dev-dependencies]
