@@ -1,0 +1,19 @@
+version: 2
+seeds:
+  - name: taxi_zone_lookup
+    config:
+      # Toggles enabled/disabled when running `dbt seed`
+      enabled: true
+
+      # Config options
+      #   'alias' refers to the table name to be created on the speficied database and sche,a
+      alias: stg_zone_lookup
+
+      # Refer to https://docs.getdbt.com/reference/seed-configs 
+      # for other seed config options
+      full_refresh: true
+      column_types:
+        LocationID: numeric
+        Borough: varchar(25)
+        Zone: varchar(50)
+        service_zone: varchar(25)
