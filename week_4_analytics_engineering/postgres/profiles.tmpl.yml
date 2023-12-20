@@ -5,7 +5,7 @@ postgres-local:
       host: localhost
       port: 5433
       dbname: nyc_taxi
-      schema: staging
+      schema: stg_nyc_trip_record_data
       user: sqlalchemy
       pass: sqlalchemy
       threads: 4
