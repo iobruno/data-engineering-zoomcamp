@@ -47,6 +47,9 @@ def ingest_nyc_trip_data_with(conn, table_name: str, dataset_endpoints: List[str
 
     for idx, url in enumerate(dataset_endpoints):
         df = pd.read_csv(url, engine="pyarrow")
+        # Converts dataframe columns to lower case, otherwise, in PostgreSQL
+        # all fields that start with uppercase will have to be quoted " for querying
+        df.columns = map(str.lower, df.columns)
         dfs, qty = split_df_in_chunks_with(df)
         progress.update(task_id=task_ids[idx], completed=0, total=qty)
         progress.start_task(task_id=task_ids[idx])
