@@ -9,5 +9,4 @@ postgres-local:
       pass: sqlalchemy
       schema: stg_nyc_trip_record_data
       threads: 4
-
   target: staging
