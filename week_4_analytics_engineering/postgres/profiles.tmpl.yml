@@ -1,0 +1,12 @@
+postgres-local:
+  outputs:
+    staging:
+      type: postgres
+      host: localhost
+      port: 5433
+      dbname: nyc_taxi
+      user: postgres
+      pass: postgres
+      schema: stg_nyc_trip_record_data
+      threads: 4
+  target: staging

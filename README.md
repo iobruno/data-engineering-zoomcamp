@@ -42,8 +42,9 @@ can take the course at your own pace
 
 ### [Module 4: Analytics Engineering](week_4_analytics_engineering)
 * [BigQuery and dbt](week_4_analytics_engineering/bigquery)
-* [DuckDB and dbt](week_4_analytics_engineering/duckdb)
 * Databricks and dbt
+* [PostgreSQL and dbt](week_4_analytics_engineering/postgres)
+* [DuckDB and dbt](week_4_analytics_engineering/duckdb)
 * Data visualization with Looker Studio
 * Data visualization with Superset (TBD)
 * Homework

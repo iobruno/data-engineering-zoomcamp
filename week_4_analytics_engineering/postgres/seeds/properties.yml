@@ -1,0 +1,22 @@
+version: 2
+seeds:
+  - name: taxi_zone_lookup
+    config:
+      # Toggles enabled/disabled when running `dbt seed`
+      enabled: true
+      # Config options
+      #  'alias' refers to the table name to be created on the speficied db and schema
+      #  'quote_columns': for PostgreSQL, if the column name(s) starts with uppercase, 
+      #                   you'll have to use " (double quotes) to refer to them. 
+      #                   So, instead use 'quote_columns false' to force them to lowercase
+      alias: stg_zone_lookup
+      quote_columns: false
+
+      # Refer to https://docs.getdbt.com/reference/seed-configs 
+      # for other seed config options
+      full_refresh: true
+      column_types:
+        LocationID: numeric
+        Borough: varchar(25)
+        Zone: varchar(50)
+        service_zone: varchar(25)
