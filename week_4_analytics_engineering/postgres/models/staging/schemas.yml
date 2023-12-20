@@ -4,7 +4,7 @@ sources:
     # PostgreSQL database
     database: nyc_taxi
     # PostgreSQL schema (to fetch raw data from)
-    schema: raw
+    schema: raw_nyc_trip_record_data
     # Tables to source data from
     tables:
       - name: ntl_green_taxi
