@@ -1,6 +1,7 @@
 {{ config(schema='stg_nyc_trip_record_data', materialized='table') }}
 
 SELECT
+    -- identifiers
     toInt8(vendorid)                        as vendor_id,
     toInt8(ratecodeid)                      as ratecode_id,
     toInt16(pulocationid)                   as pickup_location_id,
