@@ -1,13 +1,7 @@
-{{ config(schema='stg_nyc_trip_record_data') }}
+{{ config(schema='stg_nyc_trip_record_data', materialized='table') }}
 
 SELECT
     -- identifiers
-    {{
-        dbt_utils.generate_surrogate_key([
-            'vendorid', 
-            'tpep_pickup_datetime'
-        ])
-    }}                      as trip_id,
     vendorid                as vendor_id,
     ratecodeid              as ratecode_id,
     pulocationid            as pickup_location_id,
@@ -41,6 +35,6 @@ FROM
 -- Run as:
 --  dbt build --select stg_green_tripdata --var 'is_test_run: true'
 --  dbt run --select stg_green_tripdata --var 'is_test_run: false'
-{% if var('is_test_run', default=true) %}
+{% if var('is_test_run', default=false) %}
     LIMIT 1000
 {% endif %}
