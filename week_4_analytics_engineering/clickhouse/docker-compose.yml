@@ -6,7 +6,7 @@ services:
     restart: on-failure:5
     hostname: clickhouse
     environment:
-      - CLICKHOUSE_DB=clickhouse
+      - CLICKHOUSE_DB=default
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
       # - CLICKHOUSE_USER=clickhouse
       # - CLICKHOUSE_PASSWORD=clickhouse

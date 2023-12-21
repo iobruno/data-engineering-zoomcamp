@@ -1,12 +1,13 @@
 clickhouse-local:
   outputs:
-    staging:
+    default:
       type: clickhouse
-      schema: stg_nyc_trip_record_data
+      schema: default
       driver: http
       host: localhost
       port: 8123
-      verify: False
+      user: default
+      password: ''
       secure: False
 
-  target: staging
+  target: default
