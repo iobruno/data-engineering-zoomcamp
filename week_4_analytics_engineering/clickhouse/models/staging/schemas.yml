@@ -1,0 +1,13 @@
+version: 2
+sources:
+  - name: pg-raw-nyc-trip-record
+    # Clickhouse Database (to fetch raw data from)
+    schema: raw_pgdb
+    tables:
+      - name: ntl_yellow_taxi
+
+  - name: mysql-raw-nyc-trip-record
+    # Clickhouse Database (to fetch raw data from)
+    schema: raw_mysqldb
+    tables:
+      - name: ntl_green_taxi
