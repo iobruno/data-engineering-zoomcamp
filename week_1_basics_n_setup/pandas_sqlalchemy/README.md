@@ -85,8 +85,8 @@ pre-commit install
 4.1.: To connect to Postgres:
 ```shell
 export DATABASE_DRIVER=postgres \
-export DATABASE_USERNAME=sqlalchemy \
-export DATABASE_PASSWORD=sqlalchemy \
+export DATABASE_USERNAME=postgres \
+export DATABASE_PASSWORD=postgres \
 export DATABASE_HOST=localhost \
 export DATABASE_PORT=5433 \
 export DATABASE_NAME=nyc_taxi
@@ -95,8 +95,8 @@ export DATABASE_NAME=nyc_taxi
 4.2.: To connect to MySQL:
 ```shell
 export DATABASE_DRIVER=mysql \
-export DATABASE_USERNAME=sqlalchemy \
-export DATABASE_PASSWORD=sqlalchemy \
+export DATABASE_USERNAME=mysql \
+export DATABASE_PASSWORD=mysql \
 export DATABASE_HOST=localhost \
 export DATABASE_PORT=3307 \
 export DATABASE_NAME=nyc_taxi
