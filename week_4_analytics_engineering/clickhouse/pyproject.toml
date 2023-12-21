@@ -1,0 +1,23 @@
+[project]
+name = ""
+version = "1.0"
+description = "Analytics Engineering with dbt and ClickHouse"
+license = {text = "CC-BY-SA-4.0"}
+readme = "README.md"
+authors = [
+    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
+]
+
+requires-python = ">=3.10,<3.12"
+
+dependencies = [
+    "dbt-clickhouse>=1.7.1,<2.0",
+]
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "ruff>=0.1.8",
+]
+
+[tool.ruff]
+line-length = 100
