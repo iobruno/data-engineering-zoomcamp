@@ -1,3 +1,5 @@
+{{ config(schema='stg_nyc_trip_record_data') }}
+
 SELECT
     -- identifiers
     {{ 
@@ -39,6 +41,6 @@ FROM
 -- Run as:
 --  dbt build --select stg_green_tripdata --var 'is_test_run: true'
 --  dbt run --select stg_green_tripdata --var 'is_test_run: false'
-{% if var('is_test_run', default=false) %}
+{% if var('is_test_run', default=true) %}
     LIMIT 100
 {% endif %}
