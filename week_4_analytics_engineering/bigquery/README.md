@@ -52,13 +52,13 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the gcp `project_id`, the `dataset`, and `location` where BigQuery should create its tables in (on `profiles.yml`)
+4.2. Set environment variables for `dbt-bigquery`:
 
-```yaml
-  method: oauth
-  project: iobruno-gcp-labs
-  dataset: nyc_trip_record_staging
-  location: us-central1
+```shell
+export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
+export DBT_BIGQUERY_DATASET=stg_nyc_trip_record_data \
+export DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
+export DBT_BIGQUERY_AUTH_METHOD=oauth
 ```
 
 4.3. Since we're doing `oauth` authentication for development, run:
@@ -66,9 +66,9 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 gcloud auth login
 ```
 
-4.4. Update the `profile` to used by this project on `dbt_project.yml`
+4.4. Update the `profile` key on the `dbt_project.yml` file:
 
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
+Make sure to point to an existing profile name set on `profiles.yaml`. In this case:
 ```yaml
 profile: 'iobruno-gcp-labs-bigquery'
 ```

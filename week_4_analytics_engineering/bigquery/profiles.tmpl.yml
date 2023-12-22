@@ -1,11 +1,11 @@
-iobruno-gcp-labs-bigquery:
+dbt_bigquery_analytics:
   outputs:
     staging:
       type: bigquery
-      method: oauth
-      project: iobruno-gcp-labs
-      dataset: stg_nyc_trip_record_data
-      location: us-central1
+      method:   "{{ env_var('DBT_BIGQUERY_AUTH_METHOD', 'oauth') }}"
+      project:  "{{ env_var('DBT_BIGQUERY_PROJECT') }}"
+      dataset:  "{{ env_var('DBT_BIGQUERY_DATASET') }}"
+      location: "{{ env_var('DBT_BIGQUERY_DATASET_LOCATION', 'us-central1') }}"
       priority: interactive
       threads: 4
       job_execution_timeout_seconds: 300
