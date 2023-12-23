@@ -52,33 +52,25 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the gcp `host`, `port`, `dbname`, `schema`, `user` and `pass` (password) to where BigQuery should create its tables/views in (on `profiles.yml`)
+4.2. Set the environment variables for `dbt-postgres`:
 
-```yaml
-  host: localhost
-  port: 5433
-  dbname: REPLACE_ME
-  user: REPLACE_ME
-  pass: REPLACE_ME
-  schema: stg_nyc_trip_record_data
-  threads: 4
+```shell
+export DBT_POSTGRES_HOST=localhost \
+export DBT_POSTGRES_PORT=5433 \
+export DBT_POSTGRES_DATABASE=nyc_taxi \
+export DBT_POSTGRES_SCHEMA=nyc_trip_record_data \
+export DBT_POSTGRES_USER=postgres \
+export DBT_POSTGRES_PASSWORD=postgres
 ```
 
-4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the `database`, `schema`, and `tables` that the staging models fetch the data from
+4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the `tables` names where the staging models fetch the data from
 ```shell
-  - name: pg-raw-nyc-trip-record
-    database: nyc_taxi
-    schema: raw_nyc_trip_record_data
+  - name: pg-raw-nyc-trip_record
+    database: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
+    schema: "{{ 'raw_' ~ env_var('DBT_POSTGRES_SCHEMA') }}"
     tables:
       - name: ntl_green_taxi
       - name: ntl_yellow_taxi
-```
-
-4.4. Update the `profile` to used by this project on `dbt_project.yml`
-
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
-```yaml
-profile: 'postgres-local'
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
@@ -126,4 +118,4 @@ open http://localhost:8080
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with PostgreSQL Adapter ([dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
-- [ ] Run `dbt-core` in Docker
+- [x] Run `dbt-core` in Docker

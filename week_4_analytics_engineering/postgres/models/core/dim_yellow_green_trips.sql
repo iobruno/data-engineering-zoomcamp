@@ -1,4 +1,6 @@
-{{ config(schema='nyc_trip_record_data') }}
+{{ config(
+    schema=env_var('DBT_POSTGRES_SCHEMA'))
+}}
 
 WITH green_tripdata as (
     SELECT

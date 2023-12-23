@@ -1,3 +1,7 @@
+{{ config(
+    schema='stg_' ~ env_var('DBT_POSTGRES_SCHEMA'))
+}}
+
 SELECT
     -- identifiers
     {{
@@ -33,12 +37,12 @@ SELECT
         payment_type_desc_for('payment_type')
     }}                      as payment_type_desc
 FROM 
-    {{ source('pg-raw-nyc-trip-record', 'ntl_yellow_taxi') }}
+    {{ source('pg-raw-nyc-trip_record', 'ntl_yellow_taxi') }}
 
 
 -- Run as:
---  dbt build --select stg_green_tripdata --var 'is_test_run: true'
---  dbt run --select stg_green_tripdata --var 'is_test_run: false'
+--  dbt build --select stg_green_tripdata --vars 'is_test_run: true'
+--  dbt run --select stg_green_tripdata --vars 'is_test_run: false'
 {% if var('is_test_run', default=false) %}
     LIMIT 100
 {% endif %}
