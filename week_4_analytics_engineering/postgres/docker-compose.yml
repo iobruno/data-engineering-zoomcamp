@@ -18,4 +18,4 @@ services:
 
 networks:
   internal:
-    name: analytics
+    name: dbt_analytics
