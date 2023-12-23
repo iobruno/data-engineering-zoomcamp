@@ -50,34 +50,23 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the gcp `host`, `port`, `dbname`, `schema`, `user` and `pass` (password) to where BigQuery should create its tables/views in (on `profiles.yml`)
+4.2. Set the environment variables for `dbt-clickhouse`:
 
-```yaml
-  host: localhost
-  port: 5433
-  dbname: REPLACE_ME
-  user: REPLACE_ME
-  pass: REPLACE_ME
-  schema: stg_nyc_trip_record_data
-  threads: 4
+```shell
+export DBT_CLICKHOUSE_HOST=localhost \
+export DBT_CLICKHOUSE_PORT=8123 \
+export DBT_CLICKHOUSE_SCHEMA=nyc_trip_record_data
+export DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=raw_pgdata
 ```
 
-4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the `database`, `schema`, and `tables` that the staging models fetch the data from
+4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the tables names where the staging models fetch the data from
 ```shell
-  - name: pg-raw-nyc-trip-record
-    database: nyc_taxi
-    schema: raw_nyc_trip_record_data
+  - name: clickhouse-raw-nyc-trip_record
+    schema: "{{ env_var('DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA') }}"
     tables:
-      - name: ntl_green_taxi
       - name: ntl_yellow_taxi
 ```
 
-4.4. Update the `profile` to used by this project on `dbt_project.yml`
-
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
-```yaml
-profile: 'postgres-clickhouse'
-```
 
 **5.** Install dbt dependencies and trigger the pipeline
 
@@ -122,6 +111,8 @@ open http://localhost:8080
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
-- [x] Bootstrap dbt with PostgreSQL Adapter ([dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup))
+- [x] Bootstrap dbt with ClickHouse Adapter ([dbt-clickhouse](https://docs.getdbt.com/docs/core/connect-data-platform/clickhouse-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
-- [ ] Run `dbt-core` in Docker
+- [x] Run `dbt-core` in Docker
+- [x] Build at least one dbt staging_model based on Federated Queries on PostgreSQL
+- [ ] Build at least one dbt staging_model based on Federated Queries on MySQL
