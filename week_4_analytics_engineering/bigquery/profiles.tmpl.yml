@@ -1,6 +1,6 @@
 dbt_bigquery_analytics:
   outputs:
-    staging:
+    dev:
       type: bigquery
       method:   "{{ env_var('DBT_BIGQUERY_AUTH_METHOD', 'oauth') }}"
       project:  "{{ env_var('DBT_BIGQUERY_PROJECT') }}"
@@ -11,4 +11,17 @@ dbt_bigquery_analytics:
       job_execution_timeout_seconds: 300
       job_retries: 1
 
-  target: staging
+    prod:
+      type: bigquery
+      method:   "{{ env_var('DBT_BIGQUERY_AUTH_METHOD', 'service-account') }}"
+      project:  "{{ env_var('DBT_BIGQUERY_PROJECT') }}"
+      dataset:  "{{ env_var('DBT_BIGQUERY_DATASET') }}"
+      location: "{{ env_var('DBT_BIGQUERY_DATASET_LOCATION', 'us-central1') }}"
+      keyfile:  "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      priority: interactive
+      threads: 4
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+
+
+  target: dev
