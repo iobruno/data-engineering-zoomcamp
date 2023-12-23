@@ -1,3 +1,7 @@
+{{ config(
+    schema='stg_' ~ env_var('DBT_BIGQUERY_DATASET'))
+}}
+
 SELECT
     -- identifiers
     {{ 
@@ -16,12 +20,12 @@ SELECT
     DOlocationID            as dropoff_location_id,
     SR_Flag                 as shared_ride_flag
 FROM 
-    {{ source('bq-staging-nyc-trip_record', 'ext_fhv') }}
+    {{ source('bq-raw-nyc-trip_record', 'ext_fhv') }}
 
 
 -- Run as:
---  dbt build --select stg_green_tripdata --var 'is_test_run: true'
---  dbt run --select stg_green_tripdata --var 'is_test_run: false'
+--  dbt build --select stg_green_tripdata --vars 'is_test_run: true'
+--  dbt run --select stg_green_tripdata --vars 'is_test_run: false'
 {% if var('is_test_run', default=false) %}
     LIMIT 100
 {% endif %}

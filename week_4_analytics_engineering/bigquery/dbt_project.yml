@@ -2,7 +2,7 @@ name: 'dbt_bigquery_analytics'
 version: '1.0.0'
 config-version: 2
 
-profile: 'iobruno-gcp-labs-bigquery'
+profile: 'dbt_bigquery_analytics'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
