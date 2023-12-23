@@ -2,7 +2,7 @@ name: 'dbt_postgres_analytics'
 version: '1.0.0'
 config-version: 2
 
-profile: 'postgres-local'
+profile: 'dbt_postgres_analytics'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
