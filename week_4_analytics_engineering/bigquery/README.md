@@ -121,7 +121,7 @@ docker run \
   -e DBT_BIGQUERY_DATASET=nyc_trip_record_data \
   -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
   -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
-  --name dbt_biguqery \
+  --name dbt_bigquery \
   dbt_bigquery
 ```
 
