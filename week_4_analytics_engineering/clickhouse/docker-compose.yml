@@ -7,15 +7,18 @@ services:
     hostname: clickhouse
     environment:
       - CLICKHOUSE_DB=default
-      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
-      # - CLICKHOUSE_USER=clickhouse
-      # - CLICKHOUSE_PASSWORD=clickhouse
+      - CLICKHOUSE_USER=clickhouse
+      - CLICKHOUSE_PASSWORD=clickhouse
+      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=0
     volumes:
-      - ./volumes/clickhouse/data:/var/lib/clickhouse/
-      - ./volumes/clickhouse/logs:/var/log/clickhouse-server/
+      - clickhouse_data:/var/lib/clickhouse/
+      - clickhouse_logs:/var/log/clickhouse-server/
     ports:
       - "8123:8123"
       - "9000:9000"
+      - "9004:9004"
+      - "9005:9005"
+      - "9009:9009"
     ulimits:
       nofile:
         soft: 262144
@@ -60,3 +63,9 @@ services:
 networks:
   internal:
     name: clickhouse
+
+volumes:
+  clickhouse_data:
+    external: true
+  clickhouse_logs:
+    external: true
