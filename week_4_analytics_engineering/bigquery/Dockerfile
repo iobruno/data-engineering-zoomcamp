@@ -12,11 +12,11 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.11-slim AS runner
 
+ENV DBT_PROFILES_DIR=/app/
 ENV DBT_BIGQUERY_PROJECT=
 ENV DBT_BIGQUERY_DATASET=
 ENV DBT_BIGQUERY_DATASET_LOCATION=
-ENV DBT_BIGQUERY_AUTH_METHOD=
-ENV GOOGLE_APPLICATION_CREDENTIALS=
+ENV GOOGLE_APPLICATION_CREDENTIALS=/secrets/gcp_credentials.json
 
 ENV PYTHONPATH=/app/pkgs
 COPY --from=builder /app/__pypackages__/3.11/lib /app/pkgs
@@ -32,4 +32,4 @@ ADD profiles.tmpl.yml /app/profiles.yml
 
 WORKDIR /app/
 
-ENTRYPOINT dbt deps && dbt run --profiles-dir .
+ENTRYPOINT ["sh", "-c", "dbt deps && dbt seed --target prod && dbt run --target prod"]
