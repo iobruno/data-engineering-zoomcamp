@@ -60,12 +60,12 @@ services:
     networks:
       - internal
 
-networks:
-  internal:
-    name: clickhouse
-
 volumes:
   clickhouse_data:
     external: true
   clickhouse_logs:
     external: true
+
+networks:
+  internal:
+    name: dbt_analytics

@@ -57,6 +57,8 @@ export DBT_CLICKHOUSE_HOST=localhost \
 export DBT_CLICKHOUSE_PORT=8123 \
 export DBT_CLICKHOUSE_SCHEMA=nyc_trip_record_data
 export DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=raw_pgdata
+export DBT_CLICKHOUSE_USER=clickhouse
+export DBT_CLICKHOUSE_PASSWORD=clickhouse
 ```
 
 4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the tables names where the staging models fetch the data from
@@ -65,6 +67,7 @@ export DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=raw_pgdata
     schema: "{{ env_var('DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA') }}"
     tables:
       - name: ntl_yellow_taxi
+      - name: ntl_green_taxi
 ```
 
 
@@ -109,6 +112,29 @@ open http://localhost:8080
 ```
 
 
+## Containerization and Testing
+
+**1.** Build the Docker Image with:
+
+```shell
+docker build -t dbt_clickhouse:latest . --no-cache
+```
+
+**2.** Fire up the container with it:
+```shell
+docker run \
+  -e DBT_CLICKHOUSE_HOST=clickhouse \
+  -e DBT_CLICKHOUSE_PORT=8123 \
+  -e DBT_CLICKHOUSE_SCHEMA=nyc_trip_record_data \
+  -e DBT_CLICKHOUSE_USER=clickhouse \
+  -e DBT_CLICKHOUSE_PASSWORD=clickhouse \
+  -e DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=raw_pgdata \
+  --network dbt_analytics \
+  --name dbt_clickhouse \
+  dbt_clickhouse
+```
+
+
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with ClickHouse Adapter ([dbt-clickhouse](https://docs.getdbt.com/docs/core/connect-data-platform/clickhouse-setup))
@@ -116,3 +142,4 @@ open http://localhost:8080
 - [x] Run `dbt-core` in Docker
 - [x] Build at least one dbt staging_model based on Federated Queries on PostgreSQL
 - [ ] Build at least one dbt staging_model based on Federated Queries on MySQL
+- [ ] Add migrations to initialize PostgreSQL/MySQL with some data
