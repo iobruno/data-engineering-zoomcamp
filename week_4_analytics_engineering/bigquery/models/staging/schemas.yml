@@ -1,12 +1,12 @@
 version: 2
 sources:
-  - name: bq-staging-nyc-trip_record
+  - name: bq-raw-nyc-trip_record
 
     # GCP Project ID
-    database: iobruno-gcp-labs
+    database: "{{ env_var('DBT_BIGQUERY_PROJECT') }}"
 
     # BigQuery Dataset name
-    schema: raw_nyc_trip_record_data
+    schema: "{{ 'raw_' ~ env_var('DBT_BIGQUERY_DATASET') }}"
 
     # Tables to source data from
     tables:

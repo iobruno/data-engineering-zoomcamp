@@ -52,25 +52,17 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the gcp `project_id`, the `dataset`, and `location` where BigQuery should create its tables in (on `profiles.yml`)
+4.2. Set the environment variables for `dbt-bigquery`:
 
-```yaml
-  method: oauth
-  project: iobruno-gcp-labs
-  dataset: nyc_trip_record_staging
-  location: us-central1
+```shell
+export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
+export DBT_BIGQUERY_DATASET=nyc_trip_record_data \
+export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
 4.3. Since we're doing `oauth` authentication for development, run:
 ```shell
 gcloud auth login
-```
-
-4.4. Update the `profile` to used by this project on `dbt_project.yml`
-
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
-```yaml
-profile: 'iobruno-gcp-labs-bigquery'
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
@@ -118,7 +110,7 @@ open http://localhost:8080
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with BigQuery Adapter ([dbt-bigquery](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
-- [ ] Run `dbt-core` in Docker
+- [x] Run `dbt-core` in Docker
 - [ ] Complete dbt Labs Learning Path for `dbt-core`
   - [ ] [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)
   - [ ] [Jinja, Macros, Packages](https://courses.getdbt.com/courses/jinja-macros-packages)
