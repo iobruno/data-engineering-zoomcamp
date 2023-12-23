@@ -112,6 +112,7 @@ dbt docs serve
 open http://localhost:8080
 ```
 
+
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
