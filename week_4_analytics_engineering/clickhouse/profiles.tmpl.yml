@@ -1,13 +1,24 @@
-clickhouse-local:
+dbt_clickhouse_analytics:
   outputs:
-    default:
+    dev:
       type: clickhouse
-      schema: default
       driver: http
-      host: localhost
-      port: 8123
-      user: default
-      password: ''
+      host:     "{{ env_var('DBT_CLICKHOUSE_HOST', 'localhost') }}"
+      port:     "{{ env_var('DBT_CLICKHOUSE_PORT', 8123) | as_number }}"
+      schema:   "{{ env_var('DBT_CLICKHOUSE_SCHEMA') }}"
+      user:     "{{ env_var('DBT_CLICKHOUSE_USER', 'default') }}"
+      password: "{{ env_var('DBT_CLICKHOUSE_PASSWORD', '') }}"
       secure: False
 
-  target: default
+    prod:
+      type: clickhouse
+      driver: http
+      host:     "{{ env_var('DBT_CLICKHOUSE_HOST') }}"
+      port:     "{{ env_var('DBT_CLICKHOUSE_PORT', 8123) | as_number }}"
+      schema:   "{{ env_var('DBT_CLICKHOUSE_SCHEMA') }}"
+      user:     "{{ env_var('DBT_CLICKHOUSE_USER') }}"
+      password: "{{ env_var('DBT_CLICKHOUSE_PASSWORD') }}"
+      secure: False
+
+
+  target: dev
