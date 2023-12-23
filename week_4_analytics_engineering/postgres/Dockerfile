@@ -19,15 +19,15 @@ ENV DBT_POSTGRES_SCHEMA=
 ENV DBT_POSTGRES_USER=
 ENV DBT_POSTGRES_PASSWORD=
 
-ENV PYTHONPATH=/app/pkgs
-COPY --from=builder /app/__pypackages__/3.11/lib /app/pkgs
+ENV PYTHONPATH=/usr/local/lib/python/
+COPY --from=builder /app/__pypackages__/3.11/lib /usr/local/lib/python/
 COPY --from=builder /app/__pypackages__/3.11/bin /usr/local/bin
 
 ADD analyses /app/analyses
-ADD macros /app/macros
-ADD models /app/models
-ADD seeds /app/seeds
-ADD tests /app/tests
+ADD macros   /app/macros
+ADD models   /app/models
+ADD seeds    /app/seeds
+ADD tests    /app/tests
 ADD dbt_project.yml package-lock.yml packages.yml /app/
 ADD profiles.tmpl.yml /app/profiles.yml
 
