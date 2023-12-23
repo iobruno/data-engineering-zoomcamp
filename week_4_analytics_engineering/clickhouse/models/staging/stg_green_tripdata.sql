@@ -1,4 +1,7 @@
-{{ config(schema='stg_nyc_trip_record_data', materialized='table') }}
+{{ config(
+    schema='stg_' ~ env_var('DBT_CLICKHOUSE_SCHEMA'),
+    materialized='table')
+}}
 
 SELECT
     -- identifiers
@@ -29,12 +32,12 @@ SELECT
         payment_type_desc_for('payment_type')
     }}                                      as payment_type_desc
 FROM 
-    {{ source('mysql-raw-nyc-trip-record', 'ntl_green_taxi') }}
+    {{ source('postgres-raw-nyc-trip_record', 'ntl_green_taxi') }}
 
 
 -- Run as:
---  dbt build --select stg_green_tripdata --var 'is_test_run: true'
---  dbt run --select stg_green_tripdata --var 'is_test_run: false'
+--  dbt build --select stg_green_tripdata --vars 'is_test_run: true'
+--  dbt run --select stg_green_tripdata --vars 'is_test_run: false'
 {% if var('is_test_run', default=false) %}
     LIMIT 100
 {% endif %}

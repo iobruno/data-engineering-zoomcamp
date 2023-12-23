@@ -4,12 +4,12 @@ seeds:
     config:
       # Toggles enabled/disabled when running `dbt seed`
       enabled: true
-      # Overrides default schema (defined in profiles.yml) where it should write the data to
-      schema: stg_nyc_trip_record_data
+
       # Config options
-      #  'alias' refers to the table name to be created on the speficied db and schema
-      alias: stg_zone_lookup
-      quote_columns: false
+      #   'schema' overrides default schema (defined in profiles.yml) where it should write the data to
+      #   'alias' refers to the table name to be created on the speficied database and sche,a
+      schema: "{{ 'stg_' ~ env_var('DBT_CLICKHOUSE_SCHEMA') }}"
+      alias:  "{{ 'stg_' ~ 'zone_lookup' }}"
 
       # Refer to https://docs.getdbt.com/reference/seed-configs 
       # for other seed config options

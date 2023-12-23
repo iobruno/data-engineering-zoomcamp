@@ -1,4 +1,7 @@
-{{ config(schema='nyc_trip_record_data') }}
+{{ config(
+    schema=env_var('DBT_CLICKHOUSE_SCHEMA'),
+    materialized='table')
+}}
 
 SELECT
     LocationID      as location_id,

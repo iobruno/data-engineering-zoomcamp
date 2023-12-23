@@ -1,4 +1,7 @@
-{{ config(schema='nyc_trip_record_data') }}
+{{ config(
+    schema=env_var('DBT_CLICKHOUSE_SCHEMA'),
+    materialized='table')
+}}
 
 WITH green_tripdata as (
     SELECT
