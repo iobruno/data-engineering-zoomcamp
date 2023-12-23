@@ -1,3 +1,7 @@
+{{ config(
+    schema='stg_' ~ env_var('DBT_BIGQUERY_DATASET'))
+}}
+
 SELECT
     -- identifiers
     {{
@@ -33,7 +37,7 @@ SELECT
         payment_type_desc_for('payment_type')
     }}                      as payment_type_desc
 FROM 
-    {{ source('bq-staging-nyc-trip_record', 'ext_yellow') }}
+    {{ source('bq-raw-nyc-trip_record', 'ext_yellow') }}
 
 
 -- Run as:

@@ -16,6 +16,7 @@ ENV DBT_BIGQUERY_PROJECT=
 ENV DBT_BIGQUERY_DATASET=
 ENV DBT_BIGQUERY_DATASET_LOCATION=
 ENV DBT_BIGQUERY_AUTH_METHOD=
+ENV GOOGLE_APPLICATION_CREDENTIALS=
 
 ENV PYTHONPATH=/app/pkgs
 COPY --from=builder /app/__pypackages__/3.11/lib /app/pkgs
@@ -31,6 +32,4 @@ ADD profiles.tmpl.yml /app/profiles.yml
 
 WORKDIR /app/
 
-RUN dbt deps
-
-ENTRYPOINT ["dbt", "run"]
+ENTRYPOINT dbt deps && dbt run --profiles-dir .

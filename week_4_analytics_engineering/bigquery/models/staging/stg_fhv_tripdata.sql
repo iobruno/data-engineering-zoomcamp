@@ -1,3 +1,7 @@
+{{ config(
+    schema='stg_' ~ env_var('DBT_BIGQUERY_DATASET'))
+}}
+
 SELECT
     -- identifiers
     {{ 
@@ -16,7 +20,7 @@ SELECT
     DOlocationID            as dropoff_location_id,
     SR_Flag                 as shared_ride_flag
 FROM 
-    {{ source('bq-staging-nyc-trip_record', 'ext_fhv') }}
+    {{ source('bq-raw-nyc-trip_record', 'ext_fhv') }}
 
 
 -- Run as:
