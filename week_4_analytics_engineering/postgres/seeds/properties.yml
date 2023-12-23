@@ -5,11 +5,13 @@ seeds:
       # Toggles enabled/disabled when running `dbt seed`
       enabled: true
       # Config options
+      #   'schema' overrides default schema (defined in profiles.yml) where it should write the data to
       #  'alias' refers to the table name to be created on the speficied db and schema
       #  'quote_columns': for PostgreSQL, if the column name(s) starts with uppercase, 
       #                   you'll have to use " (double quotes) to refer to them. 
       #                   So, instead use 'quote_columns false' to force them to lowercase
-      alias: stg_zone_lookup
+      schema: "{{ 'stg_' ~ env_var('DBT_POSTGRES_SCHEMA') }}"
+      alias:  "{{ 'stg_' ~ 'zone_lookup' }}"
       quote_columns: false
 
       # Refer to https://docs.getdbt.com/reference/seed-configs 

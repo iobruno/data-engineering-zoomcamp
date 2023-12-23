@@ -1,3 +1,7 @@
+{{ config(
+    schema='stg_' ~ env_var('DBT_POSTGRES_SCHEMA'))
+}}
+
 SELECT
     -- identifiers
     {{
@@ -33,7 +37,7 @@ SELECT
         payment_type_desc_for('payment_type')
     }}                      as payment_type_desc
 FROM 
-    {{ source('pg-raw-nyc-trip-record', 'ntl_yellow_taxi') }}
+    {{ source('pg-raw-nyc-trip_record', 'ntl_yellow_taxi') }}
 
 
 -- Run as:
