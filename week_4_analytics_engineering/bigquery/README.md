@@ -56,21 +56,13 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-export DBT_BIGQUERY_DATASET=stg_nyc_trip_record_data \
-export DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
-export DBT_BIGQUERY_AUTH_METHOD=oauth
+export DBT_BIGQUERY_DATASET=nyc_trip_record_data \
+export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
 4.3. Since we're doing `oauth` authentication for development, run:
 ```shell
 gcloud auth login
-```
-
-4.4. Update the `profile` key on the `dbt_project.yml` file:
-
-Make sure to point to an existing profile name set on `profiles.yaml`. In this case:
-```yaml
-profile: 'iobruno-gcp-labs-bigquery'
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
