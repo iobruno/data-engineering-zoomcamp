@@ -110,7 +110,7 @@ open http://localhost:8080
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with BigQuery Adapter ([dbt-bigquery](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
-- [ ] Run `dbt-core` in Docker
+- [x] Run `dbt-core` in Docker
 - [ ] Complete dbt Labs Learning Path for `dbt-core`
   - [ ] [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)
   - [ ] [Jinja, Macros, Packages](https://courses.getdbt.com/courses/jinja-macros-packages)
