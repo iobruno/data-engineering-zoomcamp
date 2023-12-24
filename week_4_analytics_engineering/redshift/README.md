@@ -11,7 +11,7 @@ This project focuses on creating dbt models using the NY Taxi Tripdata Datasets 
 **IMPORTANT NOTE**: To access `awsdatacatalog` from RedShift, IAM auth method is required. It also explicitly needs USAGE grants that DB, therefore, on Redshift Query Editor, run:
 ```sql
 GRANT USAGE ON DATABASE awsdatacatalog to "IAM:my_iam_user";
-GRANT ALL ON DATABASE dev to "IAM:my_iam_user";
+GRANT ALL ON DATABASE <DATABASE_NAME> to "IAM:my_iam_user";
 ```
 
 
@@ -62,8 +62,6 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 export DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
 export DBT_REDSHIFT_DATABASE=dev \
 export DBT_REDSHIFT_SCHEMA=nyc_trip_record_data \
-export DBT_REDSHIFT_USER=admin \
-export DBT_REDSHIFT_PASSWORD="PASSWORD"
 ```
 
 
@@ -122,8 +120,6 @@ docker run \
   -e DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
   -e DBT_REDSHIFT_DATABASE=dev \
   -e DBT_REDSHIFT_SCHEMA=nyc_trip_record_data \
-  -e DBT_REDSHIFT_USER=admin \
-  -e DBT_REDSHIFT_PASSWORD="PASSWORD" \
   --name dbt_redshift \
   dbt_redshift
 ```
@@ -132,5 +128,5 @@ docker run \
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with Redshift Adapter ([dbt-redshift](https://docs.getdbt.com/docs/core/connect-data-platform/redshift-setup))
-- [ ] Generate and serve docs and Data Lineage Graphs locally
 - [ ] Run `dbt-core` in Docker
+- [ ] Terraform AWS Glue Catalog and Crawler
