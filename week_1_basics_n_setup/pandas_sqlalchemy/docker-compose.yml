@@ -16,20 +16,6 @@ services:
     networks:
       - internal
 
-  pgweb:
-    container_name: pgweb
-    image: sosedoff/pgweb:0.14.2
-    restart: on-failure:5
-    hostname: pgweb
-    environment:
-      - PGWEB_DATABASE_URL=postgres://sqlalchemy:sqlalchemy@postgres:5432/nyc_taxi?sslmode=disable
-    depends_on:
-      - postgres
-    ports:
-      - 8081:8081
-    networks:
-      - internal
-
   mysql:
     container_name: mysql
     image: mysql/mysql-server:8.0.32
@@ -50,4 +36,4 @@ services:
 
 networks:
   internal:
-    name: pg-network
+    name: sqlalchemy

@@ -85,27 +85,67 @@ pre-commit install
 4.1.: To connect to Postgres:
 ```shell
 export DATABASE_DRIVER=postgres \
-export DATABASE_USERNAME=postgres \
-export DATABASE_PASSWORD=postgres \
 export DATABASE_HOST=localhost \
 export DATABASE_PORT=5433 \
 export DATABASE_NAME=nyc_taxi
+export DATABASE_USERNAME=postgres \
+export DATABASE_PASSWORD=postgres
 ```
 
 4.2.: To connect to MySQL:
 ```shell
 export DATABASE_DRIVER=mysql \
-export DATABASE_USERNAME=mysql \
-export DATABASE_PASSWORD=mysql \
 export DATABASE_HOST=localhost \
 export DATABASE_PORT=3307 \
 export DATABASE_NAME=nyc_taxi
+export DATABASE_USERNAME=mysql \
+export DATABASE_PASSWORD=mysql
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
 ```shell
 python sqlalchemy_ingest.py --help
 ```
+
+
+## Containerization and Testing
+
+**1.** Build the Docker Image with:
+
+```shell
+docker build -t pandas_sqlalchemy:latest . --no-cache
+```
+
+**2.** Start a container with it:
+
+2.1. PosgreSQL:
+```shell
+docker run \
+  -e DATABASE_DRIVER=postgres \
+  -e DATABASE_HOST=postgres \
+  -e DATABASE_PORT=5432 \
+  -e DATABASE_NAME=nyc_taxi \
+  -e DATABASE_USERNAME=postgres \
+  -e DATABASE_PASSWORD=postgres \
+  --network sqlalchemy \
+  --name sqlalchemy_postgres \
+  pandas_sqlalchemy
+```
+
+2.2. For MySQL:
+```shell
+docker run \
+  -e DATABASE_DRIVER=mysql \
+  -e DATABASE_HOST=mysql \
+  -e DATABASE_PORT=3306 \
+  -e DATABASE_NAME=nyc_taxi \
+  -e DATABASE_USERNAME=mysql \
+  -e DATABASE_PASSWORD=mysql \
+  --network sqlalchemy \
+  --name sqlalchemy_mysql \
+  pandas_sqlalchemy
+```
+
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

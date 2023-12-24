@@ -12,24 +12,24 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.11-slim AS runner
 
-ENV DBT_PROFILES_DIR=/app/
+ENV DBT_PROFILES_DIR=/dbt/
 ENV DBT_BIGQUERY_PROJECT=
 ENV DBT_BIGQUERY_DATASET=
 ENV DBT_BIGQUERY_DATASET_LOCATION=
 ENV GOOGLE_APPLICATION_CREDENTIALS=/secrets/gcp_credentials.json
 
-ENV PYTHONPATH=/app/pkgs
-COPY --from=builder /app/__pypackages__/3.11/lib /app/pkgs
+ENV PYTHONPATH=/usr/local/lib/python/
+COPY --from=builder /app/__pypackages__/3.11/lib /usr/local/lib/python/
 COPY --from=builder /app/__pypackages__/3.11/bin /usr/local/bin
 
-ADD analyses /app/analyses
-ADD macros /app/macros
-ADD models /app/models
-ADD seeds /app/seeds
-ADD tests /app/tests
-ADD dbt_project.yml package-lock.yml packages.yml /app/
-ADD profiles.tmpl.yml /app/profiles.yml
+ADD analyses /dbt/analyses
+ADD macros   /dbt/macros
+ADD models   /dbt/models
+ADD seeds    /dbt/seeds
+ADD tests    /dbt/tests
+ADD dbt_project.yml package-lock.yml packages.yml /dbt/
+ADD profiles.tmpl.yml /dbt/profiles.yml
 
-WORKDIR /app/
+WORKDIR /dbt/
 
 ENTRYPOINT ["sh", "-c", "dbt deps && dbt seed --target prod && dbt run --target prod"]

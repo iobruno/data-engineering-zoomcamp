@@ -99,7 +99,6 @@ dbt [build|run] --select +models/staging
 dbt [build|run] --select models/staging+
 ```
 
-
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
@@ -114,8 +113,31 @@ open http://localhost:8080
 ```
 
 
+## Containerization and Testing
+
+**1.** Build the Docker Image with:
+
+```shell
+docker build -t dbt_postgres:latest . --no-cache
+```
+
+**2.** Start a container with it:
+```shell
+docker run \
+  -e DBT_POSTGRES_HOST=postgres \
+  -e DBT_POSTGRES_DATABASE=nyc_taxi \
+  -e DBT_POSTGRES_SCHEMA=nyc_trip_record_data \
+  -e DBT_POSTGRES_USER=postgres \
+  -e DBT_POSTGRES_PASSWORD=postgres \
+  --network dbt_analytics \
+  --name dbt_postgres \
+  dbt_postgres
+```
+
+
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with PostgreSQL Adapter ([dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
 - [x] Run `dbt-core` in Docker
+- [ ] Add migrations to initialize PostgreSQL with some data

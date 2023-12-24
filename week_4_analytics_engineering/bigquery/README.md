@@ -106,6 +106,26 @@ open http://localhost:8080
 ```
 
 
+## Containerization and Testing
+
+**1.** Build the Docker Image with:
+
+```shell
+docker build -t dbt_bigquery:latest . --no-cache
+```
+
+**2.** Start a container with it:
+```shell
+docker run \
+  -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
+  -e DBT_BIGQUERY_DATASET=nyc_trip_record_data \
+  -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
+  -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
+  --name dbt_bigquery \
+  dbt_bigquery
+```
+
+
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with BigQuery Adapter ([dbt-bigquery](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup))
