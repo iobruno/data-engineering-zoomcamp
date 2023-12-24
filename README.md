@@ -43,6 +43,7 @@ can take the course at your own pace
 ### [Module 4: Analytics Engineering](week_4_analytics_engineering)
 * [BigQuery and dbt](week_4_analytics_engineering/bigquery)
 * Databricks and dbt
+* [Redshift and dbt](week_4_analytics_engineering/redshift)
 * [ClickHouse and dbt](week_4_analytics_engineering/clickhouse)
 * [PostgreSQL and dbt](week_4_analytics_engineering/postgres)
 * [DuckDB and dbt](week_4_analytics_engineering/duckdb)

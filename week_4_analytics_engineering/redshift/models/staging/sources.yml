@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: redshift-raw-nyc-trip_record
+    database: "awsdatacatalog"
+    schema:   "nyc_trip_record_data"
+    tables:
+      - name: fhv
+      - name: green
+      - name: yellow
