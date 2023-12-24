@@ -5,12 +5,10 @@
 
 SELECT
     -- identifiers
-    {{ 
-        dbt_utils.generate_surrogate_key([
-            'VendorID',
-            'lpep_pickup_datetime'
-        ])
-    }}                      as trip_id,
+    {{ dbt_utils.generate_surrogate_key([
+        'VendorID',
+        'lpep_pickup_datetime'
+    ]) }}                   as trip_id,
     VendorID                as vendor_id,
     RatecodeID              as ratecode_id,
     PULocationID            as pickup_location_id,
@@ -33,8 +31,11 @@ SELECT
     improvement_surcharge   as improvement_surcharge,
     congestion_surcharge    as congestion_surcharge,
     total_amount            as total_amount,
-    payment_type            as payment_type
-FROM 
+    payment_type            as payment_type,
+    {{ 
+        payment_type_desc_for('payment_type')
+    }}                      as payment_type_desc
+FROM
     {{ source('redshift-raw-nyc-trip_record', 'green') }}
 
 

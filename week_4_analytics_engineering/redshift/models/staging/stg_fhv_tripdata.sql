@@ -5,12 +5,10 @@
 
 SELECT
     -- identifiers
-    {{ 
-        dbt_utils.generate_surrogate_key([
-            'dispatching_base_num',
-            'pickup_datetime'
-        ]) 
-    }}                      as trip_id,
+    {{ dbt_utils.generate_surrogate_key([
+        'dispatching_base_num',
+        'pickup_datetime'
+    ]) }}                   as trip_id,
     dispatching_base_num    as dispatching_base_num,
     Affiliated_base_number  as affiliated_base_num,
     -- pickup and dropoff timestamps
@@ -20,7 +18,7 @@ SELECT
     PUlocationID            as pickup_location_id,
     DOlocationID            as dropoff_location_id,
     SR_Flag                 as shared_ride_flag
-FROM 
+FROM
     {{ source('redshift-raw-nyc-trip_record', 'fhv') }}
 
 
