@@ -8,6 +8,12 @@
 
 This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in RedShift.
 
+**IMPORTANT NOTE**: To access `awsdatacatalog` from RedShift, IAM auth method is required. It also explicitly needs USAGE grants that DB, therefore, on Redshift Query Editor, run:
+```sql
+GRANT USAGE ON DATABASE awsdatacatalog to "IAM:my_iam_user";
+GRANT ALL ON DATABASE dev to "IAM:my_iam_user";
+```
+
 
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)

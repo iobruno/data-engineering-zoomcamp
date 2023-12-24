@@ -28,4 +28,3 @@ models:
       materialized: view
     core:
       materialized: table
-

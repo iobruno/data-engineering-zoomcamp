@@ -1,6 +1,7 @@
 {{ config(
-    schema='stg_' ~ env_var('DBT_REDSHIFT_SCHEMA'))
-}}
+    schema='stg_' ~ env_var('DBT_REDSHIFT_SCHEMA'),
+    materialized='table'
+) }}
 
 SELECT
     -- identifiers
