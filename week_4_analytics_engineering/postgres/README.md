@@ -140,3 +140,4 @@ docker run \
 - [x] Bootstrap dbt with PostgreSQL Adapter ([dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
 - [x] Run `dbt-core` in Docker
+- [ ] Add migrations to initialize PostgreSQL with some data
