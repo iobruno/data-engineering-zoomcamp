@@ -12,6 +12,7 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.11-slim AS runner
 
+ENV DBT_PROFILES_DIR=/dbt/
 ENV DBT_POSTGRES_HOST=localhost
 ENV DBT_POSTGRES_PORT=5432
 ENV DBT_POSTGRES_DATABASE=

@@ -12,7 +12,7 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.11-slim AS runner
 
-ENV DBT_PROFILES_DIR=/app/
+ENV DBT_PROFILES_DIR=/dbt/
 ENV DBT_BIGQUERY_PROJECT=
 ENV DBT_BIGQUERY_DATASET=
 ENV DBT_BIGQUERY_DATASET_LOCATION=
@@ -30,6 +30,6 @@ ADD tests    /dbt/tests
 ADD dbt_project.yml package-lock.yml packages.yml /dbt/
 ADD profiles.tmpl.yml /dbt/profiles.yml
 
-WORKDIR /dbt/
+WORKDIR /dbt/ 
 
 ENTRYPOINT ["sh", "-c", "dbt deps && dbt seed --target prod && dbt run --target prod"]

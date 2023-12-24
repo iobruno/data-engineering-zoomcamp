@@ -12,6 +12,7 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.11-slim AS runner
 
+ENV DBT_PROFILES_DIR=/dbt/
 ENV DBT_CLICKHOUSE_HOST=localhost
 ENV DBT_CLICKHOUSE_PORT=8123
 ENV DBT_CLICKHOUSE_DATABASE=
