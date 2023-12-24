@@ -30,6 +30,6 @@ ADD tests    /dbt/tests
 ADD dbt_project.yml package-lock.yml packages.yml /dbt/
 ADD profiles.tmpl.yml /dbt/profiles.yml
 
-WORKDIR /dbt/ 
+WORKDIR /dbt/
 
 ENTRYPOINT ["sh", "-c", "dbt deps && dbt seed --target prod && dbt run --target prod"]
