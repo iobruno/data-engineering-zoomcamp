@@ -9,8 +9,6 @@ with green_tripdata as (
         g.*
     from 
         {{ ref('stg_green_tripdata') }} g
-    where 
-        vendor_id is not null
 ),
 
 yellow_tripdata as (
@@ -20,8 +18,6 @@ yellow_tripdata as (
         y.*
     from 
         {{ ref('stg_yellow_tripdata') }} y
-    where 
-        vendor_id is not null
 ),
 
 all_tripdata as (

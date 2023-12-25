@@ -36,7 +36,8 @@ select
     }}                    as payment_type_desc
 from 
     {{ source('bq-raw-nyc-trip_record', 'ext_yellow') }}
-
+where
+    VendorID is not null
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'

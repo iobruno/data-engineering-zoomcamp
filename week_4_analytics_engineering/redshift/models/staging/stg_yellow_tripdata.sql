@@ -37,6 +37,8 @@ select
     }}                    as payment_type_desc
 from 
     {{ source('redshift-raw-nyc-trip_record', 'yellow') }}
+where
+    VendorID is not null
 
 
 -- Run as:

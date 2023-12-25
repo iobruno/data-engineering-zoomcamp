@@ -5,10 +5,10 @@
 select
     -- identifiers
     {{ dbt_utils.generate_surrogate_key([
-        'VendorID', 
+        'vendorid', 
         'tpep_pickup_datetime'
     ]) }}                 as trip_id,
-    VendorID              as vendor_id,
+    vendorid              as vendor_id,
     RatecodeID            as ratecode_id,
     PULocationID          as pickup_location_id,
     DOLocationID          as dropoff_location_id,
@@ -36,6 +36,8 @@ select
     }}                    as payment_type_desc
 from 
     {{ source('pg-raw-nyc-trip_record', 'ntl_yellow_taxi') }}
+where
+    vendorid is not null
 
 
 -- Run as:
