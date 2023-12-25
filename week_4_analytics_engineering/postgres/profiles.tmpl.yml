@@ -5,7 +5,7 @@ dbt_postgres_analytics:
       host:   "{{ env_var('DBT_POSTGRES_HOST', 'localhost') }}"
       port:   "{{ env_var('DBT_POSTGRES_PORT', 5433) | as_number }}"
       dbname: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
-      schema: "{{ env_var('DBT_POSTGRES_SCHEMA') }}"
+      schema: "{{ env_var('DBT_POSTGRES_TARGET_SCHEMA') }}"
       user:   "{{ env_var('DBT_POSTGRES_USER') }}"
       pass:   "{{ env_var('DBT_POSTGRES_PASSWORD') }}"
       threads: 4
@@ -15,7 +15,7 @@ dbt_postgres_analytics:
       host:   "{{ env_var('DBT_POSTGRES_HOST') }}"
       port:   "{{ env_var('DBT_POSTGRES_PORT', 5432) | as_number }}"
       dbname: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
-      schema: "{{ env_var('DBT_POSTGRES_SCHEMA') }}"
+      schema: "{{ env_var('DBT_POSTGRES_TARGET_SCHEMA') }}"
       user:   "{{ env_var('DBT_POSTGRES_USER') }}"
       pass:   "{{ env_var('DBT_POSTGRES_PASSWORD') }}"
       threads: 2
