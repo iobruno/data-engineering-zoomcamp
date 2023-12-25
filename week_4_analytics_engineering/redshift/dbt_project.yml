@@ -25,6 +25,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   dbt_redshift_analytics:
     staging:
-      materialized: view
+      materialized: table
     core:
       materialized: table

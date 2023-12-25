@@ -2,8 +2,12 @@ version: 2
 
 sources:
   - name: redshift-raw-nyc-trip_record
-    database: "awsdatacatalog"
-    schema:   "nyc_trip_record_data"
+    database: |-
+      {%- if env_var('DBT_REDSHIFT_USE_DATA_CATALOG', 0) == '1' -%} awsdatacatalog
+      {%- else -%} {{ env_var('DBT_REDSHIFT_DATABASE') }}
+      {%- endif -%}
+
+    schema: "{{ env_var('DBT_REDSHIFT_SOURCE_SCHEMA', env_var('DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB')) }}"
     tables:
       - name: fhv
       - name: green
