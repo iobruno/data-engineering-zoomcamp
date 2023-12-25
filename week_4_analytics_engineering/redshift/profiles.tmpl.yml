@@ -3,23 +3,23 @@ dbt_redshift_analytics:
     dev:
       type: redshift
       method: iam
-      host:   "{{ env_var('DBT_REDSHIFT_HOST') }}"
-      port:   "{{ env_var('DBT_REDSHIFT_PORT', 5439) | as_number }}"
-      dbname: "{{ env_var('DBT_REDSHIFT_DATABASE') }}"
-      schema: "{{ env_var('DBT_REDSHIFT_SCHEMA') }}"
-      user:   "{{ env_var('DBT_REDSHIFT_USER', 'admin') }}"
+      host:     "{{ env_var('DBT_REDSHIFT_HOST') }}"
+      port:     "{{ env_var('DBT_REDSHIFT_PORT', 5439) | as_number }}"
+      dbname:   "{{ env_var('DBT_REDSHIFT_DATABASE') }}"
+      schema:   "{{ env_var('DBT_REDSHIFT_TARGET_SCHEMA') }}"
+      user:     "{{ env_var('DBT_REDSHIFT_USER', 'admin') }}"
       password: "{{ env_var('DBT_REDSHIFT_PASSWORD') }}"
       threads: 4
 
     prod:
       type: redshift
       method: iam
-      host:   "{{ env_var('DBT_REDSHIFT_HOST') }}"
-      port:   "{{ env_var('DBT_REDSHIFT_PORT', 5439) | as_number }}"
-      dbname: "{{ env_var('DBT_REDSHIFT_DATABASE') }}"
-      schema: "{{ env_var('DBT_REDSHIFT_SCHEMA') }}"
-      user:   "{{ env_var('DBT_REDSHIFT_USER', 'admin') }}"
+      host:     "{{ env_var('DBT_REDSHIFT_HOST') }}"
+      port:     "{{ env_var('DBT_REDSHIFT_PORT', 5439) | as_number }}"
+      dbname:   "{{ env_var('DBT_REDSHIFT_DATABASE') }}"
+      schema:   "{{ env_var('DBT_REDSHIFT_TARGET_SCHEMA') }}"
+      user:     "{{ env_var('DBT_REDSHIFT_USER', 'admin') }}"
       password: "{{ env_var('DBT_REDSHIFT_PASSWORD') }}"
-      threads: 1
+      threads: 4
 
   target: dev

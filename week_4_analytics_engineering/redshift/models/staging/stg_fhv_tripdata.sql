@@ -1,6 +1,5 @@
 {{ config(
-    schema='stg_' ~ env_var('DBT_REDSHIFT_SCHEMA'),
-    materialized='table'
+    schema=resolve_schema_for('staging')
 ) }}
 
 select
