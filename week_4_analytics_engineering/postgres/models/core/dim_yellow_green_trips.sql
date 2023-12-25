@@ -1,70 +1,69 @@
 {{ config(
-    schema=env_var('DBT_POSTGRES_SCHEMA'))
-}}
+    schema=env_var('DBT_POSTGRES_SCHEMA')
+) }}
 
-WITH green_tripdata as (
-    SELECT
-        row_number() OVER(PARTITION BY vendor_id, pickup_datetime) as row_num,
-        g.*, 
-        'green' as service_type
-    FROM
+with green_tripdata as (
+    select
+        row_number() over(partition by vendor_id, pickup_datetime) as row_num,
+        'green' as service_type,
+        g.*
+    from 
         {{ ref('stg_green_tripdata') }} g
-    WHERE
-        vendor_id IS NOT NULL
+    where 
+        vendor_id is not null
 ),
 
 yellow_tripdata as (
-    SELECT
-        row_number() OVER ( PARTITION BY vendor_id, pickup_datetime ) as row_num,
-        y.*, 
-        'yellow' as service_type
-    FROM
+    select
+        row_number() over (partition by vendor_id, pickup_datetime) as row_num,
+        'yellow' as service_type,
+        y.*
+    from 
         {{ ref('stg_yellow_tripdata') }} y
-    WHERE
-        vendor_id IS NOT NULL
+    where 
+        vendor_id is not null
 ),
 
 all_tripdata as (
-    SELECT * FROM green_tripdata WHERE row_num = 1
-    UNION ALL
-    SELECT * FROM yellow_tripdata WHERE row_num = 1
+    select * from green_tripdata where row_num = 1    
+    union all 
+    select * from yellow_tripdata where row_num = 1
 ),
 
 lookup_zones as (
-    SELECT * FROM {{ ref('dim_zone_lookup' )}}
-    WHERE borough != 'Unknown'
+    select * from {{ ref('dim_zone_lookup' )}} where borough != 'Unknown'
 )
 
-SELECT
-    t.trip_id                                   as trip_id,
-    t.vendor_id                                 as vendor_id,
-    t.service_type                              as service_type,
-    t.ratecode_id                               as ratecode_id,
-    t.pickup_location_id                        as pickup_location_id,
-    pickup.borough                              as pickup_borough,
-    pickup.zone                                 as pickup_zone,
-    t.dropoff_location_id                       as dropoff_location_id,
-    dropoff.borough                             as dropoff_borough,
-    dropoff.zone                                as dropoff_zone,
-    t.pickup_datetime                           as pickup_datetime,
-    t.dropoff_datetime                          as dropoff_datetime,
-    t.store_and_fwd_flag                        as store_and_fwd_flag,
-    t.passenger_count                           as passenger_count,
-    t.trip_distance                             as trip_distance,
-    t.trip_type                                 as trip_type,
-    CAST(t.fare_amount as NUMERIC)              as fare_amount,
-    CAST(t.extra as NUMERIC)                    as extra,
-    CAST(t.mta_tax as NUMERIC)                  as mta_tax,
-    CAST(t.tip_amount as NUMERIC)               as tip_amount,
-    CAST(t.tolls_amount as NUMERIC)             as tolls_amount,
-    CAST(t.ehail_fee as NUMERIC)                as ehail_fee,
-    CAST(t.improvement_surcharge as NUMERIC)    as improvement_surcharge,
-    CAST(t.congestion_surcharge as NUMERIC)     as congestion_surcharge,
-    CAST(t.total_amount as NUMERIC)             as total_amount,
-    t.payment_type                              as payment_type
-FROM 
+select
+    t.trip_id                                as trip_id,
+    t.vendor_id                              as vendor_id,
+    t.service_type                           as service_type,
+    t.ratecode_id                            as ratecode_id,
+    t.pickup_location_id                     as pickup_location_id,
+    pickup.borough                           as pickup_borough,
+    pickup.zone                              as pickup_zone,
+    t.dropoff_location_id                    as dropoff_location_id,
+    dropoff.borough                          as dropoff_borough,
+    dropoff.zone                             as dropoff_zone,
+    t.pickup_datetime                        as pickup_datetime,
+    t.dropoff_datetime                       as dropoff_datetime,
+    t.store_and_fwd_flag                     as store_and_fwd_flag,
+    t.passenger_count                        as passenger_count,
+    t.trip_distance                          as trip_distance,
+    t.trip_type                              as trip_type,
+    cast(t.fare_amount as numeric)           as fare_amount,
+    cast(t.extra as numeric)                 as extra,
+    cast(t.mta_tax as numeric)               as mta_tax,
+    cast(t.tip_amount as numeric)            as tip_amount,
+    cast(t.tolls_amount as numeric)          as tolls_amount,
+    cast(t.ehail_fee as numeric)             as ehail_fee,
+    cast(t.improvement_surcharge as numeric) as improvement_surcharge,
+    cast(t.total_amount as numeric)          as total_amount,
+    cast(t.congestion_surcharge as numeric)  as congestion_surcharge,
+    t.payment_type                           as payment_type
+from 
     all_tripdata t
-INNER JOIN lookup_zones pickup  
-    ON t.pickup_location_id  = pickup.location_id
-INNER JOIN lookup_zones dropoff 
-    ON t.dropoff_location_id = dropoff.location_id
+inner join 
+    lookup_zones pickup on t.pickup_location_id  = pickup.location_id
+inner join 
+    lookup_zones dropoff on t.dropoff_location_id = dropoff.location_id

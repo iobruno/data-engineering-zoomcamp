@@ -1,25 +1,25 @@
 {{ config(
-    schema=env_var('DBT_POSTGRES_SCHEMA'))
-}}
+    schema=env_var('DBT_POSTGRES_SCHEMA')
+) }}
 
-SELECT
+select
     -- Revenue Grouping
-    pickup_zone                           as revenue_zone,
-    date_trunc('month', pickup_datetime)  as revenue_month,
-    service_type                          as service_type,
+    pickup_zone                                  as zone,
+    service_type                                 as service_type,
+    {{ date_trunc("month", "pickup_datetime") }} as order_year,
     -- Revenue Calculations
-    ROUND(SUM(fare_amount), 2)             as revenue_monthly_fare,
-    ROUND(SUM(extra), 2)                   as revenue_monthly_extra,
-    ROUND(SUM(mta_tax), 2)                 as revenue_monthly_mta_tax,
-    ROUND(SUM(tip_amount), 2)              as revenue_monthly_tip_amount,
-    ROUND(SUM(tolls_amount), 2)            as revenue_monthly_tolls_amount,
-    ROUND(SUM(ehail_fee), 2)               as revenue_monthly_ehail_fee,
-    ROUND(SUM(improvement_surcharge), 2)   as revenue_monthly_improvement_surcharge,
-    ROUND(SUM(total_amount), 2)            as revenue_monthly_total_amount,
-    ROUND(SUM(congestion_surcharge), 2)    as revenue_monthly_congestion_surcharge
-FROM
+    round(sum(fare_amount), 2)                   as monthly_fare,
+    round(sum(extra), 2)                         as monthly_extra,
+    round(sum(mta_tax), 2)                       as monthly_mta_tax,
+    round(sum(tip_amount), 2)                    as monthly_tip_amount,
+    round(sum(tolls_amount), 2)                  as monthly_tolls_amount,
+    round(sum(ehail_fee), 2)                     as monthly_ehail_fee,
+    round(sum(improvement_surcharge), 2)         as monthly_improvement_surcharge,
+    round(sum(total_amount), 2)                  as monthly_total_amount,
+    round(sum(congestion_surcharge), 2)          as monthly_congestion_surcharge
+from 
     {{ ref('dim_yellow_green_trips') }}
-GROUP BY
-    pickup_zone,
-    date_trunc('month', pickup_datetime),
-    service_type
+group by 
+    pickup_zone, 
+    service_type,
+    {{ date_trunc("month", "pickup_datetime") }}
