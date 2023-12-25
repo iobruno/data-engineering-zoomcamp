@@ -56,7 +56,8 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-export DBT_BIGQUERY_DATASET=nyc_trip_record_data \
+export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_trip_record_data \
+export DBT_BIGQUERY_TARGET_DATASET=nyc_trip_record_data \
 export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
@@ -118,7 +119,8 @@ docker build -t dbt_bigquery:latest . --no-cache
 ```shell
 docker run \
   -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-  -e DBT_BIGQUERY_DATASET=nyc_trip_record_data \
+  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_trip_record_data \
+  -e DBT_BIGQUERY_TARGET_DATASET=nyc_trip_record_data \
   -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
   -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
   --name dbt_bigquery \
@@ -130,6 +132,7 @@ docker run \
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with BigQuery Adapter ([dbt-bigquery](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
+- [x] Add dbt macro to configure target schemas dinamically
 - [x] Run `dbt-core` in Docker
 - [ ] Complete dbt Labs Learning Path for `dbt-core`
   - [ ] [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)

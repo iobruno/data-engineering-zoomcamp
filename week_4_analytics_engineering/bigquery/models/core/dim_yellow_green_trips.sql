@@ -1,5 +1,5 @@
 {{ config(
-    schema=env_var('DBT_BIGQUERY_DATASET')
+    schema=resolve_schema_for('core')
 ) }}
 
 with green_tripdata as (
