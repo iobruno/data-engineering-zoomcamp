@@ -1,4 +1,6 @@
 version: 2
+
+
 seeds:
   - name: taxi_zone_lookup
     config:
@@ -10,8 +12,12 @@ seeds:
       #  'quote_columns': for PostgreSQL, if the column name(s) starts with uppercase, 
       #                   you'll have to use " (double quotes) to refer to them. 
       #                   So, instead use 'quote_columns false' to force them to lowercase
-      schema: "{{ 'stg_' ~ env_var('DBT_POSTGRES_SCHEMA') }}"
-      alias:  "{{ 'stg_' ~ 'zone_lookup' }}"
+      schema: |-
+        {%- if target.name != "prod" -%} tmp_ 
+        {%- endif -%}
+        {{ env_var('DBT_POSTGRES_STAGING_SCHEMA', 'stg_' ~ env_var('DBT_POSTGRES_TARGET_SCHEMA')) }}
+
+      alias: "{{ 'stg_' ~ 'zone_lookup' }}"
       quote_columns: false
 
       # Refer to https://docs.getdbt.com/reference/seed-configs 

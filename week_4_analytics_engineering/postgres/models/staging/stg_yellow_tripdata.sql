@@ -1,6 +1,6 @@
 {{ config(
-    schema='stg_' ~ env_var('DBT_POSTGRES_SCHEMA'))
-}}
+    schema=resolve_schema_for('staging')
+) }}
 
 select
     -- identifiers
