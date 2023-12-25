@@ -58,7 +58,8 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 export DBT_POSTGRES_HOST=localhost \
 export DBT_POSTGRES_PORT=5433 \
 export DBT_POSTGRES_DATABASE=nyc_taxi \
-export DBT_POSTGRES_SCHEMA=nyc_trip_record_data \
+export DBT_POSTGRES_SOURCE_SCHEMA=public \
+export DBT_POSTGRES_TARGET_SCHEMA=nyc_trip_record_data \
 export DBT_POSTGRES_USER=postgres \
 export DBT_POSTGRES_PASSWORD=postgres
 ```
@@ -126,7 +127,8 @@ docker build -t dbt_postgres:latest . --no-cache
 docker run \
   -e DBT_POSTGRES_HOST=postgres \
   -e DBT_POSTGRES_DATABASE=nyc_taxi \
-  -e DBT_POSTGRES_SCHEMA=nyc_trip_record_data \
+  -e DBT_POSTGRES_SOURCE_SCHEMA=public \
+  -e DBT_POSTGRES_TARGET_SCHEMA=nyc_trip_record_data \
   -e DBT_POSTGRES_USER=postgres \
   -e DBT_POSTGRES_PASSWORD=postgres \
   --network dbt_analytics \
@@ -139,5 +141,6 @@ docker run \
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with PostgreSQL Adapter ([dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
+- [x] Add dbt macro to configure target schemas dinamically
 - [x] Run `dbt-core` in Docker
 - [ ] Add migrations to initialize PostgreSQL with some data
