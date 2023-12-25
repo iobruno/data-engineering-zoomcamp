@@ -120,6 +120,8 @@ docker run \
   -e DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
   -e DBT_REDSHIFT_DATABASE=dev \
   -e DBT_REDSHIFT_SCHEMA=nyc_trip_record_data \
+  -e AWS_ACCESS_KEY_ID=myAwsAccessKeyId \
+  -e AWS_SECRET_ACCESS_KEY=myAwsSecretAccessKey \
   --name dbt_redshift \
   dbt_redshift
 ```
@@ -128,5 +130,5 @@ docker run \
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with Redshift Adapter ([dbt-redshift](https://docs.getdbt.com/docs/core/connect-data-platform/redshift-setup))
-- [ ] Run `dbt-core` in Docker
+- [x] Run `dbt-core` in Docker
 - [ ] Terraform AWS Glue Catalog and Crawler

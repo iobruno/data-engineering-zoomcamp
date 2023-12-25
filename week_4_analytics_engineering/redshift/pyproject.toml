@@ -12,6 +12,7 @@ requires-python = ">=3.10,<3.12"
 
 dependencies = [
     "dbt-redshift>=1.7.1,<2.0",
+    "awscli>=1.32.7",
 ]
 
 [tool.pdm.dev-dependencies]
