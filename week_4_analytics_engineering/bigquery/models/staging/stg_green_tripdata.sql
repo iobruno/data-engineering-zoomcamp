@@ -1,5 +1,5 @@
 {{ config(
-    schema='stg_' ~ env_var('DBT_BIGQUERY_DATASET')
+    schema=resolve_schema_for('staging')
 ) }}
 
 select
