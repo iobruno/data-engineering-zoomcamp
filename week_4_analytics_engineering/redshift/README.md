@@ -61,9 +61,16 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```shell
 export DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
 export DBT_REDSHIFT_DATABASE=dev \
-export DBT_REDSHIFT_SCHEMA=nyc_trip_record_data \
+export DBT_REDSHIFT_USE_DATA_CATALOG=1 \
+export DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_trip_record_data \
+export DBT_REDSHIFT_TARGET_SCHEMA=nyc_trip_record_data
 ```
 
+Also, either have your AWS credentials set on `~/.aws/credentials` or set them as well:
+```shell
+export AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID \
+export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY
+```
 
 **5.** Install dbt dependencies and trigger the pipeline
 
@@ -117,11 +124,13 @@ docker build -t dbt_redshift:latest . --no-cache
 **2.** Start a container with it:
 ```shell
 docker run \
-  -e DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  -e DBT_REDSHIFT_HOST=$DBT_REDSHIFT_HOST \
   -e DBT_REDSHIFT_DATABASE=dev \
-  -e DBT_REDSHIFT_SCHEMA=nyc_trip_record_data \
-  -e AWS_ACCESS_KEY_ID=myAwsAccessKeyId \
-  -e AWS_SECRET_ACCESS_KEY=myAwsSecretAccessKey \
+  -e DBT_REDSHIFT_USE_DATA_CATALOG=1 \
+  -e DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_trip_record_data \
+  -e DBT_REDSHIFT_TARGET_SCHEMA=nyc_trip_record_data \
   --name dbt_redshift \
   dbt_redshift
 ```
@@ -130,5 +139,6 @@ docker run \
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with Redshift Adapter ([dbt-redshift](https://docs.getdbt.com/docs/core/connect-data-platform/redshift-setup))
+- [x] Add dbt macro to configure target schemas dinamically
 - [x] Run `dbt-core` in Docker
 - [ ] Terraform AWS Glue Catalog and Crawler
