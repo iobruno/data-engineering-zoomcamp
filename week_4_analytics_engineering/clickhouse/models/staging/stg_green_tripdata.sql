@@ -1,6 +1,5 @@
 {{ config(
-    schema='stg_' ~ env_var('DBT_CLICKHOUSE_SCHEMA'),
-    materialized='table'
+    schema=resolve_schema_for('staging')
 ) }}
 
 select
@@ -32,11 +31,9 @@ select
     toDecimal256(congestion_surcharge, 8)  as congestion_surcharge,
     toDecimal256(total_amount, 8)          as total_amount,
     payment_type                           as payment_type,
-    {{ 
-        payment_type_desc_for('payment_type')
-    }}                                     as payment_type_desc
+    {{ payment_desc_of('payment_type')}}   as payment_type_desc
 from 
-    {{ source('clickhouse-raw-nyc-trip_record', 'ntl_green_taxi') }}
+    {{ source('clickhouse-federated-postgres-nyc-trip_record', 'ntl_green_taxi') }}
 where
     vendorid is not null
 

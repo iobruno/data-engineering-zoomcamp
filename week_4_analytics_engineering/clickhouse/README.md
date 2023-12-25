@@ -55,21 +55,21 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```shell
 export DBT_CLICKHOUSE_HOST=localhost \
 export DBT_CLICKHOUSE_PORT=8123 \
-export DBT_CLICKHOUSE_SCHEMA=nyc_trip_record_data
-export DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=raw_pgdata
-export DBT_CLICKHOUSE_USER=clickhouse
+export DBT_CLICKHOUSE_SOURCE_DATABASE=raw_pgdata \
+export DBT_CLICKHOUSE_TARGET_DATABASE=nyc_trip_record_data \
+export DBT_CLICKHOUSE_USER=clickhouse \
 export DBT_CLICKHOUSE_PASSWORD=clickhouse
 ```
 
-4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the tables names where the staging models fetch the data from
-```shell
-  - name: clickhouse-raw-nyc-trip_record
-    schema: "{{ env_var('DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA') }}"
+4.3. On [sources.yml](models/staging/schema.yml), make sure to update the `table.name` where the staging models fetch the data from
+```yml
+sources:
+  - name: clickhouse-federated-postgres-nyc-trip_record
+    schema: "{{ env_var('DBT_CLICKHOUSE_SOURCE_DATABASE') }}"
     tables:
       - name: ntl_yellow_taxi
       - name: ntl_green_taxi
 ```
-
 
 **5.** Install dbt dependencies and trigger the pipeline
 
@@ -97,7 +97,6 @@ dbt [build|run] --select +models/staging
 dbt [build|run] --select models/staging+
 ```
 
-
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
@@ -124,11 +123,10 @@ docker build -t dbt_clickhouse:latest . --no-cache
 ```shell
 docker run \
   -e DBT_CLICKHOUSE_HOST=clickhouse \
-  -e DBT_CLICKHOUSE_PORT=8123 \
-  -e DBT_CLICKHOUSE_SCHEMA=nyc_trip_record_data \
+  -e DBT_CLICKHOUSE_SOURCE_DATABASE=raw_pgdata \
+  -e DBT_CLICKHOUSE_TARGET_DATABASE=nyc_trip_record_data \
   -e DBT_CLICKHOUSE_USER=clickhouse \
   -e DBT_CLICKHOUSE_PASSWORD=clickhouse \
-  -e DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=raw_pgdata \
   --network dbt_analytics \
   --name dbt_clickhouse \
   dbt_clickhouse

@@ -8,7 +8,11 @@ seeds:
       # Config options
       #   'schema' overrides default schema (defined in profiles.yml) where it should write the data to
       #   'alias' refers to the table name to be created on the speficied database and sche,a
-      schema: "{{ 'stg_' ~ env_var('DBT_CLICKHOUSE_SCHEMA') }}"
+      schema: |-
+        {%- if target.name != "prod" -%} tmp_ 
+        {%- endif -%}
+        {{ env_var('DBT_CLICKHOUSE_STAGING_DATABASE', 'stg_' ~ env_var('DBT_CLICKHOUSE_TARGET_DATABASE')) }}
+
       alias:  "{{ 'stg_' ~ 'zone_lookup' }}"
 
       # Refer to https://docs.getdbt.com/reference/seed-configs 

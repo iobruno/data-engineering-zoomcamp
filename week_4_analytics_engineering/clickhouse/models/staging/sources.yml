@@ -1,8 +1,8 @@
 version: 2
 
 sources:
-  - name: clickhouse-raw-nyc-trip_record
-    schema: "{{ env_var('DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA') }}"
+  - name: clickhouse-federated-postgres-nyc-trip_record
+    schema: "{{ env_var('DBT_CLICKHOUSE_SOURCE_DATABASE') }}"
     tables:
       - name: ntl_yellow_taxi
       - name: ntl_green_taxi
