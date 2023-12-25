@@ -1,7 +1,7 @@
 version: 2
 
 sources:
-  - name: postgres-raw-nyc-trip_record
+  - name: clickhouse-raw-nyc-trip_record
     schema: "{{ env_var('DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA') }}"
     tables:
       - name: ntl_yellow_taxi
