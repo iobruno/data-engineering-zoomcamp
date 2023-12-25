@@ -3,7 +3,7 @@
     that varies from 1 to 6
 #}
 
-{% macro payment_type_desc_for(payment_type_id) -%}
+{% macro payment_desc_of(payment_type_id) -%}
 
 CASE {{ payment_type_id }}
     WHEN 1 THEN 'Credit Card'

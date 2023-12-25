@@ -1,4 +1,3 @@
-
 name: 'dbt_clickhouse_analytics'
 version: '1.0.0'
 config-version: 2
@@ -26,6 +25,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   dbt_clickhouse_analytics:
     staging:
-      materialized: view
+      materialized: table
     core:
       materialized: table
