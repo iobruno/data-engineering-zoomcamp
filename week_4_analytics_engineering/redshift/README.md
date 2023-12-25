@@ -120,6 +120,8 @@ docker run \
   -e DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
   -e DBT_REDSHIFT_DATABASE=dev \
   -e DBT_REDSHIFT_SCHEMA=nyc_trip_record_data \
+  -e AWS_ACCESS_KEY_ID=myAwsAccessKeyId \
+  -e AWS_SECRET_ACCESS_KEY=myAwsSecretAccessKey \
   --name dbt_redshift \
   dbt_redshift
 ```
