@@ -95,13 +95,16 @@ def ingest(
         envvar="DATABASE_DRIVER", hidden=False,
     )],
     yellow: Annotated[Optional[bool], typer.Option(
-        "--yellow", "-y", help="Fetch datasets from NYC Yellow Trip"
+        "--yellow", "-y", help="Fetch NYC yellow cab dataset"
     )] = False,
     green: Annotated[Optional[bool], typer.Option(
-        "--green", "-g", help="Fetch datasets from: NYC Green Trip"
+        "--green", "-g", help="Fetch NYC green cab dataset"
+    )] = False,
+    fhv: Annotated[Optional[bool], typer.Option(
+        "--fhv", "-f", help="Fetch NYC fhv cab dataset"
     )] = False,
     zones: Annotated[Optional[bool], typer.Option(
-        "--zones", "-z", help="Fetch datasets from: Lookup Zones"
+        "--zones", "-z", help="Fetch NYC zone lookup dataset"
     )] = False,
 ):
     # fmt: on
@@ -123,6 +126,13 @@ def ingest(
             if datasets.green_trip_data:
                 ingest_nyc_trip_data_with(conn, "ntl_green_taxi", datasets.green_trip_data)
                 log.info("Done persisting the NYC Green Taxi trip data into DB")
+            else:
+                log.warning("Skipping Green trip data. The endpoint list is empty")
+
+        if fhv:
+            if datasets.fhv_trip_data:
+                ingest_nyc_trip_data_with(conn, "ntl_fhv_taxi", datasets.fhv_trip_data)
+                log.info("Done persisting the NYC FHV Taxi trip data into DB")
             else:
                 log.warning("Skipping Green trip data. The endpoint list is empty")
 
