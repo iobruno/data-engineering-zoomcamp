@@ -1,7 +1,8 @@
 {{ config(
     schema=resolve_schema_for('core'),
     orderby='(pickup_zone, order_year, service_type)',
-    engine='MergeTree()'
+    engine='MergeTree()',
+    settings={'allow_nullable_key': 1}
 ) }}
 
 select
