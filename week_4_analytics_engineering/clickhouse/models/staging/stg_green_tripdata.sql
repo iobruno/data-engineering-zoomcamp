@@ -1,5 +1,9 @@
 {{ config(
-    schema=resolve_schema_for('staging')
+    schema=resolve_schema_for('staging'),
+    order_by='(vendor_id, pickup_datetime, pickup_location_id, dropoff_location_id)',
+    engine='MergeTree()',
+    unique_key='trip_id',
+    settings={'allow_nullable_key': 1}
 ) }}
 
 select
