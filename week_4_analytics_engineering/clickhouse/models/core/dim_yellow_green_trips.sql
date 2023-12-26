@@ -1,5 +1,8 @@
 {{ config(
-    schema=resolve_schema_for('core')
+    schema=resolve_schema_for('core'),
+    order_by='(pickup_location_id, dropoff_location_id, vendor_id)',
+    engine='MergeTree()',
+    settings={'allow_nullable_key': 1}
 ) }}
 
 with green_tripdata as (
