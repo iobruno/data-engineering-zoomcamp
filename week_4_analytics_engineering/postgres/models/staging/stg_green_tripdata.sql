@@ -33,7 +33,7 @@ select
     payment_type                          as payment_type,
     {{ payment_desc_of('payment_type') }} as payment_type_desc
 from 
-    {{ source('pg-raw-nyc-trip_record', 'ntl_green_taxi') }}
+    {{ source('postgres-raw-nyc-trip_record', 'ntl_green_taxi') }}
 where
     vendorid is not null
 
