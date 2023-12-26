@@ -10,13 +10,17 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
-- `python sqlalchemy_ingest.py -g` or `--green`:
-  - fetches the datasets under the key `green_trip_data` only,
-  - persists to Postgres, on table `green_trip_data`
-
 - `python sqlalchemy_ingest.py -y` or `--yellow`:
   - fetches the datasets under the key `yellow_trip_data` only
   - persists to Postgres, on table `ntl_yellow_taxi`
+  
+- `python sqlalchemy_ingest.py -g` or `--green`:
+  - fetches the datasets under the key `green_trip_data` only,
+  - persists to Postgres, on table `ntl_green_taxi`
+
+- `python sqlalchemy_ingest.py -f` or `--fhv`:
+  - fetches the datasets under the key `zone_lookups`
+  - persists to Postgres, on table: `ntl_fhv_taxi`
 
 - `python sqlalchemy_ingest.py -z` or `--zones`:
   - fetches the datasets under the key `zone_lookups`
@@ -153,3 +157,4 @@ docker run \
 - [x] Build a CLI app with `Typer`
 - [x] Progress Bars to keep track of the execution with `rich`
 - [x] Run/Deploy the project on Docker
+- [ ] Enable downloading of multiple datasets in parallel
