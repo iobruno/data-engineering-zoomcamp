@@ -6,3 +6,4 @@ sources:
     tables:
       - name: ntl_yellow_taxi
       - name: ntl_green_taxi
+      - name: ntl_fhv_taxi

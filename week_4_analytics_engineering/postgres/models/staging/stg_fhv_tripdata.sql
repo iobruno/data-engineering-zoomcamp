@@ -18,10 +18,9 @@ select
     DOlocationID           as dropoff_location_id,
     SR_Flag                as shared_ride_flag
 from 
-    {{ source('bq-raw-nyc-trip_record', 'ext_fhv') }}
+    {{ source('postgres-raw-nyc-trip_record', 'ntl_fhv_taxi') }}
 where
     dispatching_base_num is not null
-
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'
