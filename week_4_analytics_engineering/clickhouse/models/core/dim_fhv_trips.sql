@@ -1,5 +1,8 @@
 {{ config(
-    schema=resolve_schema_for('core')
+    schema=resolve_schema_for('core'),
+    order_by='(dispatching_base_num, pickup_datetime, pickup_location_id, dropoff_location_id)',
+    engine='MergeTree()',
+    settings={'allow_nullable_key': 1}
 ) }}
 
 with fhv_tripdata as (

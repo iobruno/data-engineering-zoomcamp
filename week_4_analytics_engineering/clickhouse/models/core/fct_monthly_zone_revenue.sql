@@ -1,5 +1,7 @@
 {{ config(
-    schema=resolve_schema_for('core')
+    schema=resolve_schema_for('core'),
+    orderby='(pickup_zone, order_year, service_type)',
+    engine='MergeTree()'
 ) }}
 
 select

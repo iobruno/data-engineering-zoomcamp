@@ -1,5 +1,7 @@
 {{ config(
-    schema=resolve_schema_for('core')
+    schema=resolve_schema_for('core'),
+    order_by='(location_id, borough)',
+    engine='MergeTree()'
 ) }}
 
 select
