@@ -19,6 +19,8 @@ select
     SR_Flag                as shared_ride_flag
 from 
     {{ source('redshift-raw-nyc-trip_record', 'fhv') }}
+where
+    dispatching_base_num is not null
 
 
 -- Run as:
