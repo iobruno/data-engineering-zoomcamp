@@ -1,201 +1,201 @@
-version: "3.9"
+version: "3.9" 
+
+x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.4.3}
+x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.4.3}
+x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.4.3}
+x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUENT_PLATFORM_VERSION:-7.4.3}
+x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.4.3}
+x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUENT_PLATFORM_VERSION:-7.4.3}
+
+x-depends-on-kafka-brokers:
+  depends_on: &depends-on-kafka-brokers
+    broker0: 
+      condition: service_healthy
+    broker1: 
+      condition: service_healthy
+    broker2: 
+      condition: service_healthy
+
+x-depends-on-kafka-cluster:
+  depends_on: &depends-on-kafka-cluster
+    <<: *depends-on-kafka-brokers
+    schemaregistry: 
+      condition: service_healthy
+
+x-kafka-common: 
+  &kafka-common
+  image: *cp-kafka-image
+  environment: &kafka-common-env
+    KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+    KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+    KAFKA_DELETE_TOPIC_ENABLE: true
+  depends_on:
+    zookeeper: 
+      condition: service_healthy
+  healthcheck:
+    test: ["CMD-SHELL", "cub kafka-ready -b localhost:9092 1 10 || exit 1"]
+    start_period: 10s
+    interval: 5s
+    timeout: 10s
+    retries: 3
+  restart: on-failure
+
+x-ksqldb-common:
+  &ksqldb-common
+  image: *cp-ksqldb-server-image
+  restart: on-failure:5
+  environment:
+    &ksqldb-common-env
+    KSQL_LISTENERS: 'http://0.0.0.0:8088'
+    KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: true
+    KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: true
+  depends_on:
+    <<: *depends-on-kafka-brokers
+
 services:
   zookeeper:
-    container_name: cp-zookeeper
-    image: confluentinc/cp-zookeeper:7.4.3
-    restart: on-failure:5
-    hostname: zookeeper
+    image: *cp-zookeeper-image
+    container_name: kafka_zookeeper
     environment:
-      - ZOOKEEPER_CLIENT_PORT=2181
-      - ZOOKEEPER_TICK_TIME=2000
-      - ZOOKEEPER_SYNC_LIMIT=5
-    volumes:
-      - ./volumes/zk-data:/var/lib/zookeeper/data
-      - ./volumes/zk-txn-logs:/var/lib/zookeeper/log
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 5
     ports:
       - '2181:2181'
-    networks:
-      - sdn
-
-  kafka0:
-    container_name: cp-kafka-0
-    image: confluentinc/cp-kafka:7.4.3
-    restart: on-failure:5
-    hostname: kafka0
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://kafka0:29092,EXTERNAL://:9092
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka0:29092,EXTERNAL://127.0.0.1:9092
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-      - KAFKA_DELETE_TOPIC_ENABLE=true
     volumes:
-      - ./volumes/kafka0:/var/lib/kafka/data
-    depends_on:
-      - zookeeper
-    ports:
-      - '9092:9092'
-    networks:
-      - sdn
+      - ${ZK_DATA:-./volumes/zk_data}:/var/lib/zookeeper/data
+      - ${ZK_LOGS:-./volumes/zk_logs}:/var/lib/zookeeper/log
+    healthcheck:
+      test: ["CMD-SHELL", "cub zk-ready localhost:2181 30 || exit 1"]
+      interval: 10s
+      timeout: 30s
+      retries: 10
+    restart: on-failure
 
-  kafka1:
-    container_name: cp-kafka-1
-    image: confluentinc/cp-kafka:7.4.3
-    restart: on-failure:5
-    hostname: kafka1
+  broker0:
+    <<: *kafka-common
+    container_name: kafka_broker0
     environment:
-      - KAFKA_BROKER_ID=2
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://kafka1:29192,EXTERNAL://:9192
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka1:29192,EXTERNAL://127.0.0.1:9192
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-      - KAFKA_DELETE_TOPIC_ENABLE=true
+      <<: *kafka-common-env
+      KAFKA_BROKER_ID: 0
+      KAFKA_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29092'
+    ports:
+      - '29092:29092'
     volumes:
-      - ./volumes/kafka1:/var/lib/kafka/data
-    depends_on:
-      - zookeeper
-    ports:
-      - '9192:9192'
-    networks:
-      - sdn
+      - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
 
-  kafka2:
-    container_name: cp-kafka-2
-    image: confluentinc/cp-kafka:7.4.3
-    restart: on-failure:5
-    hostname: kafka2
+  broker1:
+    <<: *kafka-common
+    container_name: kafka_broker1
     environment:
-      - KAFKA_BROKER_ID=3
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_LISTENERS=INTERNAL://kafka2:29292,EXTERNAL://:9292
-      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka2:29292,EXTERNAL://127.0.0.1:9292
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
-      - KAFKA_DELETE_TOPIC_ENABLE=true
+      <<: *kafka-common-env
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29192'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29192'
+    ports:
+      - '29192:29192'
     volumes:
-      - ./volumes/kafka2:/var/lib/kafka/data
-    depends_on:
-      - zookeeper
-    ports:
-      - '9292:9292'
-    networks:
-      - sdn
+      - ${KAFKA_DATA:-./volumes/kafka}/broker1:/var/lib/kafka/data
 
-  ksqldb-server:
-    container_name: cp-ksqldb-server
-    image: confluentinc/cp-ksqldb-server:7.4.3
-    restart: on-failure:5
-    hostname: ksqldb-server
+  broker2:
+    <<: *kafka-common
+    container_name: kafka_broker2
     environment:
-      KSQL_LISTENERS: http://0.0.0.0:8088
-      KSQL_BOOTSTRAP_SERVERS: kafka0:29092,kafka1:29192,kafka2:29292
-      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
-      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
-    depends_on:
-      - zookeeper
-      - kafka0
-      - kafka1
-      - kafka2
+      <<: *kafka-common-env
+      KAFKA_BROKER_ID: 2
+      KAFKA_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29292'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29292'
     ports:
-      - '8088:8088'
-    networks:
-      - sdn
-
-  ksqldb-cli:
-    container_name: cp-ksqldb-cli
-    image: confluentinc/cp-ksqldb-cli:7.4.3
-    restart: on-failure:5
-    hostname: ksqldb-cli
-    depends_on:
-      - zookeeper
-      - kafka0
-      - kafka1
-      - kafka2
-      - ksqldb-server
-    entrypoint: /bin/sh
-    tty: true
-    networks:
-      - sdn
+      - '29292:29292'
+    volumes:
+      - ${KAFKA_DATA:-./volumes/kafka}/broker2:/var/lib/kafka/data
 
   schemaregistry:
-    container_name: cp-schemaregistry
-    image: confluentinc/cp-schema-registry:7.4.3
-    restart: on-failure:5
-    hostname: schemaregistry
+    image: *cp-schema-registry-image
+    container_name: kafka_schemaregistry
     environment:
-      - SCHEMA_REGISTRY_HOST_NAME=schemaregistry
-      - SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS=PLAINTEXT://kafka0:29092,PLAINTEXT://kafka1:29192,PLAINTEXT://kafka2:29292
-      - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:8081
-      - SCHEMA_REGISTRY_DEBUG=true
-    depends_on:
-      - zookeeper
-      - kafka0
-      - kafka1
-      - kafka2
+      SCHEMA_REGISTRY_HOST_NAME: 'schemaregistry'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker0:9092,PLAINTEXT://broker1:9092,PLAINTEXT://broker2:9092'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8081'
+      SCHEMA_REGISTRY_DEBUG: true
     ports:
       - '8081:8081'
-    networks:
-      - sdn
+    depends_on: *depends-on-kafka-brokers
+    healthcheck:
+      test: ["CMD-SHELL", "cub sr-ready localhost 8081 30 || exit 1"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
 
-  rest-proxy:
-    container_name: cp-restproxy
-    image: confluentinc/cp-kafka-rest:7.4.3
-    restart: on-failure:5
-    hostname: restproxy
+  restproxy:
+    image: *cp-restproxy-image
+    container_name: kafka_restproxy
     environment:
-      - KAFKA_REST_HOST_NAME=restproxy
-      - KAFKA_REST_BOOTSTRAP_SERVERS=PLAINTEXT://kafka0:29092,PLAINTEXT://kafka1:29192,PLAINTEXT://kafka2:29292
-      - KAFKA_REST_SCHEMA_REGISTRY_URL=http://schemaregistry:8081
-      - KAFKA_REST_LISTENERS=http://restproxy:8082
-    depends_on:
-      - zookeeper
-      - kafka0
-      - kafka1
-      - kafka2
-      - schemaregistry
+      KAFKA_REST_HOST_NAME: 'restproxy'
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker0:9092,PLAINTEXT://broker1:9092,PLAINTEXT://broker2:9092'
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schemaregistry:8081'
+      KAFKA_REST_LISTENERS: 'http://restproxy:8082'
     ports:
       - '8082:8082'
-    networks:
-      - sdn
+    depends_on: *depends-on-kafka-cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cub kr-ready localhost 8082 30 || exit 1"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
 
+  ksqldb0:
+    <<: *ksqldb-common
+    container_name: kafka_ksqldb0
+    environment:
+      <<: *ksqldb-common-env
+      KSQL_KSQL_SERVICE_ID: 'ksqldb0'
+      KSQL_BOOTSTRAP_SERVERS: 'broker0:9092,broker1:9092,broker2:9092'
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://schemaregistry:8081'
+    ports:
+      - '8088:8088'
+    depends_on: *depends-on-kafka-cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cub ksql-server-ready localhost 8088 30 || exit 1"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+    restart: on-failure
+
+  ksqlcli:
+    image: *cp-ksqldb-cli-image
+    container_name: kafka_ksqlcli
+    entrypoint: /bin/sh
+    depends_on:
+      ksqldb0:
+        condition: service_healthy
+    restart: on-failure
+ 
   # Conduktor Platform Docs:
   # - https://docs.conduktor.io/platform/configuration/env-variables
   # - https://docs.conduktor.io/platform/installation/hardware
   conduktor:
-    container_name: conduktor
+    container_name: kafka_conduktor
     image: conduktor/conduktor-platform:1.17.3
-    restart: on-failure:5
-    hostname: conduktor
     environment:
-      - CDK_CLUSTERS_0_ID=warp
-      - CDK_CLUSTERS_0_NAME=kafka-in-docker-cluster
-      - CDK_CLUSTERS_0_BOOTSTRAPSERVERS=kafka0:29092,kafka1:29192,kafka2:29292
-      - CDK_CLUSTERS_0_SCHEMAREGISTRY_ID=warp-registry
-      - CDK_CLUSTERS_0_SCHEMAREGISTRY_URL=http://schemaregistry:8081
-      - CDK_ADMIN_EMAIL=admin@conduktor.io
-      - CDK_ADMIN_PASSWORD=admin
-      - CDK_LISTENING_PORT=8080
-      - RUN_MODE=nano
-    depends_on:
-      - zookeeper
-      - kafka0
-      - kafka1
-      - kafka2
-      - schemaregistry
-      - ksqldb-server
+      CDK_CLUSTERS_0_ID: 'warp'
+      CDK_CLUSTERS_0_NAME: 'kafka-cluster-dev'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:9092,broker1:9092,broker2:9092'
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_ID: 'warp-registry'
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://schemaregistry:8081'
+      CDK_ADMIN_EMAIL: 'admin@conduktor.io'
+      CDK_ADMIN_PASSWORD: 'admin'
+      CDK_LISTENING_PORT: 8080
+      RUN_MODE: nano
     ports:
       - '8080:8080'
-    networks:
-      - sdn
-
-networks:
-  sdn:
-    name: stream-processing-network
+    depends_on: *depends-on-kafka-cluster
+    restart: on-failure

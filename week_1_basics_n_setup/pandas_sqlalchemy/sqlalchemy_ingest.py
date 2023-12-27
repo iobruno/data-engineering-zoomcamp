@@ -66,8 +66,10 @@ def setup_db_conn(*db_settings) -> sqlalchemy.Engine:
 
     if db_driver == "mysql":
         conn_prefix = f"mysql+mysqlconnector"
+        db_port = 3306 if db_port is None else db_port
     else:
         conn_prefix = f"postgresql+psycopg"
+        db_port = 5432 if db_port is None else db_port
 
     conn_string = f"{conn_prefix}://{db_user}:{db_passwd}@{db_host}:{db_port}/{db_name}"
     return sqlalchemy.create_engine(conn_string)
@@ -76,24 +78,24 @@ def setup_db_conn(*db_settings) -> sqlalchemy.Engine:
 # fmt: off
 @app.command(help="CLI app to extract NYC Trips data and load into Postgres")
 def ingest(
-    db_host: Annotated[str, typer.Argument(
-        envvar="DATABASE_HOST", hidden=True
-    )],
-    db_port: Annotated[str, typer.Argument(
-        envvar="DATABASE_PORT", hidden=True
-    )],
-    db_name: Annotated[str, typer.Argument(
-        envvar="DATABASE_NAME", hidden=True
-    )],
-    db_username: Annotated[str, typer.Argument(
-        envvar="DATABASE_USERNAME", hidden=True,
-    )],
-    db_password: Annotated[str, typer.Argument(
-        envvar="DATABASE_PASSWORD", hidden=True,
-    )],
     db_driver: Annotated[str, typer.Argument(
         envvar="DATABASE_DRIVER", hidden=False,
-    )],
+    )] = None,
+    db_host: Annotated[str, typer.Argument(
+        envvar="DATABASE_HOST", hidden=True
+    )] = None,
+    db_port: Annotated[str, typer.Argument(
+        envvar="DATABASE_PORT", hidden=True
+    )] = None,
+    db_name: Annotated[str, typer.Argument(
+        envvar="DATABASE_NAME", hidden=True
+    )] = None,
+    db_username: Annotated[str, typer.Argument(
+        envvar="DATABASE_USERNAME", hidden=True,
+    )] = None,
+    db_password: Annotated[str, typer.Argument(
+        envvar="DATABASE_PASSWORD", hidden=True,
+    )] = None,
     yellow: Annotated[Optional[bool], typer.Option(
         "--yellow", "-y", help="Fetch NYC yellow cab dataset"
     )] = False,

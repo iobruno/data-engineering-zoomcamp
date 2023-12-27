@@ -1,21 +1,26 @@
 version: "3.9"
+
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-15-alpine}
+
 services:
   postgres:
-    container_name: postgres
-    image: postgres:15-alpine
-    restart: on-failure:5
-    hostname: postgres
+    image: *postgres-image
+    container_name: dbt_postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nyc_taxi
-    volumes:
-      - ./volumes/pgdata:/var/lib/postgresql/data
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
     ports:
-      - "5433:5432"
-    networks:
-      - internal
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    restart: on-failure
 
-networks:
-  internal:
-    name: dbt_analytics
+volumes:
+  pg_data:
+    name: dbt_pgdata

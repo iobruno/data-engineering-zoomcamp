@@ -8,7 +8,7 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This GitHub project streamlines `Airflow DAGs` to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
+This setups the infrastructure for Airflow, in Docker, as close as possible to a deploy in a Kubernetes/Helm environment: having containers for the `airflow-scheduler`, `airflow-web`, `airflow-triggerer`, and `airflow-worker` (the CeleryExecutor)
 
 
 ## Tech Stack
@@ -21,37 +21,28 @@ This GitHub project streamlines `Airflow DAGs` to fetch NYC Taxi Tripdata CSV da
 
 ## Up and Running
 
-### Developer Setup
+### Developer Setup (Docker)
 
-**1.** Create and activate a virtualenv for Python 3.11 with conda:
+**1.** Start setting up the infrastructure in Docker with:
 ```shell
-conda create -n airflow python=3.11 -y
-conda activate airflow
+docker compose up -d
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Airflow WebUI can be accessed at:
+
 ```shell
-pdm sync
+open http://localhost:8080
 ```
 
-**3.** (Optional) Install pre-commit:
-```shell
-brew install pre-commit
+**3.** Airflow DAGs
 
-# From root folder where `.pre-commit-config.yaml` is located, run:
-pre-commit install
-```
-
-
-### Airflow DAGs
-
-- T.B.D.
+To deploy Airflow DAGs, just move them inside the [dags](dags/) folder and Airflow should pick it up soon enough
 
 
 ## TODO:
 - [ ] PEP-517: Packaging and dependency management with PDM
 - [ ] Code format/lint with Ruff
-- [ ] Run Airflow DAGs on Docker
+- [ ]  Run Airflow DAGs on Docker
 - [ ] Complete [Astronomer Academy's Airflow 101](https://academy.astronomer.io/path/airflow-101)
 - [ ] Deploy [Airflow to Kubernetes with Helm](https://airflow.apache.org/docs/helm-chart/stable/index.html)
 - [ ] Run/Deploy [Airflow DAGs on Kubernetes with KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html)

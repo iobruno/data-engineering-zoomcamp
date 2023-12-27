@@ -1,71 +1,57 @@
 version: "3.9"
+
+x-clickhouse-image: &clickhouse-image clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-23.11-alpine}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-15-alpine}
+
 services:
   clickhouse:
-    container_name: clickhouse
-    image: clickhouse/clickhouse-server:23.11-alpine
-    restart: on-failure:5
-    hostname: clickhouse
+    image: *clickhouse-image
+    container_name: dbt_clickhouse
     environment:
-      - CLICKHOUSE_DB=default
-      - CLICKHOUSE_USER=clickhouse
-      - CLICKHOUSE_PASSWORD=clickhouse
-      - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=0
-    volumes:
-      - clickhouse_data:/var/lib/clickhouse/
-      - clickhouse_logs:/var/log/clickhouse-server/
+      CLICKHOUSE_DB: 'default'
+      CLICKHOUSE_USER: 'clickhouse'
+      CLICKHOUSE_PASSWORD: 'clickhouse'
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 0
     ports:
       - "8123:8123"
       - "9000:9000"
       - "9004:9004"
       - "9005:9005"
       - "9009:9009"
+    volumes:
+      - ch_data:/var/lib/clickhouse/
+      - ch_logs:/var/log/clickhouse-server/
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
-    networks:
-      - internal
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
 
   postgres:
-    container_name: postgres
-    image: postgres:15-alpine
-    restart: on-failure:5
-    hostname: postgres
+    image: *postgres-image
+    container_name: dbt_postgres
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nyc_taxi
-    volumes:
-      - ./volumes/pgdata:/var/lib/postgresql/data
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
     ports:
-      - "5433:5432"
-    networks:
-      - internal
-
-  mysql:
-    container_name: mysql
-    image: mysql/mysql-server:8.0.32
-    restart: on-failure:5
-    hostname: mysql
-    environment:
-      - MYSQL_USER=mysql
-      - MYSQL_PASSWORD=mysql
-      - MYSQL_DATABASE=nyc_taxi
-      - MYSQL_ROOT_HOST=%
-      - MYSQL_ROOT_PASSWORD=root
+      - '5432:5432'
     volumes:
-      - ./volumes/mysql:/var/lib/mysql
-    ports:
-      - "3307:3306"
-    networks:
-      - internal
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    restart: on-failure
 
 volumes:
-  clickhouse_data:
-    external: true
-  clickhouse_logs:
-    external: true
-
-networks:
-  internal:
-    name: dbt_analytics
+  ch_data:
+    name: dbt_clickhouse_data
+  ch_logs:
+    name: dbt_clickhouse_logs
+  pg_data:
+    name: dbt_pgdata

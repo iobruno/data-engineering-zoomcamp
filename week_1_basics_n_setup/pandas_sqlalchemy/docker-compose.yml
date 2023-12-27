@@ -1,39 +1,80 @@
 version: "3.9"
+
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-mysql-image: &mysql-image mysql:${MYSQL_IMAGE:-8.2}
+
+x-ingest-postgres-env: &ingest-postgres
+  environment:
+    DATABASE_DRIVER: 'postgres'
+    DATABASE_HOST: 'postgres'
+    DATABASE_USERNAME: 'postgres'
+    DATABASE_PASSWORD: 'postgres'
+    DATABASE_NAME: 'nyc_taxi'
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+x-ingest-mysql-env: &ingest-mysql
+  environment:
+    DATABASE_DRIVER: 'mysql'
+    DATABASE_HOST: 'mysql'
+    DATABASE_USERNAME: 'mysql'
+    DATABASE_PASSWORD: 'mysql'
+    DATABASE_NAME: 'nyc_taxi'
+  depends_on:
+    mysql:
+      condition: service_healthy
+
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:15-alpine
-    restart: on-failure:5
-    hostname: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nyc_taxi
+  ingest:
+    <<: *ingest-mysql
+    build: .
+    image: iobruno/nyc-taxi-ingest:latest
+    container_name: ingest_taxi_data
     volumes:
-      - ./volumes/pgdata:/var/lib/postgresql/data
+      - ./app.yml:/app/app.yml
+
+  postgres:
+    image: *postgres-image
+    container_name: ingest_postgres
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
     ports:
-      - "5433:5432"
-    networks:
-      - internal
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
 
   mysql:
-    container_name: mysql
-    image: mysql/mysql-server:8.0.32
-    restart: on-failure:5
-    hostname: mysql
+    image: *mysql-image
+    container_name: ingest_mysql
     environment:
-      - MYSQL_USER=mysql
-      - MYSQL_PASSWORD=mysql
-      - MYSQL_DATABASE=nyc_taxi
-      - MYSQL_ROOT_HOST=%
-      - MYSQL_ROOT_PASSWORD=root
-    volumes:
-      - ./volumes/mysql:/var/lib/mysql
+      MYSQL_USER: 'mysql'
+      MYSQL_PASSWORD: 'mysql'
+      MYSQL_DATABASE: 'nyc_taxi'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 'root'
     ports:
-      - "3307:3306"
-    networks:
-      - internal
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: on-failure
 
-networks:
-  internal:
-    name: sqlalchemy
+
+volumes:
+  pg_data:
+    name: ingest_pgdata
+  mysql_data:
+    name: ingest_mysqldata
