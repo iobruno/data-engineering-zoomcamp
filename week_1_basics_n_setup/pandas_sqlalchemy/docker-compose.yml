@@ -1,39 +1,65 @@
+x-db-ingest-postgres-env: &db-ingest-postgres-env
+  environment:
+    DATABASE_DRIVER: 'postgres'
+    DATABASE_HOST: 'postgres'
+    DATABASE_PORT: 5432
+    DATABASE_USERNAME: 'postgres'
+    DATABASE_PASSWORD: 'postgres'
+    DATABASE_NAME: 'nyc_taxi'
+  depends_on:
+    - postgres
+
+x-db-ingest-mysql-env: &db-ingest-mysql-env
+  environment:
+    DATABASE_DRIVER: 'mysql'
+    DATABASE_HOST: 'mysql'
+    DATABASE_PORT: 3306
+    DATABASE_USERNAME: 'mysql'
+    DATABASE_PASSWORD: 'mysql'
+    DATABASE_NAME: 'nyc_taxi'
+  depends_on:
+    - mysql
+
 version: "3.9"
 services:
-  postgres:
-    container_name: postgres
-    image: postgres:15-alpine
-    restart: on-failure:5
-    hostname: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=nyc_taxi
+  nyc-taxi-ingest:
+    <<: *db-ingest-postgres-env
+    build: .
+    image: iobruno/nyc-taxi-ingest:latest
+    container_name: db-ingest
     volumes:
-      - ./volumes/pgdata:/var/lib/postgresql/data
+      - ./app.yml:/app/app.yml
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: on-failure:3
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
     ports:
-      - "5433:5432"
-    networks:
-      - internal
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   mysql:
+    image: mysql:8.2
     container_name: mysql
-    image: mysql/mysql-server:8.0.32
-    restart: on-failure:5
-    hostname: mysql
+    restart: on-failure:3
     environment:
-      - MYSQL_USER=mysql
-      - MYSQL_PASSWORD=mysql
-      - MYSQL_DATABASE=nyc_taxi
-      - MYSQL_ROOT_HOST=%
-      - MYSQL_ROOT_PASSWORD=root
-    volumes:
-      - ./volumes/mysql:/var/lib/mysql
+      MYSQL_USER: 'mysql'
+      MYSQL_PASSWORD: 'mysql'
+      MYSQL_DATABASE: 'nyc_taxi'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 'root'
     ports:
-      - "3307:3306"
-    networks:
-      - internal
+      - '3306:3306'
+    volumes:
+      - mysqldata:/var/lib/mysql
 
-networks:
-  internal:
-    name: sqlalchemy
+volumes:
+  pgdata:
+    name: postgres_data
+  mysqldata:
+    name: mysql_data
