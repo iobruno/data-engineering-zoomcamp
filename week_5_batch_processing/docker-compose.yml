@@ -1,66 +1,43 @@
+x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.0}
+
+x-spark-common: &spark-common
+  image: *spark-image
+  restart: on-failure:3
+  volumes:
+    - ${SPARK_JARS:-}/:/opt/spark-jars/
+    - ${GOOGLE_APPLICATION_CREDENTIALS:-}:/.gcp/gcp_credentials.json
+
+x-spark-worker-common: &spark-worker-common
+  <<: *spark-common
+  environment:
+    SPARK_MODE: 'worker'
+    SPARK_MASTER_URL: 'spark://spark-master:7077'
+    SPARK_WORKER_CORES: 2
+    SPARK_WORKER_MEMORY: 4g
+    SPARK_WORKER_WEBUI_PORT: 4040
+  depends_on:
+    - spark-master
+
 version: "3.9"
 services:
   spark-master:
+    <<: *spark-common
     container_name: spark-master
-    image: bitnami/spark:3.5.0
-    restart: on-failure:5
-    hostname: spark-master
     environment:
-      - SPARK_MODE=master
-      - SPARK_MASTER_PORT=7077
-      - SPARK_MASTER_WEBUI_PORT=9090
-      - SPARK_LOCAL_IP=spark-master
-    volumes:
-      - ./jars:/opt/spark-jars
-      - ~/.credentials/gcp-credentials.json:/opt/gcp-credentials.json
+      SPARK_MODE: 'master'
+      SPARK_MASTER_PORT: 7077
+      SPARK_MASTER_WEBUI_PORT: 4040
     ports:
+      - '8080:8080'
       - '7077:7077'
-      - '9090:9090'
-    networks:
-      - spark
+      - '4040:4040'
 
   spark-worker1:
-    container_name: spark-worker1
-    image: bitnami/spark:3.5.0
-    restart: on-failure:5
-    hostname: spark-worker1
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=8g
-      - SPARK_WORKER_WEBUI_PORT=9091
-    volumes:
-      - ./jars:/opt/spark-jars
-      - ~/.credentials/gcp-credentials.json:/opt/gcp-credentials.json
+    <<: *spark-worker-common
     ports:
-      - '9091:9091'
-    networks:
-      - spark
-    depends_on:
-      - spark-master
+      - '4041:4040'
 
   spark-worker2:
-    container_name: spark-worker2
-    image: bitnami/spark:3.5.0
-    restart: on-failure:5
-    hostname: spark-worker2
-    environment:
-      - SPARK_MODE=worker
-      - SPARK_MASTER_URL=spark://spark-master:7077
-      - SPARK_WORKER_CORES=2
-      - SPARK_WORKER_MEMORY=8g
-      - SPARK_WORKER_WEBUI_PORT=9092
-    volumes:
-      - ./jars:/opt/spark-jars
-      - ~/.credentials/gcp-credentials.json:/opt/gcp-credentials.json
+    <<: *spark-worker-common
     ports:
-      - '9092:9092'
-    networks:
-      - spark
-    depends_on:
-      - spark-master
-
-networks:
-  spark:
-    name: spark-network
+      - '4042:4040'
