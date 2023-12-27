@@ -60,8 +60,8 @@ services:
     ports:
       - '2181:2181'
     volumes:
-      - ./volumes/zk-data:/var/lib/zookeeper/data
-      - ./volumes/zk-txn-logs:/var/lib/zookeeper/log
+      - zk_data:/var/lib/zookeeper/data
+      - zk_logs:/var/lib/zookeeper/log
 
   kafka0:
     <<: *kafka-common
@@ -74,7 +74,7 @@ services:
     ports:
       - '9092:9092'
     volumes:
-      - ./volumes/kafka0:/var/lib/kafka/data
+      - kafka0_data:/var/lib/kafka/data
 
   kafka1:
     <<: *kafka-common
@@ -87,7 +87,7 @@ services:
     ports:
       - '9192:9192'
     volumes:
-      - ./volumes/kafka1:/var/lib/kafka/data
+      - kafka1_data:/var/lib/kafka/data
 
   kafka2:
     <<: *kafka-common
@@ -100,7 +100,7 @@ services:
     ports:
       - '9292:9292'
     volumes:
-      - ./volumes/kafka2:/var/lib/kafka/data
+      - kafka2_data:/var/lib/kafka/data
 
   schemaregistry:
     image: *cp-schema-registry-image
@@ -172,3 +172,15 @@ services:
       - '8080:8080'
     depends_on:
       <<: *depends-on-kafka-cluster
+
+volumes:
+  zk_data:
+    name: zookeeper_data
+  zk_logs:
+    name: zookeeper_logs
+  kafka0_data:
+    name: kafka_broker0_data
+  kafka1_data:
+    name: kafka_broker1_data
+  kafka2_data:
+    name: kafka_broker2_data
