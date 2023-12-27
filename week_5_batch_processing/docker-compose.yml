@@ -34,10 +34,12 @@ services:
 
   spark-worker1:
     <<: *spark-worker-common
+    container_name: spark-worker1
     ports:
       - '4041:4040'
 
   spark-worker2:
     <<: *spark-worker-common
+    container_name: spark-worker2
     ports:
       - '4042:4040'
