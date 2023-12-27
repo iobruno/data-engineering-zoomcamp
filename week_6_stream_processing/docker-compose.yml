@@ -179,8 +179,8 @@ volumes:
   zk_logs:
     name: zookeeper_logs
   kafka0_data:
-    name: kafka_broker0_data
+    name: kafka0_data
   kafka1_data:
-    name: kafka_broker1_data
+    name: kafka1_data
   kafka2_data:
-    name: kafka_broker2_data
+    name: kafka2_data

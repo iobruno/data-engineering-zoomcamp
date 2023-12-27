@@ -60,6 +60,6 @@ services:
 
 volumes:
   pgdata:
-    name: pgdata_nyc_taxi
+    name: postgres_data
   mysqldata:
-    name: mysqldata_nyc_taxi
+    name: mysql_data

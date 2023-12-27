@@ -15,4 +15,4 @@ services:
 
 volumes:
   pgdata:
-    name: pgdata_nyc_taxi
+    name: postgres_data
