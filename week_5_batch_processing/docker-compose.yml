@@ -1,6 +1,7 @@
 version: "3.9"
 
 x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.0}
+x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.0-beta-1}
 
 x-spark-common: &spark-common
   image: *spark-image
@@ -26,7 +27,6 @@ x-spark-worker-common: &spark-worker-common
     SPARK_WORKER_CORES: 1
     SPARK_WORKER_WEBUI_PORT: 4040
 
-
 services:
   spark-master:
     <<: *spark-common
@@ -44,3 +44,32 @@ services:
     container_name: spark_worker
     ports:
       - '4041:4040'
+
+  metastore:
+    image: *hive-image
+    container_name: hive_metastore
+    environment:
+      SERVICE_NAME: 'metastore'
+    ports:
+      - '9083:9083'
+    volumes:
+      - warehouse:/opt/hive/data/warehouse
+
+  hiveserver:
+    image: *hive-image
+    container_name: hive_server
+    environment:
+      SERVICE_NAME: 'hiveserver2'
+      SERVICE_OPTS: '-Dhive.metastore.uris=thrift://metastore:9083'
+      IS_RESUME: 'true'
+    ports:
+      - '10000:10000'
+      - '10002:10002'
+    depends_on:
+      - metastore
+    volumes:
+      - warehouse:/opt/hive/data/warehouse
+
+volumes:
+  warehouse:
+    name: hive_warehouse
