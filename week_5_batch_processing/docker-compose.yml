@@ -1,6 +1,8 @@
 version: "3.9"
 
 x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.0}
+x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.0-beta-1}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 x-spark-common: &spark-common
   image: *spark-image
@@ -26,7 +28,6 @@ x-spark-worker-common: &spark-worker-common
     SPARK_WORKER_CORES: 1
     SPARK_WORKER_WEBUI_PORT: 4040
 
-
 services:
   spark-master:
     <<: *spark-common
@@ -44,3 +45,59 @@ services:
     container_name: spark_worker
     ports:
       - '4041:4040'
+
+  postgres:
+    image: *postgres-image
+    container_name: hive_postgres
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'metastore'
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+  metastore:
+    image: *hive-image
+    container_name: hive_metastore
+    environment:
+      SERVICE_NAME: 'metastore'
+      SERVICE_OPTS: '-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore -Djavax.jdo.option.ConnectionUserName=postgres -Djavax.jdo.option.ConnectionPassword=postgres'
+      HIVE_AUX_JARS_PATH: /opt/hive/aux_jars/
+      DB_DRIVER: 'postgres'
+    depends_on:
+      postgres: 
+        condition: service_healthy
+      metastore-init:
+        condition: service_completed_successfully
+    volumes:
+      - warehouse:/opt/hive/data/warehouse
+      - auxjars:/opt/hive/aux_jars/
+
+  metastore-init:
+    image: *hive-image
+    container_name: hive_init
+    user: 0:0
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        apt update && apt install curl -y
+        curl --create-dirs -O --output-dir /tmp/aux_jars https://jdbc.postgresql.org/download/postgresql-42.7.1.jar
+    volumes:
+      - auxjars:/tmp/aux_jars
+
+volumes:
+  pgdata:
+    name: metastore_pgdata
+  warehouse:
+    name: metastore_warehouse
+  auxjars:
+    name: metastore_auxjars
