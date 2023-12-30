@@ -163,6 +163,15 @@ ipython_config.py
 # Remove previous ipynb_checkpoints
 #   git rm -r .ipynb_checkpoints/
 
+### mage.ai Pipelines ###
+**/mage_data/**
+**/secrets/**
+**/.ssh_tunnel/**
+**/.variables/**
+mage-ai.db
+.mage_temp_profiles
+.preferences.yaml
+
 ### dbt ###
 target/
 dbt_modules/

@@ -1,14 +1,102 @@
 version: "3.9"
+
+x-mage-image: &mage-image mageai/mageai:${MAGE_VERSION:-0.9.58}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-15-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2}
+
+x-mage-common: 
+  &mage-common
+  image: *mage-image
+  environment:
+    &mage-common-env
+    REDIS_URL: 'redis://@redis:6379/0'
+    MAGE_DATABASE_CONNECTION_URL: 'postgresql+psycopg2://mage:mage@postgres/mage'
+    USER_CODE_PATH: ${MAGE_BASE_DIR:-/opt/mage}
+    MAGE_BASE_DIR:  ${MAGE_BASE_DIR:-/opt/mage}
+    MAGE_PROJ_NAME: ${MAGE_PROJ_NAME:-magic}
+  volumes:
+    - ${MAGE_PROJ_DIR:-.}:${MAGE_BASE_DIR:-/opt/mage}
+  depends_on:
+    redis:
+      condition: service_healthy
+    postgres:
+      condition: service_healthy
+    mage-init:
+      condition: service_completed_successfully
+  restart: on-failure
+
 services:
-  mageai:
-    container_name: mageai
-    image: mageai/mageai:0.9.46
-    restart: on-failure:5
-    hostname: mageai
+  postgres:
+    image: *postgres-image
+    container_name: mage_postgres
+    restart: always
     environment:
-      - USER_CODE_PATH=/home/src/demo-pipeline
-    volumes:
-      - ./pipelines:/home/src
+      POSTGRES_USER: mage
+      POSTGRES_PASSWORD: mage
+      POSTGRES_DB: mage
     ports:
-      - "6789:6789"
-    command: "mage start demo-pipeline"
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: *redis-image
+    container_name: mage_redis
+    restart: always
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mage-web:
+    <<: *mage-common
+    container_name: mage_web
+    environment:
+      <<: *mage-common-env
+      INSTANCE_TYPE: 'web_server'
+    ports:
+      - '6789:6789'
+
+  mage-scheduler:
+    <<: *mage-common
+    container_name: mage_scheduler
+    environment:
+      <<: *mage-common-env
+      INSTANCE_TYPE: 'scheduler'
+
+  mage-init:
+    image: *mage-image
+    container_name: mage_init
+    entrypoint: /bin/bash
+    environment: 
+      <<: *mage-common-env
+    command:
+      - -c
+      - |
+        export MOUNT_POINT=/mnt/mage
+        export EXPECTED_MAIN_PROJ_METADATA=$${MOUNT_POINT}/metadata.yaml
+        export EXPECTED_SUB_PROJ_DIR=$${MOUNT_POINT}/$${MAGE_PROJ_NAME}
+
+        if [ ! -d "$$EXPECTED_SUB_PROJ_DIR" ]; then
+          mage init --project-type main /tmp/$$MAGE_BASE_DIR 1>/dev/null 2>/dev/null
+          mage init --project-type sub  /tmp/$$MAGE_BASE_DIR/$$MAGE_PROJ_NAME 1>/dev/null 2>/dev/null
+          mv /tmp/$$MAGE_BASE_DIR/$$MAGE_PROJ_NAME $$EXPECTED_SUB_PROJ_DIR
+
+          if [ ! -f "$$EXPECTED_MAIN_PROJ_METADATA" ]; then
+            mv /tmp/$$MAGE_BASE_DIR/metadata.yaml $$EXPECTED_MAIN_PROJ_METADATA
+          fi          
+        fi
+    volumes:
+      - ${MAGE_PROJ_DIR:-.}:/mnt/mage/
+
+volumes:
+  pg_data:
+    name: mage_pgdata
