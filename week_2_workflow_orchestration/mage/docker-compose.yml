@@ -21,6 +21,8 @@ x-mage-common:
       condition: service_healthy
     postgres:
       condition: service_healthy
+    mage-init:
+      condition: service_completed_successfully
   restart: on-failure
 
 services:
@@ -53,6 +55,22 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  mage-web:
+    <<: *mage-common
+    container_name: mage_web
+    environment:
+      <<: *mage-common-env
+      INSTANCE_TYPE: 'web_server'
+    ports:
+      - '6789:6789'
+
+  mage-scheduler:
+    <<: *mage-common
+    container_name: mage_scheduler
+    environment:
+      <<: *mage-common-env
+      INSTANCE_TYPE: 'scheduler'
 
   mage-init:
     image: *mage-image
