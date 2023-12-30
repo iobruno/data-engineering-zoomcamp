@@ -13,7 +13,7 @@ x-mage-common:
     MAGE_DATABASE_CONNECTION_URL: 'postgresql+psycopg2://mage:mage@postgres/mage'
     USER_CODE_PATH: ${MAGE_BASE_DIR:-/opt/mage}
     MAGE_BASE_DIR:  ${MAGE_BASE_DIR:-/opt/mage}
-    MAGE_PROJ_NAME: ${MAGE_PROJ_NAME:-default}
+    MAGE_PROJ_NAME: ${MAGE_PROJ_NAME:-magic}
   volumes:
     - ${MAGE_PROJ_DIR:-.}:${MAGE_BASE_DIR:-/opt/mage}
   depends_on:
@@ -86,8 +86,8 @@ services:
         export EXPECTED_SUB_PROJ_DIR=$${MOUNT_POINT}/$${MAGE_PROJ_NAME}
 
         if [ ! -d "$$EXPECTED_SUB_PROJ_DIR" ]; then
-          mage init --project-type main /tmp/$$MAGE_BASE_DIR 1>/dev/null 2>&1
-          mage init --project-type sub  /tmp/$$MAGE_BASE_DIR/$$MAGE_PROJ_NAME 1>/dev/null 2>&1
+          mage init --project-type main /tmp/$$MAGE_BASE_DIR 1>/dev/null 2>/dev/null
+          mage init --project-type sub  /tmp/$$MAGE_BASE_DIR/$$MAGE_PROJ_NAME 1>/dev/null 2>/dev/null
           mv /tmp/$$MAGE_BASE_DIR/$$MAGE_PROJ_NAME $$EXPECTED_SUB_PROJ_DIR
 
           if [ ! -f "$$EXPECTED_MAIN_PROJ_METADATA" ]; then
