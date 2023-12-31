@@ -10,12 +10,18 @@ x-airflow-common:
   image: *airflow-image
   environment:
     &airflow-common-env
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow_legacy
     AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow_legacy
     AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
     AIRFLOW__CORE__PLUGINS_FOLDER: /opt/airflow/plugins
     AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
+  volumes:
+    - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
+    - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/dags
+    - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
   depends_on:
+    &airflow-common-depends-on
     postgres:
       condition: service_healthy
 
@@ -37,6 +43,30 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+
+  airflow-web:
+    <<: *airflow-common
+    container_name: airflow_legacy_web
+    command: ["webserver"]
+    tty: true
+    ports:
+      - '8080:8080'
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+    restart: on-failure
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: airflow_legacy_scheduler
+    command: ["scheduler"]
+    tty: true
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+    restart: on-failure
 
   airflow-init:
     <<: *airflow-common
