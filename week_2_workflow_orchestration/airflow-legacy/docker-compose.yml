@@ -1,0 +1,56 @@
+version: "3.9"
+
+x-airflow-image: &airflow-image apache/airflow:1.10.15-python3.9
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-15-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2}
+
+x-airflow-common:
+  &airflow-common
+  build: .
+  image: *airflow-image
+  environment:
+    &airflow-common-env
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow_legacy
+    AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+    AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
+    AIRFLOW__CORE__PLUGINS_FOLDER: /opt/airflow/plugins
+    AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  postgres:
+    image: *postgres-image
+    container_name: airflow_legacy_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow_legacy
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: airflow_legacy_init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        mkdir -p /sources/logs /sources/dags /sources/plugins
+        chown -R "${AIRFLOW_UID:-0}:0" /sources/{logs,dags,plugins}
+        airflow db init
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}:/sources
+
+volumes:
+  pg_data:
+    name: airflow_legacy_pgdata
