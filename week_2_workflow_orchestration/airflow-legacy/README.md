@@ -1,14 +1,16 @@
 # Airflow Workflow Orchestration
 
 ![Python](https://img.shields.io/badge/Python-3.8_|_3.9-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![Airflow](https://img.shields.io/badge/Airflow-1.10.15-3772FF?style=flat&logo=apacheairflow&logoColor=white&labelColor=3772FF)
+![Airflow](https://img.shields.io/badge/Airflow-1.10.15-00C9D6?style=flat&logo=apacheairflow&logoColor=white&labelColor=007A87)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 
-This setups the infrastructure for Airflow 1.10.15, in Docker, compatible with Apple Silicon (arm64), for dealing with migrations from legacy Airflow DAGs (1.x).
+Do NOT use this for new projects. Instead refer to [Airflow 2.x](../airflow/)
+
+Infrastructure setup for Airflow 1.x in Docker, optimized for native execution on Apple Silicon (arm64). Designed specifically for handling legacy Airflow environments, such as migrations from Airflow 1.x DAGs to Airflow 2.x.
 
 
 ## Tech Stack
@@ -40,4 +42,4 @@ To deploy Airflow DAGs, just move them inside the [dags](dags/) folder and Airfl
 
 ## TODO:
 - [x] Airflow infrastructure in Docker
-- [ ] Run Airflow DAGs on Docker
+- [x] Run Airflow DAGs on Docker
