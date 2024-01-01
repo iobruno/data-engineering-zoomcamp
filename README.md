@@ -26,7 +26,8 @@ can take the course at your own pace
 * Homework
 
 ### [Module 2: Workflow Orchestration](week_2_workflow_orchestration):
-* [Workflow Orchestration with Airflow](week_2_workflow_orchestration/airflow)
+* [Workflow Orchestration with Airflow (2.x)](week_2_workflow_orchestration/airflow)
+* [Workflow Orchestration with Legacy Airflow (1.x)](week_2_workflow_orchestration/airflow-legacy)
 * [Workflow Orchestration with Mage](week_2_workflow_orchestration/mage)
 * [Workflow Orchestration with Prefect](week_2_workflow_orchestration/prefect)
   * [*.csv to Postgres](week_2_workflow_orchestration/prefect/flows/sqlalchemy_ingest.py)
