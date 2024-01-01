@@ -12,6 +12,9 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.9-slim AS runner
 
+RUN apt update && \
+    apt install curl -y
+
 ENV PYTHONPATH=/usr/local/lib/python/
 COPY --from=builder /airflow/__pypackages__/3.9/lib /usr/local/lib/python/
 COPY --from=builder /airflow/__pypackages__/3.9/bin/* /usr/local/bin/

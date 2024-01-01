@@ -33,7 +33,6 @@ services:
   postgres:
     image: *postgres-image
     container_name: airflow_legacy_postgres
-    restart: always
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
@@ -47,11 +46,11 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: on-failure
 
   redis:
     image: *redis-image
-    container_name: airflow_redis
-    restart: always
+    container_name: airflow_legacy_redis
     ports:
       - '6379:6379'
     healthcheck:
@@ -59,6 +58,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: on-failure
 
   airflow-web:
     <<: *airflow-common
@@ -70,6 +70,11 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/health"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     restart: on-failure
 
   airflow-scheduler:
@@ -90,6 +95,11 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "celery --app=airflow.executors.celery_executor.app inspect ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     restart: on-failure
 
   airflow-init:
