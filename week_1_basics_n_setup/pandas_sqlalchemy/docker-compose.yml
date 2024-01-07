@@ -27,7 +27,7 @@ x-ingest-mysql-env: &ingest-mysql
 
 services:
   ingest:
-    <<: *ingest-mysql
+    <<: *ingest-postgres
     build: .
     image: iobruno/nyc-taxi-ingest:latest
     container_name: ingest_taxi_data
