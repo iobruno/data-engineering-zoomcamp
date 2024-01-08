@@ -24,9 +24,17 @@ This setups the infrastructure for Airflow, in Docker, as close as possible to a
 ### Developer Setup (Docker)
 
 **1.** Start setting up the infrastructure in Docker with:
+
+**Airflow with CeleryExecutor**:
 ```shell
-docker compose up -d
+docker compose -f docker-compose.celery.yml up -d
 ```
+
+**Airflow with LocalExecutor**:
+```shell
+docker compose -f docker-compose.local.yml up -d
+```
+
 
 **2.** Airflow WebUI can be accessed at:
 

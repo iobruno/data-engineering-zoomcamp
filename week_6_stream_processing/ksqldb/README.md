@@ -7,8 +7,6 @@
 
 This contains the SQL statements to build the KStreams and KTables for ksqlDB to allow an overview of Green and FHV Trips distribution
 
-![ksqldb-streams](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week6_ksqldb_streams.png)
-
 
 ## Tech Stack
 - [Confluent Kafka](https://docs.confluent.io/platform/current/installation/overview.html)
