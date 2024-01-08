@@ -56,7 +56,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -95,7 +95,7 @@ services:
       - auxjars:/tmp/aux_jars
 
 volumes:
-  pgdata:
+  pg_data:
     name: metastore_pgdata
   warehouse:
     name: metastore_warehouse

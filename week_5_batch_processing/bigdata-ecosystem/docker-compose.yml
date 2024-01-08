@@ -15,7 +15,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -78,7 +78,7 @@ services:
       - '8080:8080'
 
 volumes:
-  pgdata:
+  pg_data:
     name: hive_pgdata
   warehouse:
     name: hive_warehouse

@@ -16,7 +16,8 @@ x-airflow-common:
     AIRFLOW__CORE__PLUGINS_FOLDER: /opt/airflow/plugins
     AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow_legacy
-    # AIRFLOW__API__AUTH_BACKEND: 'airflow.contrib.auth.backends.password_auth'
+    AIRFLOW__WEBSERVER__AUTHENTICATE: 'false'
+    AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.contrib.auth.backends.password_auth
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/
   volumes:

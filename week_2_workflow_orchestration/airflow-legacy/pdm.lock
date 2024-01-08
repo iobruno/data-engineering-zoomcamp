@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:cef7a08e11cd3112a41535cb20503c5227d88bfab70253b2deed546507ddf9ef"
+content_hash = "sha256:f00c6b3c254003981b4ed410dddcd46695730ea5e212bc8b5dfd823aab401aed"
 
 [[package]]
 name = "alembic"
@@ -526,6 +526,20 @@ dependencies = [
 files = [
     {file = "Flask-Babel-1.0.0.tar.gz", hash = "sha256:d6a70468f9a8919d59fba2a291a003da3a05ff884275dddbd965f3b98b09ab3e"},
     {file = "Flask_Babel-1.0.0-py3-none-any.whl", hash = "sha256:247f4ec34cf605d03781f480bccb1a5acb719df1d1a2a743c091ab3db5d5fde2"},
+]
+
+[[package]]
+name = "flask-bcrypt"
+version = "1.0.1"
+summary = "Brcrypt hashing for Flask."
+groups = ["default"]
+dependencies = [
+    "Flask",
+    "bcrypt>=3.1.1",
+]
+files = [
+    {file = "Flask-Bcrypt-1.0.1.tar.gz", hash = "sha256:f07b66b811417ea64eb188ae6455b0b708a793d966e1a80ceec4a23bc42a4369"},
+    {file = "Flask_Bcrypt-1.0.1-py3-none-any.whl", hash = "sha256:062fd991dc9118d05ac0583675507b9fe4670e44416c97e0e6819d03d01f808a"},
 ]
 
 [[package]]
