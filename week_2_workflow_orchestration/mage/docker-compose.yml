@@ -1,7 +1,7 @@
 version: "3.9"
 
 x-mage-image: &mage-image mageai/mageai:${MAGE_VERSION:-0.9.58}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-15-alpine}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2}
 
 x-mage-common: 

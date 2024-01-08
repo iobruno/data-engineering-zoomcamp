@@ -1,4 +1,4 @@
-# ksqlDB for Stream Processing
+# Stream Processing with Kafka & ksqlDB
 
 ```
 
@@ -15,7 +15,7 @@
 
 Copyright 2017-2022 Confluent Inc.
 
-CLI v7.3.2, Server v7.3.2 located at http://ksqldb-server:8088
+CLI v7.4.3, Server v7.4.3 located at http://ksqldb-server:8088
 Server Status: RUNNING
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
@@ -24,76 +24,36 @@ ksql>
 ```
 
 ## Tech Stack
-- Confluent Kafka (with Zookeeper)
+- Confluent Kafka
 - Confluent Schema Registry
 - Confluent REST Proxy
 - [ksqlDB](https://ksqldb.io/)
-- [Confluent Control Center](https://docs.confluent.io/platform/current/control-center/overview.html)
-- [Conduktor Platform](https://www.conduktor.io/explorer/)
-- [kpow](https://docs.kpow.io/ce/)
-- Docker, docker-compose
+- [Conduktor Platform](https://www.conduktor.io/console/)
+- [Docker](https://docs.docker.com/get-docker/)
 
 
 ## Up and Running
 
-### Architecture Notice
-- Take notice that all docker images pulled use `linux/arm64` platform architecture, as I'm using Apple Sillicon (M1).
-- Switch that to `linux/amd64` from `linux/arm64`, if you're using an Intel/AMD CPU (x86_64 / amd64) architecture
-
-
 ### Developer Setup
 
-**1.** Start up Kafka Cluster and external dependencies with:
-
-1.1. For a single-broker setup, without Confluent REST-Proxy, run
+**1.** Start up Kafka Cluster with:
 
 ```shell
-make minimal-setup 
+docker compose up -d
 ```
 
-1.2. Alternatively, for a multi-broker setup, with all features, run full-setup instead:
-```shell
-make full-setup
+**2.** Connect to ksqlDB through the ksqlDB CLI
 ```
-
-**2.** Start up with the ksqlDB CLI
-```
-docker exec -it cp-ksqldb-cli ksql http://ksqldb-server:8088
+docker exec -it ksqlcli ksql http://ksqldb0:8088
 ```
 
 You should be getting into this console:
 ```
-                  ===========================================
-                  =       _              _ ____  ____       =
-                  =      | | _____  __ _| |  _ \| __ )      =
-                  =      | |/ / __|/ _` | | | | |  _ \      =
-                  =      |   <\__ \ (_| | | |_| | |_) |     =
-                  =      |_|\_\___/\__, |_|____/|____/      =
-                  =                   |_|                   =
-                  =        The Database purpose-built       =
-                  =        for stream processing apps       =
-                  ===========================================
-
-Copyright 2017-2022 Confluent Inc.
-
-CLI v7.3.2, Server v7.3.2 located at http://ksqldb-server:8088
-Server Status: RUNNING
-
-Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
-
 ksql>
 ```
 
-**3.** Pick one of the following 3x tools as a Web UI for Kafka Administration
+**3.** Access Conduktor Web UI for Kafka
 
-**NOTE:** Be aware that `Confluent Control Center` is only available for a 30-day trial period.
-
-**3.1.** `Confluent Control Center` Web UI:
-```shell
-open http://localhost:9021
-```
-
-**3.2.** `Conduktor Platform` Web UI:
 ```shell
 open http://localhost:8080
 ```

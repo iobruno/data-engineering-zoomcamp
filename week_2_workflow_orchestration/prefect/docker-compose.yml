@@ -1,7 +1,10 @@
 version: "3.9"
+
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+
 services:
   postgres:
-    image: postgres:15-alpine
+    image: *postgres-image
     container_name: postgres
     restart: on-failure:3
     environment:
@@ -11,8 +14,8 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
-    name: postgres_data
+  pg_data:
+    name: prefect_pgdata

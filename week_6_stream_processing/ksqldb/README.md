@@ -1,4 +1,4 @@
-# ksqlDB Stream Processing with KStreams and KTables
+# Kafka Streams with ksqlDB
 
 ![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.4.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
@@ -6,8 +6,6 @@
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This contains the SQL statements to build the KStreams and KTables for ksqlDB to allow an overview of Green and FHV Trips distribution
-
-![ksqldb-streams](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week6_ksqldb_streams.png)
 
 
 ## Tech Stack
@@ -25,13 +23,14 @@ docker-compose up -d
 
 **1.** Log into ksql-cli Console with:
 ```
-docker exec -it cp-ksqldb-cli ksql http://ksqldb-server:8088
+docker exec -it ksqlcli ksql http://ksqldb0:8088
 ```
 
 **2.** Config ksql to default fetching offsets from 'earliest'
 ```sql
-SET 'auto.offset.reset' = 'earliest';
+ksql> SET 'auto.offset.reset' = 'earliest';
 ```
+
 
 **3.** Create the KStreams for `green_tripdata` and `fhv_tripdata`:
 ```sql
