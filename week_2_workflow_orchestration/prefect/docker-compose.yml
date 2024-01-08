@@ -1,7 +1,10 @@
 version: "3.9"
+
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+
 services:
   postgres:
-    image: postgres:15-alpine
+    image: *postgres-image
     container_name: postgres
     restart: on-failure:3
     environment:

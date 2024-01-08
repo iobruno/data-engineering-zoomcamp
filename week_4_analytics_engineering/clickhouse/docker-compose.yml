@@ -1,7 +1,7 @@
 version: "3.9"
 
 x-clickhouse-image: &clickhouse-image clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-23.11-alpine}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-15-alpine}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 services:
   clickhouse:
@@ -15,9 +15,6 @@ services:
     ports:
       - "8123:8123"
       - "9000:9000"
-      - "9004:9004"
-      - "9005:9005"
-      - "9009:9009"
     volumes:
       - ch_data:/var/lib/clickhouse/
       - ch_logs:/var/log/clickhouse-server/
@@ -28,6 +25,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8123/ || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
     restart: on-failure
 
   postgres:

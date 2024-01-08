@@ -1,7 +1,7 @@
 version: "3.9"
 
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-mysql-image: &mysql-image mysql:${MYSQL_IMAGE:-8.2}
+x-mysql-image: &mysql-image mysql:${MYSQL_VERSION:-8.2}
 
 x-ingest-postgres-env: &ingest-postgres
   environment:
