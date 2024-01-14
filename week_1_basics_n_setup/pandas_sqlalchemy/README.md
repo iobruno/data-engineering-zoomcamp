@@ -90,7 +90,7 @@ pre-commit install
 ```shell
 export DATABASE_DRIVER=postgres \
 export DATABASE_HOST=localhost \
-export DATABASE_PORT=5433 \
+export DATABASE_PORT=5432 \
 export DATABASE_NAME=nyc_taxi
 export DATABASE_USERNAME=postgres \
 export DATABASE_PASSWORD=postgres
@@ -100,7 +100,7 @@ export DATABASE_PASSWORD=postgres
 ```shell
 export DATABASE_DRIVER=mysql \
 export DATABASE_HOST=localhost \
-export DATABASE_PORT=3307 \
+export DATABASE_PORT=3306 \
 export DATABASE_NAME=nyc_taxi
 export DATABASE_USERNAME=mysql \
 export DATABASE_PASSWORD=mysql
