@@ -10,25 +10,25 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
-- `python sqlalchemy_ingest.py -y` or `--yellow`:
+- `python run.py -y` or `--yellow`:
   - fetches the datasets under the key `yellow_trip_data` only
-  - persists to Postgres, on table `ntl_yellow_taxi`
+  - persists to Postgres, on table `yellow_taxi_data`
   
-- `python sqlalchemy_ingest.py -g` or `--green`:
+- `python run.py -g` or `--green`:
   - fetches the datasets under the key `green_trip_data` only,
-  - persists to Postgres, on table `ntl_green_taxi`
+  - persists to Postgres, on table `green_taxi_data`
 
-- `python sqlalchemy_ingest.py -f` or `--fhv`:
-  - fetches the datasets under the key `zone_lookups`
-  - persists to Postgres, on table: `ntl_fhv_taxi`
+- `python run.py -f` or `--fhv`:
+  - fetches the datasets under the key `fhv_trip_data`
+  - persists to Postgres, on table: `fhv_taxi_data`
 
-- `python sqlalchemy_ingest.py -z` or `--zones`:
+- `python run.py -z` or `--zones`:
   - fetches the datasets under the key `zone_lookups`
-  - persists to Postgres, on table: `ntl_lookup_zones`
+  - persists to Postgres, on table: `zone_lookup`
 
 You can use any combination of the three above to fetch more than dataset group at a time.
 
-For instance: `python sqlalchemy_ingest.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
+For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
 
 ## Tech Stack
@@ -41,26 +41,6 @@ For instance: `python sqlalchemy_ingest.py -gz` fetches the **NYC Green Trip Dat
 
 
 ## Up and Running
-
-### Running on Docker
-
-**1.** Fire up the PostgreSQL and pgAdmin:
-```shell
- docker-compose up -d
-```
-
-Make sure to uncomment the endpoint lines of the Datasets you want to
-fetch on [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/postgres_ingest/app.yml)
-
-**2.** Build the Docker image for the Ingestion Script:
-```shell
-docker build -t taxi_ingest .
-```
-
-**3.** Run the script:
-```shell
-docker run --network pg-network -d taxi_ingest
-```
 
 ### Developer Setup
 
@@ -80,7 +60,6 @@ pdm sync
 brew install pre-commit
 
 # From root folder where `.pre-commit-config.yaml` is located, run:
-
 pre-commit install
 ```
 
@@ -88,27 +67,27 @@ pre-commit install
 
 4.1.: To connect to Postgres:
 ```shell
-export DATABASE_DRIVER=postgres \
-export DATABASE_HOST=localhost \
-export DATABASE_PORT=5432 \
+export DATABASE_DIALECT=postgres
+export DATABASE_HOST=localhost
+export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
-export DATABASE_USERNAME=postgres \
+export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=postgres
 ```
 
 4.2.: To connect to MySQL:
 ```shell
-export DATABASE_DRIVER=mysql \
-export DATABASE_HOST=localhost \
-export DATABASE_PORT=3306 \
+export DATABASE_DIALECT=mysql
+export DATABASE_HOST=localhost
+export DATABASE_PORT=3306
 export DATABASE_NAME=nyc_taxi
-export DATABASE_USERNAME=mysql \
+export DATABASE_USERNAME=mysql
 export DATABASE_PASSWORD=mysql
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
 ```shell
-python sqlalchemy_ingest.py --help
+python run.py --help
 ```
 
 
@@ -117,37 +96,35 @@ python sqlalchemy_ingest.py --help
 **1.** Build the Docker Image with:
 
 ```shell
-docker build -t pandas_sqlalchemy:latest . --no-cache
+docker build -t iobruno/nyc-taxi-ingest:latest . --no-cache
 ```
 
 **2.** Start a container with it:
 
-2.1. PosgreSQL:
+2.1. Postgres:
 ```shell
 docker run \
-  -e DATABASE_DRIVER=postgres \
-  -e DATABASE_HOST=postgres \
+  -e DATABASE_DIALECT=postgres \
+  -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=5432 \
   -e DATABASE_NAME=nyc_taxi \
   -e DATABASE_USERNAME=postgres \
   -e DATABASE_PASSWORD=postgres \
-  --network sqlalchemy \
-  --name sqlalchemy_postgres \
-  pandas_sqlalchemy
+  --name db_ingest_postgres \
+  iobruno/nyc-taxi-ingest
 ```
 
 2.2. For MySQL:
 ```shell
 docker run \
-  -e DATABASE_DRIVER=mysql \
-  -e DATABASE_HOST=mysql \
+  -e DATABASE_DIALECT=mysql \
+  -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=3306 \
   -e DATABASE_NAME=nyc_taxi \
   -e DATABASE_USERNAME=mysql \
   -e DATABASE_PASSWORD=mysql \
-  --network sqlalchemy \
-  --name sqlalchemy_mysql \
-  pandas_sqlalchemy
+  --name db_ingest_mysql \
+  iobruno/nyc-taxi-ingest
 ```
 
 

@@ -12,7 +12,7 @@ RUN pip install -U pip setuptools wheel && \
 # Runner stage
 FROM python:3.11-slim AS runner
 
-ENV DATABASE_DRIVER=
+ENV DATABASE_DIALECT=
 ENV DATABASE_HOST=
 ENV DATABASE_PORT=
 ENV DATABASE_USERNAME=
@@ -21,8 +21,10 @@ ENV DATABASE_NAME=
 
 ENV PYTHONPATH=/usr/local/lib/python/
 COPY --from=builder /app/__pypackages__/3.11/lib /usr/local/lib/python/
-COPY sqlalchemy_ingest.py app.yml README.md /app/
+
+ADD src app/src/
+ADD run.py app.yml README.md /app/
 
 WORKDIR /app/
 
-ENTRYPOINT ["python", "sqlalchemy_ingest.py", "-zygf"]
+ENTRYPOINT ["python", "run.py", "-zygf"]
