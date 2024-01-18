@@ -1,10 +1,11 @@
-# Data Visualzation with Superset
+# Data Visualzation with Superset and Metabase
 
 ![Superset](https://img.shields.io/badge/Superset-0A2933?style=flat&logo=apache&logoColor=F8FDFF&labelColor=0A2933)
+![Metabase](https://img.shields.io/badge/Metabase-509EE3?style=flat&logo=metabase&logoColor=white&labelColor=65A9E7)
 ![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)
 ![Redshift](https://img.shields.io/badge/AWS_Redshift-2766A7?style=flat&logo=Amazon%20RedShift&logoColor=white&labelColor=2766A7)
-![ClickHouse](https://img.shields.io/badge/ClickHouse-151515?style=flat&logo=clickhouse&logoColor=FBFD73&labelColor=151515)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white&labelColor=336791)
+![ClickHouse](https://img.shields.io/badge/ClickHouse-151515?style=flat&logo=clickhouse&logoColor=FBFD73&labelColor=151515)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
@@ -61,12 +62,12 @@ docker compose -f docker-compose.metabase.yml up -d
 
 Metabase supports a wide-variety of data sources out-of-the-box (BigQuery, RedShift, Snowflake, Spark SQL, Druid, PostgreSQL, MySQL, among others). The complete list of supported data sources can be found [here](https://www.metabase.com/data_sources/). 
 
-For Partners Data Sources and Community Data Source connectors, however, additional JDBC drivers have to be downloaded and put in the `plugins` folders, which is exactly what the `metabase-init` container is for.
+For Partners Data Sources and Community Data Source connectors, such as `ClickHouse`, however, additional JDBC drivers have to be downloaded and put in the `plugins` folders, which is exactly what the `metabase-init` container is for.
 
 
 **3.** After the metabase_app container is in a healthy state, you can acccess the Web UI at:
 ```shell
-open http://localhost:8088/
+open http://localhost:3000/
 ```
 
 
