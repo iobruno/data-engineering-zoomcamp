@@ -48,6 +48,11 @@ sqlalchemy-redshift==0.8.14
 clickhouse-connect==0.6.23
 ```
 
+**3.** After the `superset_app` container is in a healthy state, you can acccess Superset at:
+```shell
+open http://localhost:8088/
+```
+
 
 ### Metabase
 
@@ -65,7 +70,7 @@ Metabase supports a wide-variety of data sources out-of-the-box (BigQuery, RedSh
 For Partners Data Sources and Community Data Source connectors, such as `ClickHouse`, however, additional JDBC drivers have to be downloaded and put in the `plugins` folders, which is exactly what the `metabase-init` container is for.
 
 
-**3.** After the metabase_app container is in a healthy state, you can acccess the Web UI at:
+**3.** After the `metabase_app` container is in a healthy state, you can acccess Metabase at:
 ```shell
 open http://localhost:3000/
 ```
