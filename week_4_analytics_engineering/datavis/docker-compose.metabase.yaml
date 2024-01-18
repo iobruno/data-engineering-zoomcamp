@@ -1,0 +1,54 @@
+version: "3.9"
+
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-lastest}
+
+services:
+  metabase-db:
+    image: *postgres-image
+    container_name: metabase_db
+    environment:
+      POSTGRES_USER: 'metabase'
+      POSTGRES_PASSWORD: 'metabase'
+      POSTGRES_DB: 'metabase'
+    ports:
+      - '5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    restart: on-failure
+
+  metabase:
+    image: metabase/metabase
+    platform: linux/amd64
+    container_name: metabase_app
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: metabase-db
+      MB_DB_PORT: 5432
+      MB_DB_DBNAME: metabase
+      MB_DB_USER: metabase
+      MB_DB_PASS: metabase
+    ports:
+      - 3000:3000
+    volumes:
+      - metabase_data:/metabase-data
+    depends_on:
+      metabase-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:3000/api/health"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    restart: on-failure
+
+volumes:
+  pg_data:
+    name: metabase_pgdata
+  metabase_data:
+    name: metabase_data
