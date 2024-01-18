@@ -1,7 +1,7 @@
 version: "3.9"
 
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-lastest}
+x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-latest}
 
 services:
   metabase-db:
@@ -23,7 +23,7 @@ services:
     restart: on-failure
 
   metabase:
-    image: metabase/metabase
+    image: *metabase-image
     platform: linux/amd64
     container_name: metabase_app
     environment:
@@ -46,6 +46,7 @@ services:
       timeout: 10s
       retries: 5
     restart: on-failure
+
 
 volumes:
   pg_data:
