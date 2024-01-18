@@ -48,8 +48,7 @@ can take the course at your own pace
 * [ClickHouse and dbt](week_4_analytics_engineering/clickhouse)
 * [PostgreSQL and dbt](week_4_analytics_engineering/postgres)
 * [DuckDB and dbt](week_4_analytics_engineering/duckdb)
-* Data visualization with Looker Studio
-* Data visualization with Superset (TBD)
+* [Data Visualization with Superset/Metabase](week_4_analytics_engineering/datavis)
 * Homework
 
 ### [Module 5: Batch processing](week_5_batch_processing)
