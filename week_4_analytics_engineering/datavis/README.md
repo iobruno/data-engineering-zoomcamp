@@ -11,6 +11,7 @@
 
 ## Tech Stack
 - [Apache Superset](https://superset.apache.org/)
+- [Metabase Open Source](https://www.metabase.com/start/oss/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 
@@ -34,7 +35,6 @@ Be sure to `unset SUPERSET_LOAD_EXAMPLES` or `export SUPERSET_LOAD_EXAMPLES=no` 
 docker compose up -d
 ```
 
-
 **2.** Additional database drivers:
 
 Superset supports PostgreSQL, MySQL and out-of-the-box. To enable additional data sources, include the respective SQLAlchemy driver as a dependency on [requirements-local.txt](./superset/requirements-local.txt). 
@@ -48,6 +48,30 @@ clickhouse-connect==0.6.23
 ```
 
 
+### Metabase
+
+**1.** Spin up Metabase infrastructure with:
+
+```shell
+docker compose -f docker-compose.metabase.yaml up -d
+```
+
+
+**2.** Additional database drivers:
+
+Metabase supports a wide-variety of data sources out-of-the-box (BigQuery, RedShift, Snowflake, Spark SQL, Druid, PostgreSQL, MySQL, among others). The complete list of supported data sources can be found [here](https://www.metabase.com/data_sources/). 
+
+For Partners Data Sources and Community Data Source connectors, however, additional JDBC drivers have to be downloaded and put in the `plugins` folders, which is exactly what the `metabase-init` container is for.
+
+
+**3.** After the metabase_app container is in a healthy state, you can acccess the Web UI at:
+```shell
+open http://localhost:8088/
+```
+
+
 ## TODO:
 - [x] Bootstrap Apache Superset infrastructure in Docker
+- [x] Bootstrap Metabase infrastructure in Docker
 - [ ] Build data viz for NYC Taxi Dataset on Superset
+- [ ] Build data viz for NYC Taxi Dataset on Metabase
