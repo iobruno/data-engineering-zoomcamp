@@ -32,7 +32,7 @@ Be sure to `unset SUPERSET_LOAD_EXAMPLES` or `export SUPERSET_LOAD_EXAMPLES=no` 
 
 **1.** Spin up Apache Superset infrastructure with:
 ```shell
-docker compose up -d
+docker compose -f docker-compose.superset.yml up -d
 ```
 
 **2.** Additional database drivers:
@@ -53,7 +53,7 @@ clickhouse-connect==0.6.23
 **1.** Spin up Metabase infrastructure with:
 
 ```shell
-docker compose -f docker-compose.metabase.yaml up -d
+docker compose -f docker-compose.metabase.yml up -d
 ```
 
 
