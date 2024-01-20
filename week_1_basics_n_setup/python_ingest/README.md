@@ -10,25 +10,7 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
-- `python run.py -y` or `--yellow`:
-  - fetches the datasets under the key `yellow_trip_data` only
-  - persists to Postgres, on table `yellow_taxi_data`
-  
-- `python run.py -g` or `--green`:
-  - fetches the datasets under the key `green_trip_data` only,
-  - persists to Postgres, on table `green_taxi_data`
 
-- `python run.py -f` or `--fhv`:
-  - fetches the datasets under the key `fhv_trip_data`
-  - persists to Postgres, on table: `fhv_taxi_data`
-
-- `python run.py -z` or `--zones`:
-  - fetches the datasets under the key `zone_lookups`
-  - persists to Postgres, on table: `zone_lookup`
-
-You can use any combination of the three above to fetch more than dataset group at a time.
-
-For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
 
 ## Tech Stack
@@ -86,9 +68,26 @@ export DATABASE_PASSWORD=mysql
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
-```shell
-python run.py --help
-```
+
+- `python run.py -y` or `--yellow`:
+  - fetches the datasets under the key `yellow_trip_data` only
+  - persists to Postgres, on table `yellow_taxi_data`
+  
+- `python run.py -g` or `--green`:
+  - fetches the datasets under the key `green_trip_data` only,
+  - persists to Postgres, on table `green_taxi_data`
+
+- `python run.py -f` or `--fhv`:
+  - fetches the datasets under the key `fhv_trip_data`
+  - persists to Postgres, on table: `fhv_taxi_data`
+
+- `python run.py -z` or `--zones`:
+  - fetches the datasets under the key `zone_lookups`
+  - persists to Postgres, on table: `zone_lookup`
+
+You can use any combination of the three above to fetch more than dataset group at a time.
+
+For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
 
 ## Containerization and Testing
@@ -103,7 +102,7 @@ docker build -t iobruno/nyc-taxi-ingest:latest . --no-cache
 
 2.1. Postgres:
 ```shell
-docker run \
+docker run --rm \
   -e DATABASE_DIALECT=postgresql \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=5432 \
@@ -116,7 +115,7 @@ docker run \
 
 2.2. For MySQL:
 ```shell
-docker run \
+docker run --rm \
   -e DATABASE_DIALECT=mysql \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=3306 \
