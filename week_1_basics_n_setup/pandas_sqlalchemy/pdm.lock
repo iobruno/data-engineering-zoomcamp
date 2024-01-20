@@ -4,8 +4,8 @@
 [metadata]
 groups = ["default", "dev"]
 strategy = ["cross_platform"]
-lock_version = "4.4"
-content_hash = "sha256:48c48e204039e553f5d47a83c3922ae6788bcaed98710cb4cbd76aeeb7deaa97"
+lock_version = "4.4.1"
+content_hash = "sha256:5ff9e598eb6fdeed470a612fb15eeac54b7c8b0e471e4d720333f6b03078894f"
 
 [[package]]
 name = "antlr4-python3-runtime"
@@ -402,6 +402,16 @@ summary = "Internationalized Domain Names in Applications (IDNA)"
 files = [
     {file = "idna-3.6-py3-none-any.whl", hash = "sha256:c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f"},
     {file = "idna-3.6.tar.gz", hash = "sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca"},
+]
+
+[[package]]
+name = "inflection"
+version = "0.5.1"
+requires_python = ">=3.5"
+summary = "A port of Ruby on Rails inflector to Python"
+files = [
+    {file = "inflection-0.5.1-py2.py3-none-any.whl", hash = "sha256:f38b2b640938a4f35ade69ac3d053042959b62a0f1076a5bbaa1b9526605a8a2"},
+    {file = "inflection-0.5.1.tar.gz", hash = "sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417"},
 ]
 
 [[package]]
@@ -1547,7 +1557,7 @@ version = "2.0.23"
 requires_python = ">=3.7"
 summary = "Database Abstraction Library"
 dependencies = [
-    "greenlet!=0.4.17; platform_machine == \"aarch64\" or (platform_machine == \"ppc64le\" or (platform_machine == \"x86_64\" or (platform_machine == \"amd64\" or (platform_machine == \"AMD64\" or (platform_machine == \"win32\" or platform_machine == \"WIN32\")))))",
+    "greenlet!=0.4.17; platform_machine == \"win32\" or platform_machine == \"WIN32\" or platform_machine == \"AMD64\" or platform_machine == \"amd64\" or platform_machine == \"x86_64\" or platform_machine == \"ppc64le\" or platform_machine == \"aarch64\"",
     "typing-extensions>=4.2.0",
 ]
 files = [
