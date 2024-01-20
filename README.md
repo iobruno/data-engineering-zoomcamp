@@ -20,48 +20,42 @@ can take the course at your own pace
 
 ## Syllabus 
 
-### [Module 1: Introduction & Prerequisites](week_1_basics_n_setup):
-* [pandas and SQLAlchemy](week_1_basics_n_setup/pandas_sqlalchemy)
-* [Terraform for BigQuery and GCS](week_1_basics_n_setup/terraform-gcp)
+### [Module 1: Data Ingestion & Terraform](module1-data-ingestion)
+* [Python data ingestion (with Pandas and Polars)](module1-data-ingestion/python-ingest/)
+* Rust data ingestion
+* [Terraform for BigQuery and GCS](infrastructure/terraform-gcp)
 * Homework
 
-### [Module 2: Workflow Orchestration](week_2_workflow_orchestration):
-* [Workflow Orchestration with Airflow (2.x)](week_2_workflow_orchestration/airflow)
-* [Workflow Orchestration with Legacy Airflow (1.x)](week_2_workflow_orchestration/airflow-legacy)
-* [Workflow Orchestration with Mage](week_2_workflow_orchestration/mage)
-* [Workflow Orchestration with Prefect](week_2_workflow_orchestration/prefect)
-  * [*.csv to Postgres](week_2_workflow_orchestration/prefect/flows/sqlalchemy_ingest.py)
-  * [*.csv to .parquet on GCS](week_2_workflow_orchestration/prefect/flows/web_csv_to_gcs.py)
+### [Module 2: Workflow Orchestration](module2-workflow-orchestration):
+* [Workflow Orchestration with Airflow (2.x)](module2-workflow-orchestration/airflow)
+* [Workflow Orchestration with Mage](module2-workflow-orchestration/mage)
+* [Workflow Orchestration with Prefect](module2-workflow-orchestration/prefect)
+* [Workflow Orchestration with Legacy Airflow (1.x)](module2-workflow-orchestration/airflow-legacy)
 * Homework
 
-### [Module 3: Data Warehouse](week_3_data_warehouse)
-* [BigQuery Data Warehouse](week_3_data_warehouse/bigquery)
-  * [Federated Queries: External Tables](week_3_data_warehouse/bigquery/nyc_trip_record_data_create_ext_tables.sql)
-  * [Partitioning Native Tables](week_3_data_warehouse/bigquery/nyc_trip_record_data_create_tables.sql)
+### [Module 3: Data Warehouse](module3-data-warehouse)
+* [BigQuery Data Warehouse](module3-data-warehouse/bigquery)
 * Lakehouse with Delta Lake/Iceberg
 * Homework
 
-### [Module 4: Analytics Engineering](week_4_analytics_engineering)
-* [BigQuery and dbt](week_4_analytics_engineering/bigquery)
-* [Redshift and dbt](week_4_analytics_engineering/redshift)
+### [Module 4: Analytics Engineering](module4-analytics-engineering)
+* [BigQuery and dbt](module4-analytics-engineering/bigquery)
+* [Redshift and dbt](module4-analytics-engineering/redshift)
 * Databricks and dbt
-* [ClickHouse and dbt](week_4_analytics_engineering/clickhouse)
-* [PostgreSQL and dbt](week_4_analytics_engineering/postgres)
-* [DuckDB and dbt](week_4_analytics_engineering/duckdb)
-* [Data Visualization with Superset/Metabase](week_4_analytics_engineering/datavis)
+* [ClickHouse and dbt](module4-analytics-engineering/clickhouse)
+* [PostgreSQL and dbt](module4-analytics-engineering/postgres)
+* [DuckDB and dbt](module4-analytics-engineering/duckdb)
+* [Data Visualization with Superset/Metabase](module4-analytics-engineering/datavis)
 * Homework
 
-### [Module 5: Batch processing](week_5_batch_processing)
-* [PySpark on Jupyter Playground](week_5_batch_processing/pyspark/notebooks/)
+### [Module 5: Batch processing](module5-batch-processing)
+* [PySpark on Jupyter Playground](module5-batch-processing/pyspark/notebooks/)
 * PySpark (deploy-mode: 'cluster')  
 * Spark + Scala
 * Spark + Kotlin (TBD)
 * Homework
 
-### [Module 6: Streaming](week_6_stream_processing)
-* [Kafka for Stream Processing with Kotlin](week_6_stream_processing/kotlin)
-* [Kafka Streams with ksqlDB](week_6_stream_processing/ksqldb)
+### [Module 6: Streaming](module6-stream-processing)
+* [Kafka for Stream Processing with Kotlin](module6-stream-processing/kotlin)
+* [Kafka Streams with ksqlDB](module6-stream-processing/ksqldb)
 * Homework
-
-### [Module 7: Capstone Project](week_7_capstone_project)
-* Capstone Project
