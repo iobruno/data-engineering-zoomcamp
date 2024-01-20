@@ -7,8 +7,8 @@ from rich.progress import *
 from typing_extensions import Annotated
 from typer import Typer, Argument, Option
 
-from src.dataset_fetcher import DatasetDownloader
-from src.dataset_repository import (
+from src.dataframe_fetcher import PandasFetcher
+from src.dataframe_repository import (
     SQLRepository,
     GreenTaxiRepository,
     YellowTaxiRepository,
@@ -44,8 +44,9 @@ progress = Progress(
 def track_ingest_progress(repository: SQLRepository, endpoints: List[str]):
     filenames = [Path(endpoint).stem for endpoint in endpoints]
     tasks = [progress.add_task(name, start=False, total=0) for name in filenames]
+    dataset_fetcher = PandasFetcher()
 
-    for idx, record in enumerate(DatasetDownloader.fetch_all(endpoints)):
+    for idx, record in enumerate(dataset_fetcher.fetch_all(endpoints)):
         progress.update(task_id=tasks[idx], completed=0, total=record.num_chunks)
         progress.start_task(task_id=tasks[idx])
         for chunk_id, _ in enumerate(repository.save_all(record.chunks)):
@@ -76,19 +77,19 @@ def ingest_db(
         zone_lookup_dataset_endpoints = cfg.datasets.zone_lookups
 
         if green and green_dataset_endpoints:
-            green_taxi_repo = GreenTaxiRepository.with_config("green_taxi_data", *db_settings)
+            green_taxi_repo = GreenTaxiRepository.with_config(*db_settings)
             track_ingest_progress(green_taxi_repo, green_dataset_endpoints)
 
         if yellow and yellow_dataset_endpoints:
-            yellow_taxi_repo = YellowTaxiRepository.with_config("yellow_taxi_data", *db_settings)
+            yellow_taxi_repo = YellowTaxiRepository.with_config(*db_settings)
             track_ingest_progress(yellow_taxi_repo, yellow_dataset_endpoints)
 
         if fhv and fhv_dataset_endpoints:
-            fhv_taxi_repo = FhvTaxiRepository.with_config("fhv_taxi_data", *db_settings)
+            fhv_taxi_repo = FhvTaxiRepository.with_config(*db_settings)
             track_ingest_progress(fhv_taxi_repo, fhv_dataset_endpoints)
 
         if zones and zone_lookup_dataset_endpoints:
-            zone_lookup_repo = ZoneLookupRepository.with_config("zone_lookup", *db_settings)
+            zone_lookup_repo = ZoneLookupRepository.with_config(*db_settings)
             track_ingest_progress(zone_lookup_repo, zone_lookup_dataset_endpoints)
 
 

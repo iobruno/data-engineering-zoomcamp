@@ -1,8 +1,7 @@
-# pandas-SQLAlchemy
+# Python Data Ingestion with pandas
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -10,25 +9,7 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
 
-- `python run.py -y` or `--yellow`:
-  - fetches the datasets under the key `yellow_trip_data` only
-  - persists to Postgres, on table `yellow_taxi_data`
-  
-- `python run.py -g` or `--green`:
-  - fetches the datasets under the key `green_trip_data` only,
-  - persists to Postgres, on table `green_taxi_data`
 
-- `python run.py -f` or `--fhv`:
-  - fetches the datasets under the key `fhv_trip_data`
-  - persists to Postgres, on table: `fhv_taxi_data`
-
-- `python run.py -z` or `--zones`:
-  - fetches the datasets under the key `zone_lookups`
-  - persists to Postgres, on table: `zone_lookup`
-
-You can use any combination of the three above to fetch more than dataset group at a time.
-
-For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
 
 ## Tech Stack
@@ -67,7 +48,7 @@ pre-commit install
 
 4.1.: To connect to Postgres:
 ```shell
-export DATABASE_DIALECT=postgres
+export DATABASE_DIALECT=postgresql
 export DATABASE_HOST=localhost
 export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
@@ -86,9 +67,26 @@ export DATABASE_PASSWORD=mysql
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
-```shell
-python run.py --help
-```
+
+- `python run.py -y` or `--yellow`:
+  - fetches the datasets under the key `yellow_trip_data` only
+  - persists to Postgres, on table `yellow_taxi_data`
+  
+- `python run.py -g` or `--green`:
+  - fetches the datasets under the key `green_trip_data` only,
+  - persists to Postgres, on table `green_taxi_data`
+
+- `python run.py -f` or `--fhv`:
+  - fetches the datasets under the key `fhv_trip_data`
+  - persists to Postgres, on table: `fhv_taxi_data`
+
+- `python run.py -z` or `--zones`:
+  - fetches the datasets under the key `zone_lookups`
+  - persists to Postgres, on table: `zone_lookup`
+
+You can use any combination of the three above to fetch more than dataset group at a time.
+
+For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
 
 
 ## Containerization and Testing
@@ -103,8 +101,8 @@ docker build -t iobruno/nyc-taxi-ingest:latest . --no-cache
 
 2.1. Postgres:
 ```shell
-docker run \
-  -e DATABASE_DIALECT=postgres \
+docker run --rm \
+  -e DATABASE_DIALECT=postgresql \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=5432 \
   -e DATABASE_NAME=nyc_taxi \
@@ -116,7 +114,7 @@ docker run \
 
 2.2. For MySQL:
 ```shell
-docker run \
+docker run --rm \
   -e DATABASE_DIALECT=mysql \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=3306 \
