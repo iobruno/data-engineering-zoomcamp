@@ -9,7 +9,8 @@ from typer import Typer, Argument, Option
 
 from src.dataframe_fetcher import (
     DataframeFetcher,
-    PandasFetcher
+    PolarsFetcher,
+    PandasFetcher,
 )
 
 from src.dataframe_repository import (
@@ -50,9 +51,9 @@ def extract_load_with(fetcher: DataframeFetcher, repository: SQLRepository, endp
     tasks = [progress.add_task(name, start=False, total=0) for name in filenames]
 
     for idx, record in enumerate(fetcher.fetch_all(endpoints)):
-        progress.update(task_id=tasks[idx], completed=0, total=record.num_chunks)
+        progress.update(task_id=tasks[idx], completed=0, total=len(record.slices))
         progress.start_task(task_id=tasks[idx])
-        for chunk_id, _ in enumerate(repository.save_all(record.chunks)):
+        for chunk_id, _ in enumerate(repository.save_all(record.slices)):
             progress.update(task_id=tasks[idx], completed=chunk_id + 1)
 
 
@@ -79,7 +80,7 @@ def ingest_db(
         fhv_dataset_endpoints = cfg.datasets.fhv_trip_data
         zone_lookup_dataset_endpoints = cfg.datasets.zone_lookups
 
-        df_fetcher: DataframeFetcher = PandasFetcher()
+        df_fetcher: DataframeFetcher = PolarsFetcher()
 
         if green and green_dataset_endpoints:
             green_taxi_repo = GreenTaxiRepository.with_config(*db_settings)
