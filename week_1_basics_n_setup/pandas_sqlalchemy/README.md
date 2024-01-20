@@ -67,7 +67,7 @@ pre-commit install
 
 4.1.: To connect to Postgres:
 ```shell
-export DATABASE_DIALECT=postgres
+export DATABASE_DIALECT=postgresql
 export DATABASE_HOST=localhost
 export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
@@ -104,7 +104,7 @@ docker build -t iobruno/nyc-taxi-ingest:latest . --no-cache
 2.1. Postgres:
 ```shell
 docker run \
-  -e DATABASE_DIALECT=postgres \
+  -e DATABASE_DIALECT=postgresql \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=5432 \
   -e DATABASE_NAME=nyc_taxi \
