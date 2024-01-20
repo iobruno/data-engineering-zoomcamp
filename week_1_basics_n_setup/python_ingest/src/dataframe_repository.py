@@ -25,7 +25,7 @@ class SQLRepository(metaclass=ABCMeta):
     def with_config(cls, *db_settings) -> 'SQLRepository':
         (db_dialect, db_host, db_port, db_name, db_username, db_password) = db_settings
         if db_dialect == "postgresql":
-            conn_prefix = f"p"
+            conn_prefix = f"postgresql+psycopg"
             db_port = 5432 if db_port is None else db_port
         elif db_dialect == "mysql":
             conn_prefix = f"mysql+mysqlconnector"
