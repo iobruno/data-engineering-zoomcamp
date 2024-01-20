@@ -70,6 +70,7 @@ def ingest_db(
     green: Annotated[bool, Option("--green", "-g", help="Fetch Green cab dataset")] = False,
     fhv: Annotated[bool, Option("--fhv", "-f", help="Fetch FHV cab dataset")] = False,
     zones: Annotated[bool, Option("--zones", "-z", help="Fetch Zone lookup dataset")] = False,
+    polars_ff: Annotated[bool, Option("--use-polars", help="Feature flag to enable Polars ")] = False
 ):
     # fmt: on
     log.info(f"Connecting to '{db_dialect}' with credentials on ENV VARs...")
@@ -79,8 +80,14 @@ def ingest_db(
         yellow_dataset_endpoints = cfg.datasets.yellow_trip_data
         fhv_dataset_endpoints = cfg.datasets.fhv_trip_data
         zone_lookup_dataset_endpoints = cfg.datasets.zone_lookups
+        df_fetcher: DataframeFetcher
 
-        df_fetcher: DataframeFetcher = PolarsFetcher()
+        if polars_ff:
+            df_fetcher = PolarsFetcher()
+            log.info("Using 'polars' as Dataframe library")
+        else:
+            df_fetcher = PandasFetcher()
+            log.info("Using 'pandas' as Dataframe library")
 
         if green and green_dataset_endpoints:
             green_taxi_repo = GreenTaxiRepository.with_config(*db_settings)
