@@ -18,10 +18,9 @@ class DataframeFetcher(metaclass=ABCMeta):
         for endpoint in endpoints:
             yield self.fetch(endpoint)
 
-    @classmethod
-    def split_df_in_chunks(cls, df, chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
-        num_chunks = math.ceil(len(df) / chunk_size)
-        return np.array_split(df, num_chunks), num_chunks
+    @abstractmethod
+    def split_df_in_chunks(self, df, chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+        raise NotImplementedError()
 
 
 class PandasFetcher(DataframeFetcher):
@@ -30,4 +29,8 @@ class PandasFetcher(DataframeFetcher):
         # Enforces conversion of dataframe cols to lowercase, otherwise, in Postgres,
         #  all fields starting with an uppercase letter would have to be "quoted" for querying
         df.columns = map(str.lower, df.columns)
-        return Record(endpoint, *self.__class__.split_df_in_chunks(df))
+        return Record(endpoint, *self.split_df_in_chunks(df))
+
+    def split_df_in_chunks(self, df, chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+        num_chunks = math.ceil(len(df) / chunk_size)
+        return np.array_split(df, num_chunks), num_chunks
