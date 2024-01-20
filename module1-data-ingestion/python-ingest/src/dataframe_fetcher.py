@@ -4,6 +4,7 @@ from typing import List
 import math
 import numpy as np
 import pandas as pd
+import polars as pl
 
 
 Record = namedtuple("Record", ["url", "chunks", "num_chunks"])
@@ -34,3 +35,16 @@ class PandasFetcher(DataframeFetcher):
     def split_df_in_chunks(self, df, chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
         num_chunks = math.ceil(len(df) / chunk_size)
         return np.array_split(df, num_chunks), num_chunks
+
+
+class PolarsFetcher(DataframeFetcher):
+    def fetch(self, endpoint: str) -> Record:
+        df = pl.read_csv(endpoint)
+        return Record(endpoint, *self.split_df_in_chunks(df))
+
+    def split_df_in_chunks(self, df, chunk_size: int = 100_000) -> (List[pl.DataFrame], int):
+        num_chunks = math.ceil(len(df) / chunk_size)
+        return [
+            df.slice(offset=chunk_id * chunk_size, length=chunk_size)
+            for chunk_id in range(num_chunks)
+        ]
