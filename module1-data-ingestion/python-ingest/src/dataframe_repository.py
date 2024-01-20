@@ -19,7 +19,7 @@ class SQLRepository(metaclass=ABCMeta):
         raise RuntimeError("Unsupported Dataframe type."
                            "Supported types are pandas or polars Dataframes only")
 
-    def save_polars_df(self, df: pl.DataFrame, engine="sqlalchemy"):
+    def save_polars_df(self, df: pl.DataFrame, engine="adbc"):
         return df.write_database(
             table_name=self.tbl_name,
             connection=self.conn_string,
@@ -43,7 +43,7 @@ class SQLRepository(metaclass=ABCMeta):
     def with_config(cls, *db_settings) -> "SQLRepository":
         (db_dialect, db_host, db_port, db_name, db_username, db_password) = db_settings
         if db_dialect == "postgresql":
-            conn_prefix = f"postgresql+psycopg"
+            conn_prefix = f"postgresql"
             db_port = 5432 if db_port is None else db_port
         elif db_dialect == "mysql":
             conn_prefix = f"mysql+mysqlconnector"
