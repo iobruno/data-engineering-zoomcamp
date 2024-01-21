@@ -10,29 +10,29 @@ class SQLRepository(metaclass=ABCMeta):
         self.conn_string = conn_string
         self.conn = sqlalchemy.create_engine(conn_string).connect()
 
-    def save(self, df: Union[pd.DataFrame, pl.DataFrame]) -> Optional[int]:
+    def save(self, df: Union[pd.DataFrame, pl.DataFrame], if_table_exists: str) -> Optional[int]:
         if isinstance(df, pl.DataFrame):
-            return self.save_polars_df(df)
+            return self.save_polars_df(df, if_table_exists)
         elif isinstance(df, pd.DataFrame):
-            return self.save_pandas_df(df)
+            return self.save_pandas_df(df, if_table_exists)
 
         raise RuntimeError("Unsupported Dataframe type."
                            "Supported types are pandas or polars Dataframes only")
 
-    def save_polars_df(self, df: pl.DataFrame, engine="adbc"):
+    def save_polars_df(self, df: pl.DataFrame, if_table_exists: str, engine="adbc"):
         return df.write_database(
             table_name=self.tbl_name,
             connection=self.conn_string,
-            if_table_exists="append",
+            if_table_exists=if_table_exists,
             engine=engine,
         )
 
-    def save_pandas_df(self, df: pd.DataFrame):
-        return df.to_sql(self.tbl_name, con=self.conn, if_exists="append", index=False)
+    def save_pandas_df(self, df: pd.DataFrame, if_table_exists):
+        return df.to_sql(self.tbl_name, con=self.conn, if_exists=if_table_exists, index=False)
 
     def save_all(self, chunks: List[pd.DataFrame]):
         for chunk in chunks:
-            yield self.save(df=chunk)
+            yield self.save(df=chunk, if_table_exists='append')
 
     @property
     @abstractmethod
