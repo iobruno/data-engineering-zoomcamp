@@ -23,7 +23,8 @@ ENV PYTHONPATH=/usr/local/lib/python/
 COPY --from=builder /app/__pypackages__/3.11/lib /usr/local/lib/python/
 
 ADD src app/src/
-ADD run.py app.yml README.md /app/
+ADD schemas app/schemas/
+ADD run.py datasets.yml /app/
 
 WORKDIR /app/
 
