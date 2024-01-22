@@ -3,16 +3,16 @@ import polars as pl
 
 def green_taxi():
     return {
-        'VendorID': pl.Int64,
+        'VendorID': pl.Int32,
         'lpep_pickup_datetime': pl.Datetime,
         'lpep_dropoff_datetime': pl.Datetime,
-        'passenger_count': pl.Int64,
+        'passenger_count': pl.Int8,
         'trip_distance': pl.Float64,
-        'PULocationID': pl.Int64,
-        'DOLocationID': pl.Int64,
-        'RatecodeID': pl.Int64,
+        'PULocationID': pl.Int32,
+        'DOLocationID': pl.Int32,
+        'RatecodeID': pl.Int8,
         'store_and_fwd_flag': pl.String,
-        'payment_type': pl.Int64,
+        'payment_type': pl.Int8,
         'fare_amount': pl.Float64,
         'extra': pl.Float64,
         'mta_tax': pl.Float64,
@@ -22,22 +22,22 @@ def green_taxi():
         'total_amount': pl.Float64,
         'congestion_surcharge': pl.Float64,
         'ehail_fee': pl.Float64,
-        'trip_type': pl.Int64,
+        'trip_type': pl.Int8,
     }
 
 
 def yellow_taxi():
     return {
-        'VendorID': pl.Int64,
+        'VendorID': pl.Int32,
         'tpep_pickup_datetime': pl.Datetime,
         'tpep_dropoff_datetime': pl.Datetime,
-        'passenger_count': pl.Int64,
+        'passenger_count': pl.Int8,
         'trip_distance': pl.Float64,
-        'PULocationID': pl.Int64,
-        'DOLocationID': pl.Int64,
-        'RatecodeID': pl.Int64,
+        'PULocationID': pl.Int32,
+        'DOLocationID': pl.Int32,
+        'RatecodeID': pl.Int8,
         'store_and_fwd_flag': pl.String,
-        'payment_type': pl.Int64,
+        'payment_type': pl.Int8,
         'fare_amount': pl.Float64,
         'extra': pl.Float64,
         'mta_tax': pl.Float64,
@@ -54,8 +54,8 @@ def fhv_taxi():
         'dispatching_base_num': pl.String,
         'pickup_datetime': pl.String,
         'dropOff_datetime': pl.String,
-        'PUlocationID': pl.Int64,
-        'DOlocationID': pl.Int64,
+        'PUlocationID': pl.Int32,
+        'DOlocationID': pl.Int32,
         'SR_Flag': pl.String,
         'Affiliated_base_number': pl.String,
     }
@@ -63,7 +63,7 @@ def fhv_taxi():
 
 def zone_lookup():
     return {
-        'LocationID': pl.Int64,
+        'LocationID': pl.Int32,
         'Borough': pl.String,
         'Zone': pl.String,
         'service_zone': pl.String,
