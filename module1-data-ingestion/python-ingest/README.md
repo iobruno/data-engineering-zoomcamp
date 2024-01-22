@@ -2,6 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
+![Polars](https://img.shields.io/badge/polars-24292E?style=flat&logo=polars&logoColor=CC792B&labelColor=24292E)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -14,6 +15,7 @@ based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-
 
 ## Tech Stack
 - [pandas](https://pandas.pydata.org/docs/user_guide/)
+- [polars](https://docs.pola.rs/)
 - [Typer](https://typer.tiangolo.com/tutorial/)
 - [Rich CLI](https://github.com/Textualize/rich)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
@@ -132,4 +134,5 @@ docker run --rm \
 - [x] Build a CLI app with `Typer`
 - [x] Progress Bars to keep track of the execution with `rich`
 - [x] Run/Deploy the project on Docker
-- [ ] Enable downloading of multiple datasets in parallel
+- [x] Re-Implement the pipeline with Polars
+- [ ] Define the DataFrame schemas for Polars to prevent DB errors
