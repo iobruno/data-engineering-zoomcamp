@@ -27,4 +27,4 @@ ADD run.py app.yml README.md /app/
 
 WORKDIR /app/
 
-ENTRYPOINT ["python", "run.py", "-zygf"]
+ENTRYPOINT ["python", "run.py", "-zygf", "--use-polars"]
