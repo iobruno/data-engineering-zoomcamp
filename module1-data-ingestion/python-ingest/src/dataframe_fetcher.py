@@ -11,6 +11,10 @@ Record = namedtuple("Record", ["url", "slices"])
 
 
 class DataframeFetcher(metaclass=ABCMeta):
+
+    def __init__(self, schema=None):
+        self.schema = schema
+
     @abstractmethod
     def fetch(self, endpoint: str) -> Record:
         raise NotImplementedError()
@@ -18,6 +22,10 @@ class DataframeFetcher(metaclass=ABCMeta):
     def fetch_all(self, endpoints: List[str]) -> List[Record]:
         for endpoint in endpoints:
             yield self.fetch(endpoint)
+
+    def with_schema(self, schema):
+        self.schema = schema
+        return self
 
     @abstractmethod
     def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pd.DataFrame]:
@@ -40,7 +48,7 @@ class PolarsFetcher(DataframeFetcher):
 
 class PandasFetcher(DataframeFetcher):
     def fetch(self, endpoint: str) -> Record:
-        df = pd.read_csv(endpoint, engine="pyarrow")
+        df = pd.read_csv(endpoint, engine="pyarrow").astype(self.schema)
         # Enforces conversion of dataframe cols to lowercase, otherwise, in Postgres,
         #  all fields starting with an uppercase letter would have to be "quoted" for querying
         df.columns = map(str.lower, df.columns)

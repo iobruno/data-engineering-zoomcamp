@@ -1,6 +1,6 @@
 import logging
 
-from omegaconf import OmegaConf
+from omegaconf import OmegaConf, DictConfig
 from pathlib import Path
 from rich.logging import RichHandler
 from rich.progress import *
@@ -21,7 +21,8 @@ from src.dataframe_repository import (
     ZoneLookupRepository,
 )
 
-config_file = Path(__file__).parent.joinpath("app.yml")
+root_folder = Path(__file__).parent
+config_file = root_folder.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
 log = logging.getLogger("sqlalchemy_ingest")
 cli = Typer(no_args_is_help=True)
@@ -101,11 +102,13 @@ def ingest_db(
         fhv_dataset_endpoints = cfg.datasets.fhv_trip_data
         zones_dataset_endpoints = cfg.datasets.zone_lookups
         df_fetcher: DataframeFetcher
+        df_schema: DictConfig
 
         if polars_ff:
             df_fetcher = PolarsFetcher()
             log.info("Using 'polars' as Dataframe library")
         else:
+            df_schema = OmegaConf.load(root_folder.joinpath("schemas.pandas.yml"))
             df_fetcher = PandasFetcher()
             log.info("Using 'pandas' as Dataframe library")
 
@@ -119,17 +122,26 @@ def ingest_db(
         if green and green_dataset_endpoints:
             green_repo = GreenTaxiRepository.with_config(*db_settings)
             green_tasks = gen_progress_tasks_for(green_dataset_endpoints)
-            extract_load_with(df_fetcher, green_repo, green_dataset_endpoints, green_tasks)
+            extract_load_with(
+                df_fetcher.with_schema(df_schema.get('green')),
+                green_repo, green_dataset_endpoints, green_tasks
+            )
 
         if yellow and yellow_dataset_endpoints:
             yellow_repo = YellowTaxiRepository.with_config(*db_settings)
             yellow_tasks = gen_progress_tasks_for(yellow_dataset_endpoints)
-            extract_load_with(df_fetcher, yellow_repo, yellow_dataset_endpoints, yellow_tasks)
+            extract_load_with(
+                df_fetcher.with_schema(df_schema.get('yellow')),
+                yellow_repo, yellow_dataset_endpoints, yellow_tasks
+            )
 
         if fhv and fhv_dataset_endpoints:
             fhv_repo = FhvTaxiRepository.with_config(*db_settings)
             fhv_tasks = gen_progress_tasks_for(fhv_dataset_endpoints)
-            extract_load_with(df_fetcher, fhv_repo, fhv_dataset_endpoints, fhv_tasks)
+            extract_load_with(
+                df_fetcher.with_schema(df_schema.get('fhv')),
+                fhv_repo, fhv_dataset_endpoints, fhv_tasks
+            )
 
         if zones and zones_dataset_endpoints:
             zone_repo = ZoneLookupRepository.with_config(*db_settings)
