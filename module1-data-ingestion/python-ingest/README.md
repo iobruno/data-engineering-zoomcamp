@@ -84,9 +84,11 @@ export DATABASE_PASSWORD=mysql
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `zone_lookup`
 
-You can use any combination of the three above to fetch more than dataset group at a time.
+You can use any combination of the three above to fetch more than dataset group at a time.  
 
-For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
+Additionally, you can use `--use-polars` for a major speed boost with Polars.
+
+For instance: `python run.py -gz --use-polars` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones** using Polars as the Dataframe library.
 
 
 ## Containerization and Testing
