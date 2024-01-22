@@ -7,15 +7,19 @@ from rich.progress import *
 from typing_extensions import Annotated
 from typer import Typer, Argument, Option
 
-from src.dataframe_fetcher import PandasFetcher
+from src.dataframe_fetcher import (
+    DataframeFetcher,
+    PolarsFetcher,
+    PandasFetcher,
+)
+
 from src.dataframe_repository import (
     SQLRepository,
     GreenTaxiRepository,
     YellowTaxiRepository,
     FhvTaxiRepository,
-    ZoneLookupRepository
+    ZoneLookupRepository,
 )
-
 
 config_file = Path(__file__).parent.joinpath("app.yml")
 cfg = OmegaConf.load(config_file)
@@ -41,16 +45,36 @@ progress = Progress(
 )
 
 
-def track_ingest_progress(repository: SQLRepository, endpoints: List[str]):
-    filenames = [Path(endpoint).stem for endpoint in endpoints]
-    tasks = [progress.add_task(name, start=False, total=0) for name in filenames]
-    dataset_fetcher = PandasFetcher()
+def extract_load_with(
+    fetcher: DataframeFetcher,
+    repo: SQLRepository,
+    endpoints: List[str],
+    tasks: List[int],
+    if_table_exists: str = "replace",
+):
+    if not endpoints:
+        return
 
-    for idx, record in enumerate(dataset_fetcher.fetch_all(endpoints)):
-        progress.update(task_id=tasks[idx], completed=0, total=record.num_chunks)
-        progress.start_task(task_id=tasks[idx])
-        for chunk_id, _ in enumerate(repository.save_all(record.chunks)):
-            progress.update(task_id=tasks[idx], completed=chunk_id + 1)
+    endpoint, *remain_endpoints = endpoints
+    tid, *remain_tasks = tasks
+
+    record = fetcher.fetch(endpoint)
+    df_slice, *other_slices = record.slices
+    completeness, total_parts = 1, len(record.slices)
+
+    # This is required since, in 'append' mode, polars.df does not create
+    # the table if it doesn't exist. It also prevents having to manually
+    # drop the table on consecutive runs
+    progress.update(task_id=tid, completed=0, total=total_parts)
+    progress.start_task(task_id=tid)
+    repo.save(df_slice, if_table_exists=if_table_exists)
+    progress.update(task_id=tid, completed=completeness, total=total_parts)
+
+    for _ in repo.save_all(other_slices):
+        completeness += 1
+        progress.update(task_id=tid, completed=completeness, total=total_parts)
+
+    extract_load_with(fetcher, repo, remain_endpoints, remain_tasks, if_table_exists="append")
 
 
 # fmt: off
@@ -66,6 +90,7 @@ def ingest_db(
     green: Annotated[bool, Option("--green", "-g", help="Fetch Green cab dataset")] = False,
     fhv: Annotated[bool, Option("--fhv", "-f", help="Fetch FHV cab dataset")] = False,
     zones: Annotated[bool, Option("--zones", "-z", help="Fetch Zone lookup dataset")] = False,
+    polars_ff: Annotated[bool, Option("--use-polars", help="Feature flag to enable Polars")] = False
 ):
     # fmt: on
     log.info(f"Connecting to '{db_dialect}' with credentials on ENV VARs...")
@@ -74,23 +99,42 @@ def ingest_db(
         green_dataset_endpoints = cfg.datasets.green_trip_data
         yellow_dataset_endpoints = cfg.datasets.yellow_trip_data
         fhv_dataset_endpoints = cfg.datasets.fhv_trip_data
-        zone_lookup_dataset_endpoints = cfg.datasets.zone_lookups
+        zones_dataset_endpoints = cfg.datasets.zone_lookups
+        df_fetcher: DataframeFetcher
+
+        if polars_ff:
+            df_fetcher = PolarsFetcher()
+            log.info("Using 'polars' as Dataframe library")
+        else:
+            df_fetcher = PandasFetcher()
+            log.info("Using 'pandas' as Dataframe library")
+
+        def gen_progress_tasks_for(endpoints: List[str]):
+            filenames = [Path(endpoint).stem for endpoint in endpoints]
+            return [
+                progress.add_task(name, start=False, total=float('inf'), completed=0)
+                for name in filenames
+            ]
 
         if green and green_dataset_endpoints:
-            green_taxi_repo = GreenTaxiRepository.with_config(*db_settings)
-            track_ingest_progress(green_taxi_repo, green_dataset_endpoints)
+            green_repo = GreenTaxiRepository.with_config(*db_settings)
+            green_tasks = gen_progress_tasks_for(green_dataset_endpoints)
+            extract_load_with(df_fetcher, green_repo, green_dataset_endpoints, green_tasks)
 
         if yellow and yellow_dataset_endpoints:
-            yellow_taxi_repo = YellowTaxiRepository.with_config(*db_settings)
-            track_ingest_progress(yellow_taxi_repo, yellow_dataset_endpoints)
+            yellow_repo = YellowTaxiRepository.with_config(*db_settings)
+            yellow_tasks = gen_progress_tasks_for(yellow_dataset_endpoints)
+            extract_load_with(df_fetcher, yellow_repo, yellow_dataset_endpoints, yellow_tasks)
 
         if fhv and fhv_dataset_endpoints:
-            fhv_taxi_repo = FhvTaxiRepository.with_config(*db_settings)
-            track_ingest_progress(fhv_taxi_repo, fhv_dataset_endpoints)
+            fhv_repo = FhvTaxiRepository.with_config(*db_settings)
+            fhv_tasks = gen_progress_tasks_for(fhv_dataset_endpoints)
+            extract_load_with(df_fetcher, fhv_repo, fhv_dataset_endpoints, fhv_tasks)
 
-        if zones and zone_lookup_dataset_endpoints:
-            zone_lookup_repo = ZoneLookupRepository.with_config(*db_settings)
-            track_ingest_progress(zone_lookup_repo, zone_lookup_dataset_endpoints)
+        if zones and zones_dataset_endpoints:
+            zone_repo = ZoneLookupRepository.with_config(*db_settings)
+            zone_tasks = gen_progress_tasks_for(zones_dataset_endpoints)
+            extract_load_with(df_fetcher, zone_repo, zones_dataset_endpoints, zone_tasks)
 
 
 if __name__ == "__main__":

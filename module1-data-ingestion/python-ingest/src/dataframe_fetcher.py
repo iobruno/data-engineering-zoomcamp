@@ -4,9 +4,10 @@ from typing import List
 import math
 import numpy as np
 import pandas as pd
+import polars as pl
 
 
-Record = namedtuple("Record", ["url", "chunks", "num_chunks"])
+Record = namedtuple("Record", ["url", "slices"])
 
 
 class DataframeFetcher(metaclass=ABCMeta):
@@ -19,8 +20,22 @@ class DataframeFetcher(metaclass=ABCMeta):
             yield self.fetch(endpoint)
 
     @abstractmethod
-    def split_df_in_chunks(self, df, chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+    def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pd.DataFrame]:
         raise NotImplementedError()
+
+
+class PolarsFetcher(DataframeFetcher):
+    def fetch(self, endpoint: str) -> Record:
+        # TODO: define schema to prevent database errors
+        df = pl.read_csv(endpoint)
+        return Record(endpoint, self.slice_df_in_chunks(df))
+
+    def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pl.DataFrame]:
+        num_chunks = math.ceil(len(df) / chunk_size)
+        return [
+            df.slice(offset=chunk_id * chunk_size, length=chunk_size)
+            for chunk_id in range(num_chunks)
+        ]
 
 
 class PandasFetcher(DataframeFetcher):
@@ -29,8 +44,11 @@ class PandasFetcher(DataframeFetcher):
         # Enforces conversion of dataframe cols to lowercase, otherwise, in Postgres,
         #  all fields starting with an uppercase letter would have to be "quoted" for querying
         df.columns = map(str.lower, df.columns)
-        return Record(endpoint, *self.split_df_in_chunks(df))
+        return Record(endpoint, self.slice_df_in_chunks(df))
 
-    def split_df_in_chunks(self, df, chunk_size: int = 100_000) -> (List[pd.DataFrame], int):
+    def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pd.DataFrame]:
         num_chunks = math.ceil(len(df) / chunk_size)
-        return np.array_split(df, num_chunks), num_chunks
+        return np.array_split(df, num_chunks)
+
+
+
