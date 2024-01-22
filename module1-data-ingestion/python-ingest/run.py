@@ -24,9 +24,9 @@ from src.dataframe_repository import (
 )
 
 root_folder = Path(__file__).parent
-config_file = root_folder.joinpath("app.yml")
-cfg = OmegaConf.load(config_file)
-log = logging.getLogger("sqlalchemy_ingest")
+dataset = OmegaConf.load(root_folder.joinpath("datasets.yml"))
+log = logging.getLogger("py_ingest")
+
 cli = Typer(no_args_is_help=True)
 
 
@@ -99,10 +99,10 @@ def ingest_db(
     log.info(f"Connecting to '{db_dialect}' with credentials on ENV VARs...")
     db_settings = db_dialect, db_host, db_port, db_name, db_username, db_password
     with progress:
-        green_dataset_endpoints = cfg.datasets.green_trip_data
-        yellow_dataset_endpoints = cfg.datasets.yellow_trip_data
-        fhv_dataset_endpoints = cfg.datasets.fhv_trip_data
-        zones_dataset_endpoints = cfg.datasets.zone_lookups
+        green_dataset_endpoints = dataset.green_trip_data
+        yellow_dataset_endpoints = dataset.yellow_trip_data
+        fhv_dataset_endpoints = dataset.fhv_trip_data
+        zones_dataset_endpoints = dataset.zone_lookups
         df_fetcher: DataframeFetcher
         df_schema: DictConfig
 

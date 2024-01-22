@@ -32,7 +32,7 @@ services:
     image: iobruno/nyc-taxi-ingest:latest
     container_name: ingest_taxi_data
     volumes:
-      - ./app.yml:/app/app.yml
+      - ./datasets.yml:/app/datasets.yml
 
   postgres:
     image: *postgres-image
