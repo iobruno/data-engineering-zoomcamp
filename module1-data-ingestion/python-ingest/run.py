@@ -105,6 +105,7 @@ def ingest_db(
         df_schema: DictConfig
 
         if polars_ff:
+            df_schema = OmegaConf.load(root_folder.joinpath("schemas.polars.yml"))
             df_fetcher = PolarsFetcher()
             log.info("Using 'polars' as Dataframe library")
         else:
