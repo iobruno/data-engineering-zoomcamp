@@ -1,6 +1,3 @@
-import pyarrow as pa
-
-
 def green_taxi():
     return {
         'VendorID': 'Int64',

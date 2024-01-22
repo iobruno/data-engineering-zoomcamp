@@ -8,6 +8,7 @@ from typing_extensions import Annotated
 import logging
 import schemas.polars as pl_schema
 import schemas.pyarrow as pa_schema
+import schemas.renaming_strategy as rename
 
 from src.dataframe_fetcher import (
     DataframeFetcher,
@@ -125,25 +126,33 @@ def ingest_db(
         if green and green_dataset_endpoints:
             green_repo = GreenTaxiRepository.with_config(*db_settings)
             green_tasks = gen_progress_tasks_for(green_dataset_endpoints)
-            fetcher = df_fetcher.with_schema(schema_ref.green_taxi())
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.green_taxi())\
+                .with_renaming_strategy(rename.green_taxi())
             extract_load_with(fetcher, green_repo, green_dataset_endpoints, green_tasks)
 
         if yellow and yellow_dataset_endpoints:
             yellow_repo = YellowTaxiRepository.with_config(*db_settings)
             yellow_tasks = gen_progress_tasks_for(yellow_dataset_endpoints)
-            fetcher = df_fetcher.with_schema(schema_ref.yellow_taxi())
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.yellow_taxi())\
+                .with_renaming_strategy(rename.yellow_taxi())
             extract_load_with(fetcher, yellow_repo, yellow_dataset_endpoints, yellow_tasks)
 
         if fhv and fhv_dataset_endpoints:
             fhv_repo = FhvTaxiRepository.with_config(*db_settings)
             fhv_tasks = gen_progress_tasks_for(fhv_dataset_endpoints)
-            fetcher = df_fetcher.with_schema(schema_ref.fhv_taxi())
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.fhv_taxi())\
+                .with_renaming_strategy(rename.fhv_taxi())
             extract_load_with(fetcher, fhv_repo, fhv_dataset_endpoints, fhv_tasks)
 
         if zones and zones_dataset_endpoints:
             zone_repo = ZoneLookupRepository.with_config(*db_settings)
             zone_tasks = gen_progress_tasks_for(zones_dataset_endpoints)
-            fetcher = df_fetcher.with_schema(schema_ref.zone_lookup())
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.zone_lookup())\
+                .with_renaming_strategy(rename.zone_lookup())
             extract_load_with(fetcher, zone_repo, zones_dataset_endpoints, zone_tasks)
 
 
