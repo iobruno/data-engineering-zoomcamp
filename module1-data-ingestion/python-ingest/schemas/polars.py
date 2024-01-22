@@ -4,8 +4,8 @@ import polars as pl
 def green_taxi():
     return {
         'VendorID': pl.Int64,
-        'lpep_pickup_datetime': pl.String,
-        'lpep_dropoff_datetime': pl.String,
+        'lpep_pickup_datetime': pl.Datetime,
+        'lpep_dropoff_datetime': pl.Datetime,
         'passenger_count': pl.Int64,
         'trip_distance': pl.Float64,
         'PULocationID': pl.Int64,
@@ -29,8 +29,8 @@ def green_taxi():
 def yellow_taxi():
     return {
         'VendorID': pl.Int64,
-        'tpep_pickup_datetime': pl.String,
-        'tpep_dropoff_datetime': pl.String,
+        'tpep_pickup_datetime': pl.Datetime,
+        'tpep_dropoff_datetime': pl.Datetime,
         'passenger_count': pl.Int64,
         'trip_distance': pl.Float64,
         'PULocationID': pl.Int64,
