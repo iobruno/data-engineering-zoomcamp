@@ -26,6 +26,7 @@ class DataframeFetcher(metaclass=ABCMeta):
 
 class PolarsFetcher(DataframeFetcher):
     def fetch(self, endpoint: str) -> Record:
+        # TODO: define schema to prevent database errors
         df = pl.read_csv(endpoint)
         return Record(endpoint, self.slice_df_in_chunks(df))
 
