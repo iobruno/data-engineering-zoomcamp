@@ -5,22 +5,24 @@ x-mysql-image: &mysql-image mysql:${MYSQL_VERSION:-8.2}
 
 x-ingest-postgres-env: &ingest-postgres
   environment:
-    DATABASE_DRIVER: 'postgres'
+    DATABASE_DIALECT: 'postgresql'
     DATABASE_HOST: 'postgres'
+    DATABASE_PORT: 5432
+    DATABASE_NAME: 'nyc_taxi'
     DATABASE_USERNAME: 'postgres'
     DATABASE_PASSWORD: 'postgres'
-    DATABASE_NAME: 'nyc_taxi'
   depends_on:
     postgres:
       condition: service_healthy
 
 x-ingest-mysql-env: &ingest-mysql
   environment:
-    DATABASE_DRIVER: 'mysql'
+    DATABASE_DIALECT: 'mysql'
     DATABASE_HOST: 'mysql'
+    DATABASE_PORT: 3306
+    DATABASE_NAME: 'nyc_taxi'
     DATABASE_USERNAME: 'mysql'
     DATABASE_PASSWORD: 'mysql'
-    DATABASE_NAME: 'nyc_taxi'
   depends_on:
     mysql:
       condition: service_healthy
@@ -32,7 +34,7 @@ services:
     image: iobruno/nyc-taxi-ingest:latest
     container_name: ingest_taxi_data
     volumes:
-      - ./app.yml:/app/app.yml
+      - ./datasets.yml:/app/datasets.yml
 
   postgres:
     image: *postgres-image

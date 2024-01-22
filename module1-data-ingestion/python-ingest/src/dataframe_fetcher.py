@@ -11,6 +11,9 @@ Record = namedtuple("Record", ["url", "slices"])
 
 
 class DataframeFetcher(metaclass=ABCMeta):
+    schema: str = None
+    renaming_strategy: str = {}
+
     @abstractmethod
     def fetch(self, endpoint: str) -> Record:
         raise NotImplementedError()
@@ -19,6 +22,14 @@ class DataframeFetcher(metaclass=ABCMeta):
         for endpoint in endpoints:
             yield self.fetch(endpoint)
 
+    def with_schema(self, schema):
+        self.schema = schema
+        return self
+
+    def with_renaming_strategy(self, renaming):
+        self.renaming_strategy = renaming
+        return self
+
     @abstractmethod
     def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pd.DataFrame]:
         raise NotImplementedError()
@@ -26,8 +37,8 @@ class DataframeFetcher(metaclass=ABCMeta):
 
 class PolarsFetcher(DataframeFetcher):
     def fetch(self, endpoint: str) -> Record:
-        # TODO: define schema to prevent database errors
-        df = pl.read_csv(endpoint)
+        df = pl.read_csv(endpoint, dtypes=self.schema)
+        df = df.rename(self.renaming_strategy)
         return Record(endpoint, self.slice_df_in_chunks(df))
 
     def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pl.DataFrame]:
@@ -40,15 +51,10 @@ class PolarsFetcher(DataframeFetcher):
 
 class PandasFetcher(DataframeFetcher):
     def fetch(self, endpoint: str) -> Record:
-        df = pd.read_csv(endpoint, engine="pyarrow")
-        # Enforces conversion of dataframe cols to lowercase, otherwise, in Postgres,
-        #  all fields starting with an uppercase letter would have to be "quoted" for querying
-        df.columns = map(str.lower, df.columns)
+        df = pd.read_csv(endpoint, engine='pyarrow', dtype=self.schema)
+        df = df.rename(columns=self.renaming_strategy)
         return Record(endpoint, self.slice_df_in_chunks(df))
 
     def slice_df_in_chunks(self, df, chunk_size: int = 100_000) -> List[pd.DataFrame]:
         num_chunks = math.ceil(len(df) / chunk_size)
         return np.array_split(df, num_chunks)
-
-
-

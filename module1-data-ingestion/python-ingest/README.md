@@ -1,4 +1,4 @@
-# Python Data Ingestion with pandas
+# Python data ingestion with polars and pandas
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Polars](https://img.shields.io/badge/polars-24292E?style=flat&logo=polars&logoColor=CC792B&labelColor=24292E)
@@ -8,12 +8,12 @@
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
-based on the endpoints in [app.yml](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week1/pandas_sqlalchemy/app.yml).
+based on the endpoints in [datasets.yml](./datasets.yml).
 
 
 ## Tech Stack
-- [pandas](https://pandas.pydata.org/docs/user_guide/)
 - [polars](https://docs.pola.rs/)
+- [pandas](https://pandas.pydata.org/docs/user_guide/)
 - [Typer](https://typer.tiangolo.com/tutorial/)
 - [Rich CLI](https://github.com/Textualize/rich)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
@@ -84,9 +84,10 @@ export DATABASE_PASSWORD=mysql
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `zone_lookup`
 
-You can use any combination of the three above to fetch more than dataset group at a time.
 
-For instance: `python run.py -gz` fetches the **NYC Green Trip Data** AND **NYC Lookup Zones**
+Additionally, you can use `--use-polars` for a major speed boost with Polars. 
+
+You can use any combination of options above to fetch more than dataset group at a time. For instance: `python run.py -gz --use-polars` fetches the **NYC Green Trip Data** and **NYC Lookup Zones** while **using Polars** as the Dataframe library.
 
 
 ## Containerization and Testing
@@ -133,4 +134,4 @@ docker run --rm \
 - [x] Progress Bars to keep track of the execution with `rich`
 - [x] Run/Deploy the project on Docker
 - [x] Re-Implement the pipeline with Polars
-- [ ] Define the DataFrame schemas for Polars to prevent DB errors
+- [x] Define the DataFrame schemas for Polars to prevent DB errors

@@ -1,11 +1,14 @@
-import logging
-
-from omegaconf import OmegaConf
+from omegaconf import OmegaConf, DictConfig
 from pathlib import Path
 from rich.logging import RichHandler
 from rich.progress import *
-from typing_extensions import Annotated
 from typer import Typer, Argument, Option
+from typing_extensions import Annotated
+
+import logging
+import schemas.polars as pl_schema
+import schemas.pyarrow as pa_schema
+import schemas.renaming_strategy as rename
 
 from src.dataframe_fetcher import (
     DataframeFetcher,
@@ -21,9 +24,10 @@ from src.dataframe_repository import (
     ZoneLookupRepository,
 )
 
-config_file = Path(__file__).parent.joinpath("app.yml")
-cfg = OmegaConf.load(config_file)
-log = logging.getLogger("sqlalchemy_ingest")
+root_folder = Path(__file__).parent
+dataset = OmegaConf.load(root_folder.joinpath("datasets.yml"))
+log = logging.getLogger("py_ingest")
+
 cli = Typer(no_args_is_help=True)
 
 
@@ -96,16 +100,19 @@ def ingest_db(
     log.info(f"Connecting to '{db_dialect}' with credentials on ENV VARs...")
     db_settings = db_dialect, db_host, db_port, db_name, db_username, db_password
     with progress:
-        green_dataset_endpoints = cfg.datasets.green_trip_data
-        yellow_dataset_endpoints = cfg.datasets.yellow_trip_data
-        fhv_dataset_endpoints = cfg.datasets.fhv_trip_data
-        zones_dataset_endpoints = cfg.datasets.zone_lookups
+        green_dataset_endpoints = dataset.green_trip_data
+        yellow_dataset_endpoints = dataset.yellow_trip_data
+        fhv_dataset_endpoints = dataset.fhv_trip_data
+        zones_dataset_endpoints = dataset.zone_lookups
         df_fetcher: DataframeFetcher
+        df_schema: DictConfig
 
         if polars_ff:
+            schema_ref = pl_schema
             df_fetcher = PolarsFetcher()
             log.info("Using 'polars' as Dataframe library")
         else:
+            schema_ref = pa_schema
             df_fetcher = PandasFetcher()
             log.info("Using 'pandas' as Dataframe library")
 
@@ -119,22 +126,34 @@ def ingest_db(
         if green and green_dataset_endpoints:
             green_repo = GreenTaxiRepository.with_config(*db_settings)
             green_tasks = gen_progress_tasks_for(green_dataset_endpoints)
-            extract_load_with(df_fetcher, green_repo, green_dataset_endpoints, green_tasks)
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.green_taxi())\
+                .with_renaming_strategy(rename.green_taxi())
+            extract_load_with(fetcher, green_repo, green_dataset_endpoints, green_tasks)
 
         if yellow and yellow_dataset_endpoints:
             yellow_repo = YellowTaxiRepository.with_config(*db_settings)
             yellow_tasks = gen_progress_tasks_for(yellow_dataset_endpoints)
-            extract_load_with(df_fetcher, yellow_repo, yellow_dataset_endpoints, yellow_tasks)
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.yellow_taxi())\
+                .with_renaming_strategy(rename.yellow_taxi())
+            extract_load_with(fetcher, yellow_repo, yellow_dataset_endpoints, yellow_tasks)
 
         if fhv and fhv_dataset_endpoints:
             fhv_repo = FhvTaxiRepository.with_config(*db_settings)
             fhv_tasks = gen_progress_tasks_for(fhv_dataset_endpoints)
-            extract_load_with(df_fetcher, fhv_repo, fhv_dataset_endpoints, fhv_tasks)
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.fhv_taxi())\
+                .with_renaming_strategy(rename.fhv_taxi())
+            extract_load_with(fetcher, fhv_repo, fhv_dataset_endpoints, fhv_tasks)
 
         if zones and zones_dataset_endpoints:
             zone_repo = ZoneLookupRepository.with_config(*db_settings)
             zone_tasks = gen_progress_tasks_for(zones_dataset_endpoints)
-            extract_load_with(df_fetcher, zone_repo, zones_dataset_endpoints, zone_tasks)
+            fetcher = df_fetcher\
+                .with_schema(schema_ref.zone_lookup())\
+                .with_renaming_strategy(rename.zone_lookup())
+            extract_load_with(fetcher, zone_repo, zones_dataset_endpoints, zone_tasks)
 
 
 if __name__ == "__main__":
