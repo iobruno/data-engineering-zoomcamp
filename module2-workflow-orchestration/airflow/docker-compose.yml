@@ -14,7 +14,7 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
@@ -23,11 +23,11 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
   depends_on:
-    postgres:
+    airflow-db:
       condition: service_healthy
 
 services:
-  postgres:
+  airflow-db:
     image: *postgres-image
     container_name: airflow_postgres
     restart: always
@@ -36,7 +36,7 @@ services:
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
     ports:
-      - '5432:5432'
+      - '5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
@@ -64,7 +64,7 @@ services:
     restart: always
     command: ["airflow", "scheduler"]
     ports:
-      - '8974:8974'
+      - '8974'
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8974/health"]
       interval: 5s
