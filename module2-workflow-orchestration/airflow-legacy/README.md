@@ -31,7 +31,7 @@ docker compose up -d
 **2.** Airflow WebUI can be accessed at:
 
 ```shell
-open http://localhost:8080
+open http://localhost:8081
 ```
 
 **3.** Airflow DAGs
