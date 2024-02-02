@@ -15,24 +15,24 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_FOLDER: /opt/airflow/dags
     AIRFLOW__CORE__PLUGINS_FOLDER: /opt/airflow/plugins
     AIRFLOW__CORE__BASE_LOG_FOLDER: /opt/airflow/logs
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow_legacy
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow_legacy
     AIRFLOW__WEBSERVER__AUTHENTICATE: 'false'
     AIRFLOW__WEBSERVER__AUTH_BACKEND: airflow.contrib.auth.backends.password_auth
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
-    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@airflow-db/airflow
+    AIRFLOW__CELERY__BROKER_URL: redis://:@airflow-redis:6379/
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/dags
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
   depends_on:
     &airflow-common-depends-on
-    postgres:
+    airflow-db:
       condition: service_healthy
-    redis:
+    airflow-redis:
       condition: service_healthy
 
 services:
-  postgres:
+  airflow-db:
     image: *postgres-image
     container_name: airflow_legacy_postgres
     environment:
@@ -50,7 +50,7 @@ services:
       retries: 5
     restart: on-failure
 
-  redis:
+  airflow-redis:
     image: *redis-image
     container_name: airflow_legacy_redis
     ports:
