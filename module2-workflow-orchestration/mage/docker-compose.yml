@@ -64,6 +64,11 @@ services:
       INSTANCE_TYPE: 'web_server'
     ports:
       - '6789:6789'
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:6789/"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   mage-scheduler:
     <<: *mage-common

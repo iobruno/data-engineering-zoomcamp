@@ -51,7 +51,7 @@ services:
     restart: always
     command: ["airflow", "webserver"]
     ports:
-      - '8080'
+      - '8080:8080'
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8080/health"]
       interval: 5s
