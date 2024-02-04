@@ -66,7 +66,7 @@ blocks:
   language: python
   name: green_taxi_gcs_parquet_serializer
   retry_config: null
-  status: executed
+  status: updated
   timeout: null
   type: data_exporter
   upstream_blocks:
@@ -82,7 +82,7 @@ blocks:
   language: python
   name: green_taxi_gcs_partitioned_parquet_serializer
   retry_config: null
-  status: not_executed
+  status: updated
   timeout: null
   type: data_exporter
   upstream_blocks:
@@ -109,7 +109,7 @@ settings:
 spark_config: {}
 tags: []
 type: python
-updated_at: '2024-02-04 21:37:58'
+updated_at: '2024-02-04 22:56:43'
 uuid: green_taxi_serialize_to_gcs
 variables_dir: /home/src/mage_data/magic
 widgets: []

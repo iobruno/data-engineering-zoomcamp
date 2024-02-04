@@ -14,7 +14,7 @@ def export_data_to_google_cloud_storage(df: DataFrame, **kwargs) -> None:
     config_profile = 'dev'
 
     bucket_name = 'iobruno-lakehouse-raw'
-    object_key = 'nyc_taxi/green.parquet'
+    object_key = 'nyc_tlc_dataset/unpartitioned/green_taxi_data.parquet'
 
     GoogleCloudStorage.with_config(ConfigFileLoader(config_path, config_profile)).export(
         df,
