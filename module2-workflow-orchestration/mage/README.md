@@ -34,7 +34,7 @@ By default, it sets up a subproject called `magic` where Mage Pipelines can be d
 
 ```shell
 export MAGE_PROJ_NAME=dtc_nyc_taxi
-docker compose up -d mage-init
+docker compose up -d
 ```
 
 **3.** Mage UI can be accessed at:
@@ -45,7 +45,6 @@ open http://localhost:6789
 ### Developer Setup (Local)
 
 If a local environment is prefered, though,
-
 
 **1.** Create and activate a virtualenv for Python 3.11 with conda:
 ```shell
