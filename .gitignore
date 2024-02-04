@@ -168,6 +168,7 @@ ipython_config.py
 **/secrets/**
 **/.ssh_tunnel/**
 **/.variables/**
+**/.file_versions/**
 mage-ai.db
 .mage_temp_profiles
 .preferences.yaml
