@@ -25,6 +25,24 @@ x-mage-common:
   restart: on-failure
 
 services:
+  postgres:
+    image: *postgres-image
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nyc_taxi
+    ports:
+      - '5432:5432'
+    volumes:
+      - nyc_taxi_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   mage-db:
     image: *postgres-image
     container_name: mage_postgres
@@ -38,7 +56,7 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U mage"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -97,5 +115,7 @@ services:
       - ${MAGE_PROJ_DIR:-.}:/mnt/mage/
 
 volumes:
+  nyc_taxi_pgdata:
+    name: nyc_taxi_pgdata
   pg_data:
     name: mage_pgdata
