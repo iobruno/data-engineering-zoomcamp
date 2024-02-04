@@ -13,6 +13,7 @@ x-mage-common:
     REDIS_URL: 'redis://@mage-redis:6379/0'
     MAGE_PROJ_NAME: ${MAGE_PROJ_NAME:-magic}
     USER_CODE_PATH: ${USER_CODE_PATH:-/opt/mage/magic}
+    GOOGLE_APPLICATION_CREDENTIALS: '/.gcp/credentials.json'
   volumes:
     - ${MAGE_PROJ_DIR:-./magic}:${USER_CODE_PATH:-/opt/mage/magic}
     - ~/.gcp/workflow-orchestration-credentials.json:/.gcp/credentials.json

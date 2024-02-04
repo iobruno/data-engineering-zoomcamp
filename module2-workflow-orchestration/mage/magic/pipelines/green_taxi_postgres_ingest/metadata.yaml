@@ -36,7 +36,7 @@ blocks:
   color: null
   configuration: {}
   downstream_blocks:
-  - green_taxi_dataset_enrichment
+  - green_taxi_db_ingest
   executor_config: null
   executor_type: local_python
   has_callback: false
@@ -52,23 +52,6 @@ blocks:
 - all_upstream_blocks_executed: true
   color: null
   configuration: {}
-  downstream_blocks:
-  - green_taxi_db_ingest
-  executor_config: null
-  executor_type: local_python
-  has_callback: false
-  language: python
-  name: green_taxi_dataset_enrichment
-  retry_config: null
-  status: updated
-  timeout: null
-  type: transformer
-  upstream_blocks:
-  - green_taxi_filter_out_invalid_entries
-  uuid: green_taxi_dataset_enrichment
-- all_upstream_blocks_executed: false
-  color: null
-  configuration: {}
   downstream_blocks: []
   executor_config: null
   executor_type: local_python
@@ -80,7 +63,7 @@ blocks:
   timeout: null
   type: data_exporter
   upstream_blocks:
-  - green_taxi_dataset_enrichment
+  - green_taxi_filter_out_invalid_entries
   uuid: green_taxi_db_ingest
 cache_block_output_in_memory: false
 callbacks: []
@@ -103,7 +86,7 @@ settings:
 spark_config: {}
 tags: []
 type: python
-updated_at: '2024-02-04T21:01:14+00:00'
+updated_at: '2024-02-04 21:34:34'
 uuid: green_taxi_postgres_ingest
 variables_dir: /home/src/mage_data/magic
 widgets: []
