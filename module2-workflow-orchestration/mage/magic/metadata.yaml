@@ -1,4 +1,4 @@
-project_type: sub
+project_type: standalone
 
 variables_dir: ~/.mage_data
 # remote_variables_dir: s3://bucket/path_prefix
@@ -51,6 +51,4 @@ notification_config:
     webhook_url: "{{ env_var('MAGE_SLACK_WEBHOOK_URL') }}"
   teams_config:
     webhook_url: "{{ env_var('MAGE_TEAMS_WEBHOOK_URL') }}"
-cluster_type:
-project_uuid: 405ed3fd0b9a4b6c8b868df8db2dfed2
-help_improve_mage: true
+project_uuid: bebbd76c90924fa4b087a92cbae6d0ff
