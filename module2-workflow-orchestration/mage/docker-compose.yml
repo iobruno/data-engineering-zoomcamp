@@ -15,6 +15,7 @@ x-mage-common:
     USER_CODE_PATH: ${USER_CODE_PATH:-/opt/mage/magic}
   volumes:
     - ${MAGE_PROJ_DIR:-./magic}:${USER_CODE_PATH:-/opt/mage/magic}
+    - ~/.gcp/workflow-orchestration-credentials.json:/.gcp/credentials.json
   depends_on:
     mage-db:
       condition: service_healthy
