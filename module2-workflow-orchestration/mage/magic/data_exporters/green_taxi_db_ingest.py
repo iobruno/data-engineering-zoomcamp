@@ -10,7 +10,7 @@ if 'data_exporter' not in globals():
 
 @data_exporter
 def export_data_to_postgres(df: DataFrame, **kwargs) -> None:
-    schema_name = 'public'
+    schema_name = 'mage'
     table_name = 'green_taxi_data'
     config_path = path.join(get_repo_path(), 'io_config.yaml')
     config_profile = 'dev'
