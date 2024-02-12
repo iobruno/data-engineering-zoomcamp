@@ -21,8 +21,8 @@ provider "google" {
 }
 
 # Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
-resource "google_bigquery_dataset" "stg_nyc_dataset" {
-  dataset_id = var.bqds_raw_nyc_trip_record_data
+resource "google_bigquery_dataset" "raw_nyc_tlc" {
+  dataset_id = var.bigquery_raw_nyc_tlc
   location   = var.data_region
 }
 

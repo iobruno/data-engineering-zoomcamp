@@ -9,7 +9,7 @@ variable "data_region" {
   default     = "us-central1"
 }
 
-variable "bqds_raw_nyc_trip_record_data" {
+variable "bigquery_raw_nyc_tlc" {
   description = "BigQuery Dataset for the raw data from NYC trip record data"
   type        = string
 }
