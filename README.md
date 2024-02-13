@@ -26,11 +26,10 @@ can take the course at your own pace
 * [Terraform for BigQuery and GCS](infrastructure/terraform-gcp)
 * Homework
 
-### [Module 2: Workflow Orchestration](module2-workflow-orchestration):
-* [Workflow Orchestration with Airflow (2.x)](module2-workflow-orchestration/airflow)
+### [Module 2: Workflow Orchestration](module2-workflow-orchestration)
+* [Workflow Orchestration with Airflow](module2-workflow-orchestration/airflow)
 * [Workflow Orchestration with Mage](module2-workflow-orchestration/mage)
 * [Workflow Orchestration with Prefect](module2-workflow-orchestration/prefect)
-* [Workflow Orchestration with Legacy Airflow (1.x)](module2-workflow-orchestration/airflow-legacy)
 * Homework
 
 ### [Module 3: Data Warehouse](module3-data-warehouse)
