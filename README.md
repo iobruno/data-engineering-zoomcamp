@@ -23,6 +23,7 @@ can take the course at your own pace
 ### [Module 1: Data Ingestion & Infrastructure as Code](module1-data-ingestion)
 * [Python data ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
 * Rust data ingestion
+* [data load tool (dlt)](module1-data-ingestion/data-load-tool/)
 * [Terraform for BigQuery and GCS](infrastructure/terraform-gcp)
 * Homework
 
