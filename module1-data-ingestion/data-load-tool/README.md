@@ -11,8 +11,7 @@ This is meant for experimenting with [data load tool (dlt)](https://dlthub.com/)
 
 ## Tech Stack
 - [data load tool (dlt)](https://dlthub.com/)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [DuckDB](https://duckdb.org/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 
