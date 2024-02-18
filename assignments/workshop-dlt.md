@@ -62,28 +62,30 @@ The [linked colab notebook](https://colab.research.google.com/drive/1Te-AT0lfh0G
 
 
 #### Question 1: What is the sum of the outputs of the generator for limit = 5?
-- [ ] **A**: 10.23433234744176
-- [ ] **B**: 7.892332347441762
-- [ ] **C**: 8.382332347441762
-- [ ] **D**: 9.123332347441762
+- [ ] A: 10.234
+- [ ] B: 7.892
+- [x] C: 8.382
+- [ ] D: 9.123
 
 #### Question 2: What is the 13th number yielded by the generator?
-- [ ] **A**: 4.236551275463989
-- [ ] **B**: 3.605551275463989
-- [ ] **C**: 2.345551275463989
-- [ ] **D**: 5.678551275463989
+- [ ] A: 4.236
+- [x] B: 3.605
+- [ ] C: 2.345
+- [ ] D: 5.678
 
 #### Question 3: Append the 2 generators. After correctly appending the data, calculate the sum of all ages of people.
-- [ ] **A**: 353
-- [ ] **B**: 365
-- [ ] **C**: 378
-- [ ] **D**: 390
+- [x] A: 353
+- [ ] B: 365
+- [ ] C: 378
+- [ ] D: 390
 
 #### Question 4: Merge the 2 generators using the ID column. Calculate the sum of ages of all the people loaded as described above.
-- [ ] **A**: 205
-- [ ] **B**: 213
-- [ ] **C**: 221
-- [ ] **D**: 230
+- [ ] A: 215
+- [x] B: 266
+- [ ] C: 241
+- [ ] D: 258
+
+Submit the solution here: https://courses.datatalks.club/de-zoomcamp-2024/homework/workshop1
 
 --- 
 # Next steps
@@ -118,8 +120,6 @@ Here are some example projects that others did with dlt:
 
 
 If you create a personal project, consider submitting it to our blog - we will be happy to showcase it. Just drop us a line in the dlt slack.
-
-
 
 **And don't forget, if you like dlt**
 - **Give us a [GitHub Star!](https://github.com/dlt-hub/dlt)**
