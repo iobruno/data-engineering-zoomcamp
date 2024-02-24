@@ -56,22 +56,23 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 
 ```shell
 export DBT_POSTGRES_HOST=localhost \
-export DBT_POSTGRES_PORT=5433 \
+export DBT_POSTGRES_PORT=5432 \
 export DBT_POSTGRES_DATABASE=nyc_taxi \
 export DBT_POSTGRES_SOURCE_SCHEMA=public \
-export DBT_POSTGRES_TARGET_SCHEMA=nyc_trip_record_data \
+export DBT_POSTGRES_TARGET_SCHEMA=nyc_tlc_record_data \
 export DBT_POSTGRES_USER=postgres \
 export DBT_POSTGRES_PASSWORD=postgres
 ```
 
 4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the `tables` names where the staging models fetch the data from
 ```shell
-  - name: pg-raw-nyc-trip_record
+  - name: raw_nyc_tlc_record_data
     database: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
-    schema: "{{ 'raw_' ~ env_var('DBT_POSTGRES_SCHEMA') }}"
+    schema:   "{{ env_var('DBT_POSTGRES_SOURCE_SCHEMA') }}"
     tables:
-      - name: ntl_green_taxi
-      - name: ntl_yellow_taxi
+      - name: green_taxi_trips
+      - name: yellow_taxi_trips
+      - name: yellow_taxi_trips
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
