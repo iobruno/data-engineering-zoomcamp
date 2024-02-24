@@ -2,64 +2,65 @@
     schema=resolve_schema_for('core')
 ) }}
 
-with green_tripdata as (
+with green_taxi_trips as (
     select
-        row_number() over(partition by vendor_id, pickup_datetime) as row_num,
+        gt.*,
         'green' as service_type,
-        g.*
     from 
-        {{ ref('stg_green_tripdata') }} g
+        {{ ref('stg_green_tripdata') }} gt
 ),
 
-yellow_tripdata as (
+yellow_taxi_trips as (
     select
-        row_number() over (partition by vendor_id, pickup_datetime) as row_num,
+        yt.*,
         'yellow' as service_type,
-        y.*
     from 
-        {{ ref('stg_yellow_tripdata') }} y
+        {{ ref('stg_yellow_tripdata') }} yt
 ),
 
-all_tripdata as (
-    select * from green_tripdata where row_num = 1    
+taxi_trips as (
+    select * from green_taxi_trips
     union all 
-    select * from yellow_tripdata where row_num = 1
+    select * from yellow_taxi_trips
 ),
 
 lookup_zones as (
-    select * from {{ ref('dim_zone_lookup' )}} where borough != 'Unknown'
+    select * 
+    from {{ ref('dim_zone_lookup' )}} 
+    where borough != 'Unknown'
 )
 
 select
-    t.trip_id               as trip_id,
-    t.vendor_id             as vendor_id,
-    t.service_type          as service_type,
-    t.ratecode_id           as ratecode_id,
-    t.pickup_location_id    as pickup_location_id,
-    pickup.borough          as pickup_borough,
-    pickup.zone             as pickup_zone,
-    t.dropoff_location_id   as dropoff_location_id,
-    dropoff.borough         as dropoff_borough,
-    dropoff.zone            as dropoff_zone,
-    t.pickup_datetime       as pickup_datetime,
-    t.dropoff_datetime      as dropoff_datetime,
-    t.store_and_fwd_flag    as store_and_fwd_flag,
-    t.passenger_count       as passenger_count,
-    t.trip_distance         as trip_distance,
-    t.trip_type             as trip_type,
-    t.fare_amount           as fare_amount,
-    t.extra                 as extra,
-    t.mta_tax               as mta_tax,
-    t.tip_amount            as tip_amount,
-    t.tolls_amount          as tolls_amount,
-    t.ehail_fee             as ehail_fee,
-    t.improvement_surcharge as improvement_surcharge,
-    t.total_amount          as total_amount,
-    t.payment_type          as payment_type,
-    t.congestion_surcharge  as congestion_surcharge
-from 
-    all_tripdata t
+    tt.trip_id                  as trip_id,
+    tt.vendor_id                as vendor_id,
+    tt.service_type             as service_type,
+    tt.ratecode_id              as ratecode_id,
+    tt.pickup_location_id       as pickup_location_id,
+    pickup.borough              as pickup_borough,
+    pickup.zone                 as pickup_zone,
+    tt.dropoff_location_id      as dropoff_location_id,
+    dropoff.borough             as dropoff_borough,
+    dropoff.zone                as dropoff_zone,
+    tt.pickup_datetime          as pickup_datetime,
+    tt.dropoff_datetime         as dropoff_datetime,
+    tt.store_and_fwd_flag       as store_and_fwd_flag,
+    tt.passenger_count          as passenger_count,
+    tt.trip_distance            as trip_distance,
+    tt.trip_type                as trip_type,
+    tt.fare_amount              as fare_amount,
+    tt.extra                    as extra,
+    tt.mta_tax                  as mta_tax,
+    tt.tip_amount               as tip_amount,
+    tt.tolls_amount             as tolls_amount,
+    tt.ehail_fee                as ehail_fee,
+    tt.improvement_surcharge    as improvement_surcharge,
+    tt.total_amount             as total_amount,
+    tt.payment_type             as payment_type,
+    tt.payment_type_desc        as payment_type_description,
+    tt.congestion_surcharge     as congestion_surcharge
+from
+    taxi_trips tt
 inner join 
-    lookup_zones pickup on t.pickup_location_id  = pickup.location_id
+    lookup_zones pickup on tt.pickup_location_id  = pickup.location_id
 inner join 
-    lookup_zones dropoff on t.dropoff_location_id = dropoff.location_id
+    lookup_zones dropoff on tt.dropoff_location_id = dropoff.location_id
