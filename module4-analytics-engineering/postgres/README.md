@@ -125,14 +125,13 @@ docker build -t dbt_postgres:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run \
-  -e DBT_POSTGRES_HOST=postgres \
+docker run --rm \
+  -e DBT_POSTGRES_HOST=host.docker.internal \
   -e DBT_POSTGRES_DATABASE=nyc_taxi \
   -e DBT_POSTGRES_SOURCE_SCHEMA=public \
-  -e DBT_POSTGRES_TARGET_SCHEMA=nyc_trip_record_data \
+  -e DBT_POSTGRES_TARGET_SCHEMA=nyc_tlc_record_data \
   -e DBT_POSTGRES_USER=postgres \
   -e DBT_POSTGRES_PASSWORD=postgres \
-  --network dbt_analytics \
   --name dbt_postgres \
   dbt_postgres
 ```
