@@ -24,14 +24,14 @@ instead. If you have access to GCP, you don't need to do it for local Postgres -
 You'll need to have completed the ["Build the first dbt models"](https://www.youtube.com/watch?v=UVI30Vxzd6c) video. 
 - [ ] It's the same as running *dbt build*
 - [ ] It applies a _limit 100_ to all of our models
-- [ ] It applies a _limit 100_ only to our staging models
+- [x] It applies a _limit 100_ only to our staging models
 - [ ] Nothing
 
 ### Question 2: 
 
 **What is the code that our CI job will run?**  
 
-- [ ] The code that has been merged into the main branch
+- [x] The code that has been merged into the main branch
 - [ ] The code that is behind the object on the dbt_cloud_pr_ schema
 - [ ] The code from any development branch that has been opened based on main
 - [ ] The code from a development branch requesting a merge to main
@@ -47,9 +47,19 @@ Similar to what we've done in fact_trips, keep only records with known pickup an
 Run the dbt model without limits (is_test_run: false).
 
 - [ ] 12,998,722
-- [ ] 22,998,722
+- [x] 22,998,722
 - [ ] 32,998,722
 - [ ] 42,998,722
+
+```sql
+  select 
+    'fhv' as service_type,
+    count(1) as num_trips
+  from 
+    `iobruno-gcp-labs.nyc_tlc_record_data.dim_fhv_trips` tt
+  where 
+    tt.pickup_datetime >= '2019-01-01' and tt.pickup_datetime < '2020-01-01'
+```
 
 ### Question 4: 
 
@@ -59,16 +69,42 @@ Create a dashboard with some tiles that you find interesting to explore the data
 
 - [ ] FHV
 - [ ] Green
-- [ ] Yellow
+- [x] Yellow
 - [ ] FHV and Green
 
+```sql
+with taxi_trips as (
+  select 
+    service_type, 
+    count(1) as num_trips
+  from 
+    `iobruno-gcp-labs.nyc_tlc_record_data.dim_taxi_trips` tt
+  where 
+    tt.pickup_datetime >= '2019-07-01' and tt.pickup_datetime < '2019-08-01'
+  group by
+    tt.service_type
+),
+
+fhv_trips as (
+  select 
+    'fhv' as service_type,
+    count(1) as num_trips 
+  from 
+    `iobruno-gcp-labs.nyc_tlc_record_data.dim_fhv_trips` f
+  where 
+    f.pickup_datetime >= '2019-07-01' and f.pickup_datetime < '2019-08-01'
+)
+
+select * from taxi_trips
+union all
+select * from fhv_trips;
+```
 
 ## Submitting the solutions
+You can submit your homework multiple times. In this case, only the last submission will be used. 
 
-* Form for submitting: [TO DO]
-* You can submit your homework multiple times. In this case, only the last submission will be used. 
-
-Deadline: 22 February (Thursday), 22:00 CET
+* Form for submitting: https://courses.datatalks.club/de-zoomcamp-2024/homework/hw4
+* Deadline: 22 February (Thursday), 22:00 CET
 
 
 ## Solution (To be published after deadline)
@@ -79,4 +115,3 @@ Deadline: 22 February (Thursday), 22:00 CET
   * Question 2: 
   * Question 3: 
   * Question 4: 
-  * Question 5: 
