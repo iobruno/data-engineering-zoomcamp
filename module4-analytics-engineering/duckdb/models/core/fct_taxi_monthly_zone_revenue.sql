@@ -1,3 +1,7 @@
+{{ config(
+    schema=resolve_schema_for('core')
+) }}
+
 select
     -- Revenue Grouping
     pickup_zone                                     as zone,

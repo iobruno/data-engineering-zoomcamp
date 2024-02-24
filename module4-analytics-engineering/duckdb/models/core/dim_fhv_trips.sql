@@ -1,3 +1,7 @@
+{{ config(
+    schema='analytics'
+) }}
+
 with fhv_trips as (
     select
         dispatching_base_num,

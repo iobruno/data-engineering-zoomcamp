@@ -1,3 +1,7 @@
+{{ config(
+    schema='staging'
+) }}
+
 with fhv_trips as (
     select
         fhv.*

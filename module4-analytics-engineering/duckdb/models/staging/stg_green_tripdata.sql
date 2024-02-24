@@ -1,3 +1,7 @@
+{{ config(
+    schema=resolve_schema_for('staging')
+) }}
+
 with green_taxi_trips as (
     select 
         row_number() over(partition by VendorID, lpep_pickup_datetime) as row_num,

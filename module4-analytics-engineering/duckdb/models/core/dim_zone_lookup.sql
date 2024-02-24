@@ -1,3 +1,7 @@
+{{ config(
+    schema=resolve_schema_for('core')
+) }}
+
 select
     LocationID      as location_id,
     Borough         as borough,

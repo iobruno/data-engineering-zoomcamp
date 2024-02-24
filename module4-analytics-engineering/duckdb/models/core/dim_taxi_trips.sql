@@ -1,3 +1,7 @@
+{{ config(
+    schema=resolve_schema_for('core')
+) }}
+
 with green_taxi_trips as (
     select
         gt.*, 
