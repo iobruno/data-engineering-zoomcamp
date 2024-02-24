@@ -3,9 +3,8 @@
 ) }}
 
 
-with fhv_tripdata as (
+with fhv_trips as (
     select
-        row_number() over(partition by dispatching_base_num, pickup_datetime) as row_num,
         fhv.*
     from
         {{ source('raw_nyc_tlc_record_data', 'fhv') }} fhv
@@ -29,10 +28,7 @@ select
     DOlocationID           as dropoff_location_id,
     SR_Flag                as shared_ride_flag
 from 
-    fhv_tripdata
-where
-    row_num = 1
-
+    fhv_trips
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'

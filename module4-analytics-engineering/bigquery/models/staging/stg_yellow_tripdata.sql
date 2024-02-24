@@ -3,7 +3,7 @@
 ) }}
 
 
-with yellow_tripdata as (
+with yellow_taxi_trips as (
     select
         row_number() over(partition by vendorid, tpep_pickup_datetime) as row_num,
         yt.*
@@ -44,7 +44,7 @@ select
     payment_type                         as payment_type,
     {{ payment_desc_of('payment_type')}} as payment_type_desc
 from 
-    yellow_tripdata
+    yellow_taxi_trips
 where
     row_num = 1
 

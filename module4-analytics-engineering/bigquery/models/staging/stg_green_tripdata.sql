@@ -3,7 +3,7 @@
 ) }}
 
 
-with green_tripdata as (
+with green_taxi_trips as (
     select
         row_number() over(partition by vendorid, lpep_pickup_datetime) as row_num,
         gt.*
@@ -44,7 +44,7 @@ select
     payment_type                         as payment_type,
     {{ payment_desc_of('payment_type')}} as payment_type_desc
 from 
-    green_tripdata
+    green_taxi_trips
 where
     row_num = 1
 
