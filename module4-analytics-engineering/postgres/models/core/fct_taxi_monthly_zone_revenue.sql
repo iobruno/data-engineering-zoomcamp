@@ -18,7 +18,7 @@ select
     round(sum(total_amount), 2)                  as monthly_total_amount,
     round(sum(congestion_surcharge), 2)          as monthly_congestion_surcharge
 from 
-    {{ ref('dim_yellow_green_trips') }}
+    {{ ref('dim_taxi_trips') }}
 group by 
     pickup_zone, 
     service_type,
