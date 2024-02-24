@@ -10,7 +10,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "~> 5.7.0"
+      version = "~> 5.17.0"
     }
   }
 }
@@ -21,8 +21,8 @@ provider "google" {
 }
 
 # Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
-resource "google_bigquery_dataset" "raw_nyc_tlc" {
-  dataset_id = var.bigquery_raw_nyc_tlc
+resource "google_bigquery_dataset" "raw_nyc_tlc_record_dataset" {
+  dataset_id = var.raw_nyc_tlc_record_dataset
   location   = var.data_region
 }
 

@@ -1,10 +1,10 @@
 version: 2
 
 sources:
-  - name: bq-raw-nyc-trip_record
+  - name: raw_nyc_tlc_record_data
     database: "{{ env_var('DBT_BIGQUERY_PROJECT') }}"
     schema:   "{{ env_var('DBT_BIGQUERY_SOURCE_DATASET') }}"
     tables:
       - name: ext_fhv
-      - name: ext_green
-      - name: ext_yellow
+      - name: ext_green_taxi
+      - name: ext_yellow_taxi

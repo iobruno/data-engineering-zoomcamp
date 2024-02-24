@@ -3,7 +3,6 @@
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)
-![Looker](https://img.shields.io/badge/Looker_Studio-3772FF?style=flat&logo=looker&logoColor=white&labelColor=3772FF)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
@@ -16,7 +15,6 @@ This project focuses on creating dbt models using the NY Taxi Tripdata Datasets 
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
-- [Looker Studio](https://lookerstudio.google.com/)
 
 
 ## Up and Running
@@ -56,8 +54,8 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_trip_record_data \
-export DBT_BIGQUERY_TARGET_DATASET=nyc_trip_record_data \
+export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data \
+export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data \
 export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
@@ -117,10 +115,10 @@ docker build -t dbt_bigquery:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run \
+docker run --rm \
   -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_trip_record_data \
-  -e DBT_BIGQUERY_TARGET_DATASET=nyc_trip_record_data \
+  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data \
+  -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data \
   -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
   -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
   --name dbt_bigquery \
