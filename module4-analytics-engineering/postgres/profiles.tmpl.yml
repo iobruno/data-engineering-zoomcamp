@@ -3,7 +3,7 @@ dbt_postgres_analytics:
     dev:
       type: postgres
       host:   "{{ env_var('DBT_POSTGRES_HOST', 'localhost') }}"
-      port:   "{{ env_var('DBT_POSTGRES_PORT', 5433) | as_number }}"
+      port:   "{{ env_var('DBT_POSTGRES_PORT', 5432) | as_number }}"
       dbname: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
       schema: "{{ env_var('DBT_POSTGRES_TARGET_SCHEMA') }}"
       user:   "{{ env_var('DBT_POSTGRES_USER') }}"
