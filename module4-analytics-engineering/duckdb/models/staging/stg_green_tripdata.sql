@@ -39,7 +39,7 @@ select
     payment_type                            as payment_type,
     {{ payment_desc_of('payment_type') }}   as payment_type_desc
 from 
-    {{ source('nyc_trip_record_data_parquet', 'green') }}
+    green_taxi_trips
 where
     row_num = 1
 
