@@ -31,15 +31,15 @@ select
     trip_distance                           as trip_distance,
     1                                       as trip_type, -- yellow cabs are always street-hail
     -- payment info
-    fare_amount                             as fare_amount,
-    extra                                   as extra,
-    mta_tax                                 as mta_tax,
-    tip_amount                              as tip_amount,
-    tolls_amount                            as tolls_amount,
-    0                                       as ehail_fee, -- it does not apply for yellow cabs
-    improvement_surcharge                   as improvement_surcharge,
-    congestion_surcharge                    as congestion_surcharge,
-    total_amount                            as total_amount,
+    cast(fare_amount as numeric)            as fare_amount,
+    cast(extra as numeric)                  as extra,
+    cast(mta_tax as numeric)                as mta_tax,
+    cast(tip_amount as numeric)             as tip_amount,
+    cast(tolls_amount as numeric)           as tolls_amount,
+    cast(0 as numeric)                      as ehail_fee, -- it does not apply for yellow cabs
+    cast(improvement_surcharge as numeric)  as improvement_surcharge,
+    cast(congestion_surcharge as numeric)   as congestion_surcharge,
+    cast(total_amount as numeric)           as total_amount,
     payment_type                            as payment_type,
     {{ payment_desc_of('payment_type') }}   as payment_type_desc
 from 
