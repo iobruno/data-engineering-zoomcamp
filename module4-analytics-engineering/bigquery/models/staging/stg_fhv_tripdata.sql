@@ -2,6 +2,17 @@
     schema=resolve_schema_for('staging')
 ) }}
 
+
+with fhv_tripdata as (
+    select
+        row_number() over(partition by dispatching_base_num, pickup_datetime) as row_num,
+        fhv.*
+    from
+        {{ source('raw_nyc_tlc_record_data', 'fhv') }} fhv
+    where
+        dispatching_base_num is not null        
+)
+
 select
     -- identifiers
     {{ dbt_utils.generate_surrogate_key([
@@ -18,9 +29,9 @@ select
     DOlocationID           as dropoff_location_id,
     SR_Flag                as shared_ride_flag
 from 
-    {{ source('raw_nyc_tlc_record_data', 'fhv') }}
+    fhv_tripdata
 where
-    dispatching_base_num is not null
+    row_num = 1
 
 
 -- Run as:
