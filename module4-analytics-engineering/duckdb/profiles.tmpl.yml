@@ -2,9 +2,9 @@
 ## For setting up the parameters under the 'filesystems' key, see the docs at 
 ## https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem
 
-duckdb-local:
+dbt_duckdb_analytics:
   outputs:
-    dev:
+    google-cloud:
       type: duckdb
       path: '/tmp/dbt_analytics.duckdb'
       filesystems:
@@ -14,5 +14,5 @@ duckdb-local:
         token: google_default
         cache_timeout: 0
 
-  target: dev
+  target: google-cloud
   

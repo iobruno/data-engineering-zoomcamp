@@ -1,8 +1,8 @@
 name: 'dbt_duckdb_analytics'
-version: '2.0.0'
+version: '1.0.0'
 config-version: 2
 
-profile: 'duckdb-local'
+profile: 'dbt_duckdb_analytics'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -29,6 +29,3 @@ models:
       materialized: table
     core:
       materialized: table
-
-vars:
-  payment_type_values: [1, 2, 3, 4, 5, 6]
