@@ -50,41 +50,61 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
+4.2. Set the environment variables for `dbt-bigquery`:
 
-```yaml
-  path: '/tmp/piperider.duckdb'
-  filesystems:
-  - fs: gcs
-    project: iobruno-gcp-labs
-```
-
-4.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
 ```shell
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
+export DBT_DUCKDB_GCS_PATH=
+export DBT_DUCKDB_TARGET_FILE=
 ```
 
-**5.** Update the `profile` to used by this project on `dbt_project.yml`
-
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
-```yaml
-profile: 'duckdb-local'
+4.3. Since we're doing `oauth` authentication for development, run:
+```shell
+gcloud auth login
 ```
 
-**6.** Run `dbt deps` and `dbt build`:
+**5.** Install dbt dependencies and trigger the pipeline
+
+5.1. Run `dbt deps` to install  dbt plugins
 ```shell
 dbt deps
+```
+
+5.2. Run `dbt seed` to push/create the tables from the .csv seed files to the target schema
+```shell
+dbt seed
+```
+
+5.3. Run dbt run to trigger the dbt models to run
+```shell
 dbt build
+
+# Alternatively you can run only a subset of the models with:
+
+## +models/staging: Runs the dependencies/preceding models first that lead 
+## to 'models/staging', and then the target models
+dbt [build|run] --select +models/staging
+
+## models/staging+: Runs the target models first, and then all models that depend on it
+dbt [build|run] --select models/staging+
+```
+
+**6.** Generate the Docs and the Data Lineage graph with:
+```shell
+dbt docs generate
+```
+```shell
+dbt docs serve
+```
+Access the generated docs on a web browser at the URL:
+```shell
+open http://localhost:8080
 ```
 
 **7.** Setup and run PipeRider:
 
-Initialize the PipeRider 
 ```shell
 piperider init 
 ```
-
-Next, run `diagnose`
 ```shell
 piperider diagnose
 ```
