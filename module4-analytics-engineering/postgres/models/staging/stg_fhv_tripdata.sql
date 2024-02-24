@@ -6,7 +6,7 @@ with fhv_trips as (
     select
         fhv.*
     from
-        {{ source('raw_nyc_tlc_record_data', 'ext_fhv') }} fhv
+        {{ source('raw_nyc_tlc_record_data', 'fhv_trips') }} fhv
     where
         dispatching_base_num is not null        
 )
@@ -23,7 +23,7 @@ select
     pickup_datetime         as pickup_datetime,
     dropoff_datetime        as dropoff_datetime,
     -- trip info
-    pu_location             as pickup_location_id,
+    pu_location_id          as pickup_location_id,
     do_location_id          as dropoff_location_id,
     sr_flag                 as shared_ride_flag
 from 

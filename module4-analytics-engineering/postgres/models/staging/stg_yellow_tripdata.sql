@@ -15,7 +15,7 @@ with yellow_taxi_trips as (
 select
     -- identifiers
     {{ dbt_utils.generate_surrogate_key([
-        'vendorid', 
+        'vendor_id', 
         'tpep_pickup_datetime'
     ]) }}                                   as trip_id,
     vendor_id                               as vendor_id,
@@ -43,9 +43,9 @@ select
     payment_type                            as payment_type,
     {{ payment_desc_of('payment_type') }}   as payment_type_desc
 from 
-    {{ source('postgres-raw-nyc-trip_record', 'ntl_yellow_taxi') }}
+    yellow_taxi_trips
 where
-    vendorid is not null
+    row_num = 1
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'
