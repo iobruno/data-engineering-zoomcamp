@@ -1,6 +1,6 @@
 version: "3.9"
 
-x-clickhouse-image: &clickhouse-image clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-23.11-alpine}
+x-clickhouse-image: &clickhouse-image clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-24-alpine}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 services:
@@ -16,8 +16,8 @@ services:
       - "8123:8123"
       - "9000:9000"
     volumes:
-      - ch_data:/var/lib/clickhouse/
-      - ch_logs:/var/log/clickhouse-server/
+      - dbt_ch_data:/var/lib/clickhouse/
+      - dbt_ch_logs:/var/log/clickhouse-server/
     ulimits:
       nofile:
         soft: 262144
@@ -42,7 +42,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - dbt_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -51,9 +51,9 @@ services:
     restart: on-failure
 
 volumes:
-  ch_data:
+  dbt_ch_data:
     name: dbt_clickhouse_data
-  ch_logs:
+  dbt_ch_logs:
     name: dbt_clickhouse_logs
-  pg_data:
+  dbt_pgdata:
     name: dbt_pgdata

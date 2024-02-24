@@ -20,5 +20,4 @@ dbt_clickhouse_analytics:
       password: "{{ env_var('DBT_CLICKHOUSE_PASSWORD') }}"
       secure: False
 
-
   target: dev
