@@ -15,7 +15,7 @@ with green_taxi_trips as (
 select
     -- identifiers
     {{ dbt_utils.generate_surrogate_key([
-        'vendorid',
+        'vendor_id',
         'lpep_pickup_datetime'
     ]) }}                                   as trip_id,
     vendor_id                               as vendor_id,

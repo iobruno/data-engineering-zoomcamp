@@ -56,8 +56,8 @@ select
     cast(tt.improvement_surcharge as numeric)   as improvement_surcharge,
     cast(tt.congestion_surcharge as numeric)    as congestion_surcharge,
     cast(tt.total_amount as numeric)            as total_amount,
-    t.payment_type                              as payment_type,
-    t.payment_type_desc                         as payment_type_description
+    tt.payment_type                             as payment_type,
+    tt.payment_type_desc                        as payment_type_description
 from 
     taxi_trips tt
 inner join 
