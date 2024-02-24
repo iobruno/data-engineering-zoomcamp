@@ -2,6 +2,17 @@
     schema=resolve_schema_for('staging')
 ) }}
 
+
+with yellow_taxi_trips as (
+    select
+        row_number() over(partition by vendorid, tpep_pickup_datetime) as row_num,
+        yt.*
+    from
+        {{ source('raw_nyc_tlc_record_data', 'ext_yellow_taxi') }} yt
+    where
+        VendorID is not null        
+)
+
 select
     -- identifiers
     {{ dbt_utils.generate_surrogate_key([
@@ -33,9 +44,9 @@ select
     payment_type                         as payment_type,
     {{ payment_desc_of('payment_type')}} as payment_type_desc
 from 
-    {{ source('bq-raw-nyc-trip_record', 'ext_yellow') }}
+    yellow_taxi_trips
 where
-    VendorID is not null
+    row_num = 1
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'

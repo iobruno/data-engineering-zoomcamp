@@ -3,6 +3,6 @@
 
 project_id = "iobruno-gcp-labs"
 
-bigquery_raw_nyc_tlc = "raw_nyc_tlc"
+raw_nyc_tlc_record_dataset = "raw_nyc_tlc_record_data"
 
 lakehouse_raw_bucket = "iobruno-lakehouse-raw"
