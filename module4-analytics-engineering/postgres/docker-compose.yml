@@ -13,7 +13,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - dbt_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -22,5 +22,5 @@ services:
     restart: on-failure
 
 volumes:
-  pg_data:
+  dbt_pgdata:
     name: dbt_pgdata
