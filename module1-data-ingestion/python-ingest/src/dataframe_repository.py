@@ -60,19 +60,19 @@ class SQLRepository(metaclass=ABCMeta):
 class GreenTaxiRepository(SQLRepository):
     @property
     def tbl_name(self) -> str:
-        return "green_taxi_data"
+        return "green_taxi_trips"
 
 
 class YellowTaxiRepository(SQLRepository):
     @property
     def tbl_name(self) -> str:
-        return "yellow_taxi_data"
+        return "yellow_taxi_trips"
 
 
 class FhvTaxiRepository(SQLRepository):
     @property
     def tbl_name(self) -> str:
-        return "fhv_taxi_data"
+        return "fhv_trips"
 
 
 class ZoneLookupRepository(SQLRepository):
