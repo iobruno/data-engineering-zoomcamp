@@ -6,5 +6,5 @@ sources:
     schema:   "{{ env_var('DBT_POSTGRES_SOURCE_SCHEMA') }}"
     tables:
       - name: green_taxi_trips
-      - name: green_taxi_trips
+      - name: yellow_taxi_trips
       - name: fhv_trips
