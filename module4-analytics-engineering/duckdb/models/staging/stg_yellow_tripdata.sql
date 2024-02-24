@@ -1,6 +1,6 @@
 with yellow_taxi_trips as (
     select 
-        row_num() over(partition by VendorID, tpep_pickup_datetime) as row_num,
+        row_number() over(partition by VendorID, tpep_pickup_datetime) as row_num,
         gt.*
     from
         {{ source('nyc_tlc_trip_record_data_parquet', 'yellow_taxi') }} gt
@@ -41,7 +41,7 @@ select
 from 
     yellow_taxi_trips
 where
-    row_nm = 1
+    row_num = 1
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'

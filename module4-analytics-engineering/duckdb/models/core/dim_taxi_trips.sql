@@ -23,7 +23,7 @@ taxi_trips as (
 lookup_zones as (
     select * 
     from {{ ref('dim_zone_lookup' )}}
-    whereE borough != 'Unknown'
+    where borough != 'Unknown'
 )
 
 select
