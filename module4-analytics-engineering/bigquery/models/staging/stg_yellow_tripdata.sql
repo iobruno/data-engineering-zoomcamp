@@ -33,7 +33,7 @@ select
     payment_type                         as payment_type,
     {{ payment_desc_of('payment_type')}} as payment_type_desc
 from 
-    {{ source('bq-raw-nyc-trip_record', 'ext_yellow') }}
+    {{ source('raw_nyc_tlc_record_data', 'yellow_taxi') }}
 where
     VendorID is not null
 
