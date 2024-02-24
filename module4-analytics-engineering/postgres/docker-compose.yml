@@ -5,7 +5,7 @@ x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 services:
   postgres:
     image: *postgres-image
-    container_name: dbt_postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
