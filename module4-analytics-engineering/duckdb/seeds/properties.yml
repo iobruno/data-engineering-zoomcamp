@@ -6,7 +6,11 @@ seeds:
       enabled: true
 
       # Config options
-      #   'alias' refers to the table name to be created on the speficied database and schema
+      #  'schema' overrides default schema (defined in profiles.yml) where it should write the data to
+      #  'alias' refers to the table name to be created on the speficied database and schema
+      schema: |-
+        {{ env_var('DBT_DUCKDB_STAGING_SCHEMA', 'main') }}
+
       alias:  "{{ 'stg_' ~ 'zone_lookup' }}"
 
       # Refer to https://docs.getdbt.com/reference/seed-configs 
