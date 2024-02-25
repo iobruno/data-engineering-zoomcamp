@@ -14,6 +14,7 @@ It also adds Data Reliability on top of that with PipeRider.
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-duckdb](https://docs.getdbt.com/reference/warehouse-setups/duckdb-setup)
+- [fsspec](https://filesystem-spec.readthedocs.io/en/latest/api.html#other-known-implementations)
 - [PipeRider](https://github.com/InfuseAI/piperider)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
@@ -55,8 +56,8 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-bigquery`:
 
 ```shell
-export DBT_DUCKDB_GCS_PATH=
-export DBT_DUCKDB_TARGET_FILE=
+export DBT_DUCKDB_PARQUET_SOURCE_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_trip_record_data"
+export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
 ```
 
 4.3. Since we're doing `oauth` authentication for development, run:
@@ -142,8 +143,7 @@ piperider run
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with DuckDB Adapter ([dbt-duckdb](https://github.com/duckdb/dbt-duckdb))
-- [x] Configure [dbt-duckdb](https://github.com/duckdb/dbt-duckdb) to use `fsspec` and [read directly from GCS](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
 - [x] Integrate with PipeRider and generate reports
-- [x] Modify the dbt models, generate a new report and compare
-- [x] Utilize the comparison on a [GitHub Pull Request](https://github.com/iobruno/data-engineering-zoomcamp/pull/2)
-- [ ] Set up a CI Pipeline with GitHub Actions
+- [ ] Configure dbt-duckdb with `fsspec` and write to [Local Filesystem](https://filesystem-spec.readthedocs.io/en/latest/api.html#fsspec.implementations.local.LocalFileSystem)
+- [ ] Configure dbt-duckdb with `fsspec` and write to [S3 Filesytem](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
+- [ ] Configure dbt-duckdb with `fsspec` and write to [GCS Filesystem](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
