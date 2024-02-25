@@ -6,7 +6,8 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in RedShift.
+This project is meant for experimenting with `dbt` and the `dbt-redshift` adapter for Analytics,
+using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique.
 
 **IMPORTANT NOTE**: To access `awsdatacatalog` from RedShift, IAM auth method is required. It also explicitly needs USAGE grants that DB, therefore, on Redshift Query Editor, run:
 ```sql
@@ -20,7 +21,6 @@ GRANT ALL ON DATABASE <DATABASE_NAME> to "IAM:my_iam_user";
 - [dbt-redshift](https://docs.getdbt.com/reference/warehouse-setups/redshift-setup)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
-- [Docker](https://docs.docker.com/get-docker/)
 
 
 ## Up and Running
@@ -59,16 +59,16 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-bigquery`:
 
 ```shell
-export DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
-export DBT_REDSHIFT_DATABASE=dev \
-export DBT_REDSHIFT_USE_DATA_CATALOG=1 \
-export DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_trip_data \
-export DBT_REDSHIFT_TARGET_SCHEMA=nyc_trip_record_data
+export DBT_REDSHIFT_HOST=redshift.[id].[region].redshift-serverless.amazonaws.com
+export DBT_REDSHIFT_DATABASE=dev
+export DBT_REDSHIFT_USE_DATA_CATALOG=1
+export DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_tlc_tripdata
+export DBT_REDSHIFT_TARGET_SCHEMA=nyc_tlc_record_data
 ```
 
-Also, either have your AWS credentials set on `~/.aws/credentials` or set them as well:
+4.3. Also, either have your AWS credentials set on `~/.aws/credentials` or set them as well:
 ```shell
-export AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID \
+export AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID
 export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY
 ```
 
@@ -98,7 +98,6 @@ dbt [build|run] --select +models/staging
 dbt [build|run] --select models/staging+
 ```
 
-
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
@@ -106,8 +105,7 @@ dbt docs generate
 ```shell
 dbt docs serve
 ```
-
-**7.** Access the generated docs on a web browser at the URL:
+Access the generated docs at:
 ```shell
 open http://localhost:8080
 ```
@@ -123,14 +121,14 @@ docker build -t dbt_redshift:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run \
-  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-  -e DBT_REDSHIFT_HOST=$DBT_REDSHIFT_HOST \
+docker run --rm \
+  -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY} \
+  -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+  -e DBT_REDSHIFT_HOST=${DBT_REDSHIFT_HOST} \
   -e DBT_REDSHIFT_DATABASE=dev \
   -e DBT_REDSHIFT_USE_DATA_CATALOG=1 \
-  -e DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_trip_data \
-  -e DBT_REDSHIFT_TARGET_SCHEMA=nyc_trip_record_data \
+  -e DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_tlc_tripdata \
+  -e DBT_REDSHIFT_TARGET_SCHEMA=nyc_tlc_record_data \
   --name dbt_redshift \
   dbt_redshift
 ```
