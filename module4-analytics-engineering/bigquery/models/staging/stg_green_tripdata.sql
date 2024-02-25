@@ -5,7 +5,7 @@
 
 with green_taxi_trips as (
     select
-        row_number() over(partition by vendorid, lpep_pickup_datetime) as row_num,
+        row_number() over(partition by VendorID, lpep_pickup_datetime) as row_num,
         gt.*
     from
         {{ source('raw_nyc_tlc_record_data', 'green_taxi') }} gt
