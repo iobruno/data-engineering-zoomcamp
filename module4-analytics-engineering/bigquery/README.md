@@ -53,9 +53,9 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-bigquery`:
 
 ```shell
-export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data \
-export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data \
+export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs
+export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data
+export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data
 export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
@@ -115,7 +115,7 @@ docker build -t dbt_bigquery:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run \
+docker run --rm \
   -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
   -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data \
   -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data \
