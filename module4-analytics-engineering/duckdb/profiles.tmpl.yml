@@ -1,35 +1,19 @@
 dbt_duckdb_analytics:
   outputs:
     # Ref.: https://filesystem-spec.readthedocs.io/en/latest/api.html#fsspec.implementations.local.LocalFileSystem
+    # Ref.: https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem
+    # Ref.: https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem
     localfs:
       type: duckdb
-      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '~/dbt_analytics.duck') }}"
+      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '~/dbt.duck') }}"
       filesystems:
-      - fs: local
-        auto_mkdir: True
-
-    # TODO: This isn't working yet
-    # Ref.: https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem
-    s3fs:
-      type: duckdb
-      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH') }}"
-      filesystems:
-      - fs: s3
-        anon: false
-        key: "{{ env_var('AWS_ACCESS_KEY') }}"
-        secret: "{{ env_var('AWS_SECRET_ACCESS_KEY') }}"
-
-    # TODO: This isn't working yet
-    # Ref.: https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem
-    gcsfs:
-      type: duckdb
-      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH') }}"
-      filesystems:
-      - fs: gcs
-        token: google_default
-        access: read_write
-        cache_timeout: 0
-
+        - fs: gcs
+          access: read_write
+          token: google_default
+          cache_timeout: 0
+        - fs: s3
+          anon: false
+          key: "{{ env_var('AWS_ACCESS_KEY', '') }}"
+          secret: "{{ env_var('AWS_SECRET_ACCESS_KEY', '') }}"
 
   target: localfs
-  
