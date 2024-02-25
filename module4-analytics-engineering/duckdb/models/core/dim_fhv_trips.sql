@@ -15,7 +15,7 @@ with fhv_trips as (
         {{ ref('stg_fhv_tripdata') }}
 ),
 
-lookup_zones AS (
+lookup_zones as (
     select * 
     from {{ ref('dim_zone_lookup' )}} 
     where borough != 'Unknown'
