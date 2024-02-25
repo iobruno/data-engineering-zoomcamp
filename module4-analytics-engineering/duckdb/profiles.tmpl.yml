@@ -5,7 +5,7 @@ dbt_duckdb_analytics:
     # Ref.: https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem
     localfs:
       type: duckdb
-      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '~/dbt.duck') }}"
+      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '/tmp/dbt.duck') }}"
       filesystems:
         - fs: gcs
           access: read_write
