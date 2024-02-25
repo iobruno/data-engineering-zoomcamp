@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: nyc_tlc_trip_record_data_parquet
     meta:
-      external_location: "read_parquet('gs://iobruno-lakehouse-raw/nyc_tlc_trip_record_data/{name}/*.parquet')"
+      external_location: "{{ env_var('DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH') ~ '{name}/*.parquet' }}"
     tables:
       - name: fhv
       - name: green_taxi
