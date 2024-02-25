@@ -39,13 +39,14 @@ In [Google Cloud Storage](https://console.cloud.google.com/storage/browser?hl=en
 
 **2.** Configure Terraform backend for GCS:
 
-**2.1.** In [main.tf](main.tf), edit the `bucket` to the name of the bucket you created in the step above
+**2.1.** In [backend.tf](backend.tf), edit the `bucket` to the name of the bucket you created in the step above
 
 ```terraform
-  backend "gcs" {
-    bucket = "iobruno-gcp-labs-tfstate"
-    prefix = "terraform-state"
-  }
+terraform {
+    backend "gcs" {
+        bucket  = "iobruno-gcp-labs-tfstate"
+    }
+}
 ```
 
 **2.2.** Initialize Terraform backend with:
