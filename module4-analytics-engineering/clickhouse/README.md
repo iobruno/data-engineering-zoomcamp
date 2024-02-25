@@ -6,7 +6,8 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in ClickHouse.
+This project is meant for experimenting with `dbt` and the `dbt-clickhouse` adapter for Analytics,
+using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique.
 
 
 ## Tech Stack
@@ -53,22 +54,12 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-clickhouse`:
 
 ```shell
-export DBT_CLICKHOUSE_HOST=localhost \
-export DBT_CLICKHOUSE_PORT=8123 \
-export DBT_CLICKHOUSE_SOURCE_DATABASE=raw_pgdata \
-export DBT_CLICKHOUSE_TARGET_DATABASE=nyc_trip_record_data \
-export DBT_CLICKHOUSE_USER=clickhouse \
+export DBT_CLICKHOUSE_HOST=localhost
+export DBT_CLICKHOUSE_PORT=8123
+export DBT_CLICKHOUSE_FQDN_NYC_TAXI=fqdb_nyc_taxi
+export DBT_CLICKHOUSE_TARGET_DATABASE=nyc_tlc_record_data
+export DBT_CLICKHOUSE_USER=clickhouse
 export DBT_CLICKHOUSE_PASSWORD=clickhouse
-```
-
-4.3. On [sources.yml](models/staging/schema.yml), make sure to update the `table.name` where the staging models fetch the data from
-```yml
-sources:
-  - name: clickhouse-federated-postgres-nyc-trip_record
-    schema: "{{ env_var('DBT_CLICKHOUSE_SOURCE_DATABASE') }}"
-    tables:
-      - name: ntl_yellow_taxi
-      - name: ntl_green_taxi
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
@@ -104,8 +95,7 @@ dbt docs generate
 ```shell
 dbt docs serve
 ```
-
-**7.** Access the generated docs on a web browser at the URL:
+Access the generated docs at:
 ```shell
 open http://localhost:8080
 ```
@@ -121,13 +111,12 @@ docker build -t dbt_clickhouse:latest . --no-cache
 
 **2.** Fire up the container with it:
 ```shell
-docker run \
-  -e DBT_CLICKHOUSE_HOST=clickhouse \
-  -e DBT_CLICKHOUSE_SOURCE_DATABASE=raw_pgdata \
-  -e DBT_CLICKHOUSE_TARGET_DATABASE=nyc_trip_record_data \
+docker run --rm \
+  -e DBT_CLICKHOUSE_HOST=host.docker.internal \
+  -e DBT_CLICKHOUSE_FQDN_NYC_TAXI=fqdb_nyc_taxi \
+  -e DBT_CLICKHOUSE_TARGET_DATABASE=nyc_tlc_record_data \
   -e DBT_CLICKHOUSE_USER=clickhouse \
   -e DBT_CLICKHOUSE_PASSWORD=clickhouse \
-  --network dbt_analytics \
   --name dbt_clickhouse \
   dbt_clickhouse
 ```
