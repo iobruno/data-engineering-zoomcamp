@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: fqdb_nyc_taxi
-    schema: "{{ env_var('DBT_CLICKHOUSE_SOURCE_DATABASE') }}"
+    schema: "{{ env_var('DBT_CLICKHOUSE_FQDN_NYC_TAXI') }}"
     tables:
       - name: fhv_trips
       - name: green_taxi_trips
