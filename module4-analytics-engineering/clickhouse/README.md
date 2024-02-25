@@ -111,13 +111,12 @@ docker build -t dbt_clickhouse:latest . --no-cache
 
 **2.** Fire up the container with it:
 ```shell
-docker run \
-  -e DBT_CLICKHOUSE_HOST=clickhouse \
-  -e DBT_CLICKHOUSE_SOURCE_DATABASE=raw_pgdata \
-  -e DBT_CLICKHOUSE_TARGET_DATABASE=nyc_trip_record_data \
+docker run --rm \
+  -e DBT_CLICKHOUSE_HOST=host.docker.internal \
+  -e DBT_CLICKHOUSE_FQDN_NYC_TAXI=fqdb_nyc_taxi \
+  -e DBT_CLICKHOUSE_TARGET_DATABASE=nyc_tlc_record_data \
   -e DBT_CLICKHOUSE_USER=clickhouse \
   -e DBT_CLICKHOUSE_PASSWORD=clickhouse \
-  --network dbt_analytics \
   --name dbt_clickhouse \
   dbt_clickhouse
 ```
