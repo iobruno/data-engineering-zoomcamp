@@ -26,8 +26,8 @@ select
     toDateTime(pickup_datetime)     as pickup_datetime,
     toDateTime(dropoff_datetime)    as dropoff_datetime,
     -- trip info
-    toInt16(pulocationid)           as pickup_location_id,
-    toInt16(dolocationid)           as dropoff_location_id,
+    toInt16(pu_location_id)         as pickup_location_id,
+    toInt16(do_location_id)         as dropoff_location_id,
     sr_flag                         as shared_ride_flag
 from 
     fhv_trips
