@@ -6,7 +6,8 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This project is meant for experimenting with dbt-clickhouse and ClickHouse DataWarehouse using the NYC TLC Trip Record
+This project is meant for experimenting with `dbt` and the `dbt-clickhouse` adapter for Analytics,
+using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique.
 
 
 ## Tech Stack
@@ -94,8 +95,7 @@ dbt docs generate
 ```shell
 dbt docs serve
 ```
-
-**7.** Access the generated docs on a web browser at the URL:
+Access the generated docs at:
 ```shell
 open http://localhost:8080
 ```
