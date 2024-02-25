@@ -1,77 +1,78 @@
 # Terraform for Google Cloud Platform
 
-![Terraform](https://img.shields.io/badge/Terraform-1.4-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
+![Terraform](https://img.shields.io/badge/Terraform-1.7-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
 ![GCP](https://img.shields.io/badge/Google_Cloud-3772FF?style=flat&logo=googlecloud&logoColor=white&labelColor=3772FF)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 
-## Initial Setup
+## Initial Setup - IAM Service Account
 
-Download and install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk) for your platform, following the instructions on the page
+Download and install [Google Cloud CLI](https://cloud.google.com/sdk/docs/install-sdk) for your platform, following the instructions on the page.
 
-On the GCP Console in the web, create a new `Service Account` with the roles below, and export the key with JSON format:
+On the GCP Console, create a new `Service Account` with the roles of:
+- Editor
+- Service Usage Admin
 
-- BigQuery Admin
-- Storage Admin
-- Storage Object Admin
+Next, access the created service_account, and create a 'New Key' with `Key type: JSON`, and save it somewhere safe on your workstation
 
-Export an environment variables named `GOOGLE_APPLICATION_CREDENTIALS` pointing to the full path where the .json credentials file is located:
+![terraform-service-account](../../assets/terraform-service-account-pt1.png)
+![terraform-service-account](../../assets/terraform-service-account-pt2.png)
 
-```shell
-export GOOGLE_APPLICATION_CREDENTIALS=/some/path/to/gcp-credentials.json
-```
 
-Execute the command below to ensure applications will now use the privileges you've set up on the Service Account
+Now, export the environment variables `GOOGLE_APPLICATION_CREDENTIALS` pointing to the full path where the .json credentials file was downloaded/saved:
 
 ```shell
-gcloud auth application-default login
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
 ```
-
-**Enable BigQuery API on your GCP Project:**
-
-Visit the [BigQuery API Console](https://console.developers.google.com/apis/api/bigquery.googleapis.com/overview) and enable it
-
-![gcp-bigquery-api](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_gcp_bigquery_api.png)
 
 
 ## Up & Running with Terraform
 
-**1.**: Create the GCS Bucket to serve as the backend for Terraform
+**1.**: Save Terraform state on GCP:
 
-In Google Cloud Storage, create a bucket that Terraform will use as its backend to save state:
+In [Google Cloud Storage](https://console.cloud.google.com/storage/browser?hl=en&project=iobruno-gcp-labs), create a bucket that Terraform will use as its backend to save state:
 
-![tfstate-gcp-bucket](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/assets/week1_tfstate_gcp_bucket.png)
+![terraform-state-bucket](../../assets/terraform-tfstate-bucket.png)
 
 
 **2.** Configure Terraform backend for GCS:
 
-- In `main.tf`, under the `backend "gcs"`, edit the `bucket` name to use the one defined in step 1
+**2.1.** In [backend.tf](backend.tf), edit the `bucket` to the name of the bucket you created in the step above
 
-- Initialize Terraform backend with:
+```terraform
+terraform {
+    backend "gcs" {
+        bucket  = "iobruno-gcp-labs-tfstate"
+    }
+}
+```
+
+**2.2.** Initialize Terraform modules and backend with:
 ```shell
 terraform init
 ```
 
-**3.** Terraform Plan & Apply
+**2.3.** Edit the variables on [terraform.tfvars](terraform.tfvars):  
 
+Edit the values of the variables (`project_id`, `lakehouse_raw_bucket`, `bigquery_raw_nyc_tlc`) to your suit your project
+
+
+**2.4.** Create the resources with Terraform
 ```shell
 terraform plan
 ```
-
 ```shell
-terraform apply
+terraform apply --auto-approve
 ```
+
 
 ## Terraform Best Practises
 
 Following the best practises for Terraform,
 
-The variables that might contain sensitive information were set on `terraform.tfvars` (which, **for educational purposes only**, is set to *not* be ignored in version control - **do NOT use this for real-world scenarios**)
+Variables that might contain sensitive information were set on [terraform.tfvars](terraform.tfvars), which, **for educational purposes only**, is set **not** to be ignored in version control.
 
-- GCP Project ID
-- Bucket name for the RAW Datalake data
-- BigQuery Dataset name for the Staging Data
 
 ## TODO:
 - [x] Configure Google Cloud Storage as the backend for Terraform States

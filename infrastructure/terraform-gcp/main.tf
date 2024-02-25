@@ -1,51 +1,13 @@
-terraform {
-  required_version = "~> 1.0"
+module "bigquery" {
+  source = "./bigquery"
 
-  # Ref.: https://cloud.google.com/docs/terraform/resource-management/store-state
-  backend "gcs" {
-    bucket = "iobruno-gcp-labs-tfstate"
-    prefix = "terraform/state"
-  }
-
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 5.7.0"
-    }
-  }
+  dataset_id  = var.raw_nyc_tlc_record_dataset
+  region      = var.data_region
 }
 
-provider "google" {
-  project = var.project_id
+module "gcs" {
+  source = "./cloud-storage"
+
+  name    = var.data_lakehouse_raw_bucket
   region  = var.data_region
-}
-
-# Ref.: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/bigquery_dataset
-resource "google_bigquery_dataset" "raw_nyc_tlc" {
-  dataset_id = var.bigquery_raw_nyc_tlc
-  location   = var.data_region
-}
-
-# Ref: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
-resource "google_storage_bucket" "iobruno_lakehouse_raw" {
-  name     = var.lakehouse_raw_bucket
-  location = var.data_region
-
-  # Cascade delete all objects within when the bucket is deleted
-  force_destroy               = true
-  uniform_bucket_level_access = true
-  storage_class               = var.lakehouse_storage_class
-
-  versioning {
-    enabled = true
-  }
-
-  lifecycle_rule {
-    condition {
-      age = var.lakehouse_blob_expiration
-    }
-    action {
-      type = "Delete"
-    }
-  }
 }
