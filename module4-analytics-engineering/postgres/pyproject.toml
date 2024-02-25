@@ -11,13 +11,12 @@ authors = [
 requires-python = ">=3.10,<3.12"
 
 dependencies = [
-    "dbt-core>=1.7.4,<2.0",
-    "dbt-postgres>=1.7.4,<2.0",
+    "dbt-postgres>=1.7.8,<2.0",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.1.8",
+    "ruff>=0.2.2",
 ]
 
 [tool.ruff]

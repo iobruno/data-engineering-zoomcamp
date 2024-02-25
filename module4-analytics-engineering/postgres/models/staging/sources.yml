@@ -1,10 +1,10 @@
 version: 2
 
 sources:
-  - name: postgres-raw-nyc-trip_record
+  - name: raw_nyc_tlc_record_data
     database: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
     schema:   "{{ env_var('DBT_POSTGRES_SOURCE_SCHEMA') }}"
     tables:
-      - name: ntl_green_taxi
-      - name: ntl_yellow_taxi
-      - name: ntl_fhv_taxi
+      - name: fhv_trips
+      - name: green_taxi_trips
+      - name: yellow_taxi_trips
