@@ -8,6 +8,6 @@ module "bigquery" {
 module "gcs" {
   source = "./cloud-storage"
 
-  name    = var.lakehouse_raw_bucket
+  name    = var.data_lakehouse_raw_bucket
   region  = var.data_region
 }

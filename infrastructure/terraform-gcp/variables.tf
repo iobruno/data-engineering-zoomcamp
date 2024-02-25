@@ -9,9 +9,9 @@ variable "data_region" {
   default     = "us-central1"
 }
 
-variable "lakehouse_raw_bucket" {
+variable "data_lakehouse_raw_bucket" {
   type        = string
-  description = "Bucket name for the raw layer of the Lakehouse"
+  description = "Bucket name for the raw layer of the Data Lakehouse"
 }
 
 variable "raw_nyc_tlc_record_dataset" {
