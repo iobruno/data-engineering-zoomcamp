@@ -5,6 +5,6 @@ sources:
     database: "{{ env_var('DBT_BIGQUERY_PROJECT') }}"
     schema:   "{{ env_var('DBT_BIGQUERY_SOURCE_DATASET') }}"
     tables:
-      - name: fhv
-      - name: green_taxi
-      - name: yellow_taxi
+      - name: ext_fhv
+      - name: ext_green_taxi
+      - name: ext_yellow_taxi
