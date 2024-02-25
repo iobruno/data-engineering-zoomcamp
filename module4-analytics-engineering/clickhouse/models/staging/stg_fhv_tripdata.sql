@@ -9,7 +9,7 @@ with fhv_trips as (
     select
         fhv.*
     from
-        {{ source('raw_nyc_tlc_record_data', 'fhv_trips') }} fhv
+        {{ source('fqdb_nyc_taxi', 'fhv_trips') }} fhv
     where
         dispatching_base_num is not null        
 )
