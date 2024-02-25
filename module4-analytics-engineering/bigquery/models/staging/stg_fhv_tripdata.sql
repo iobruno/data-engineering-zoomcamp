@@ -2,6 +2,16 @@
     schema=resolve_schema_for('staging')
 ) }}
 
+
+with fhv_trips as (
+    select
+        fhv.*
+    from
+        {{ source('raw_nyc_tlc_record_data', 'ext_fhv') }} fhv
+    where
+        dispatching_base_num is not null        
+)
+
 select
     -- identifiers
     {{ dbt_utils.generate_surrogate_key([
@@ -18,10 +28,7 @@ select
     DOlocationID           as dropoff_location_id,
     SR_Flag                as shared_ride_flag
 from 
-    {{ source('bq-raw-nyc-trip_record', 'ext_fhv') }}
-where
-    dispatching_base_num is not null
-
+    fhv_trips
 
 -- Run as:
 --  dbt build --select stg_green_tripdata --vars 'is_test_run: true'
