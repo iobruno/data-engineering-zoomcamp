@@ -5,14 +5,13 @@
 
 {% macro payment_desc_of(payment_type_id) -%}
 
-CASE {{ payment_type_id }}
-    WHEN 1 THEN 'Credit Card'
-    WHEN 2 THEN 'Cash'
-    WHEN 3 THEN 'No charge'
-    WHEN 4 THEN 'Dispute'
-    WHEN 5 THEN 'Unknown'
-    WHEN 6 THEN 'Voided trip'
-END
-
+case {{ payment_type_id }}
+    when 1 then 'Credit Card'
+    when 2 then 'Cash'
+    when 3 then 'No charge'
+    when 4 then 'Dispute'
+    when 5 then 'Unknown'
+    when 6 then 'Voided trip'
+end
 
 {%- endmacro %}
