@@ -1,17 +1,22 @@
-# dbt and DuckDB for Data Reliability
+# dbt and DuckDB for Analytics Engineering
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![DuckDB](https://img.shields.io/badge/DuckDB-black?style=flat&logo=duckdb&logoColor=FEF000&labelColor=black)
+![gcsfs](https://img.shields.io/badge/gcsfs-black?style=flat&logo=googlecloudstorage&logoColor=FEF000&labelColor=black)
+![s3fs](https://img.shields.io/badge/s3fs-black?style=flat&logo=amazon-s3&logoColor=FEF000&labelColor=black)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-Data observability with dbt, DuckDB, and PipeRider. This project focuses on building a dbt model on DuckDB and integrating PipeRider pipelines for robust data observability.
+This project is meant for experimenting with `dbt` and the `dbt-duckdb` adapter for Analytics,
+using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique. 
 
+It also adds Data Reliability on top of that with PipeRider.
 
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-duckdb](https://docs.getdbt.com/reference/warehouse-setups/duckdb-setup)
+- [fsspec](https://filesystem-spec.readthedocs.io/en/latest/api.html#other-known-implementations)
 - [PipeRider](https://github.com/InfuseAI/piperider)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
@@ -50,41 +55,78 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Configure the `gcp project_id` and the local `path` where duckdb should save its file (on `profiles.yml`)
+4.2. Set the environment variables for `dbt-duckdb`:
 
-```yaml
-  path: '/tmp/piperider.duckdb'
-  filesystems:
-  - fs: gcs
-    project: iobruno-gcp-labs
-```
-
-4.3. Make sure the `GOOGLE_APPLICATION_CREDENTIALS` env variable is set
 ```shell
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcp-credentials.json
+export DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_trip_record_data/"
+export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
 ```
 
-**5.** Update the `profile` to used by this project on `dbt_project.yml`
+Optionally, you can also set the DuckDB schemas where the dbt staging & core models should land on:
+```shell
+# Schema for the dim_ and fct_ models; it defaults to 'main', when not set
+export DBT_DUCKDB_TARGET_SCHEMA='stg_analytics'
 
-Make sure to point to an existing profile name set on profiles.yaml. In this case:
-```yaml
-profile: 'duckdb-local'
+# Schema for the stg_ models; it defaults to 'main', when not set
+export DBT_DUCKDB_STAGING_SCHEMA='analytics'
 ```
 
-**6.** Run `dbt deps` and `dbt build`:
+4.3. If you're reading data from gcs, authenticate with:
+```shell
+gcloud auth login
+```
+
+4.4. Additionally, If you're reading data from s3, make sure to set `AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY`:
+```shell
+export AWS_ACCESS_KEY=
+export AWS_SECRET_ACCESS_KEY=
+```
+
+**5.** Install dbt dependencies and trigger the pipeline
+
+5.1. Run `dbt deps` to install  dbt plugins
 ```shell
 dbt deps
-dbt build
 ```
 
-**7.** Setup and run PipeRider:
+5.2. Run `dbt seed` to push/create the tables from the .csv seed files to the target schema
+```shell
+dbt seed
+```
 
-Initialize the PipeRider 
+5.3. Run dbt run to trigger the dbt models to run
+```shell
+dbt build
+
+# Alternatively you can run only a subset of the models with:
+
+## +models/staging: Runs the dependencies/preceding models first that lead 
+## to 'models/staging', and then the target models
+dbt [build|run] --select +models/staging
+
+## models/staging+: Runs the target models first, and then all models that depend on it
+dbt [build|run] --select models/staging+
+```
+
+**6.** Generate the Docs and the Data Lineage graph with:
+```shell
+dbt docs generate
+```
+```shell
+dbt docs serve
+```
+Access the generated docs at:
+```shell
+open http://localhost:8080
+```
+
+
+## Data Reliability with PipeRider
+
+Initialize the pipeline with:
 ```shell
 piperider init 
 ```
-
-Next, run `diagnose`
 ```shell
 piperider diagnose
 ```
@@ -111,7 +153,7 @@ Check connections:
 🎉 You are all set!
 ```
 
-Finally, run piperider itself:
+Next, run piperider pipeline:
 ```shell
 piperider run
 ```
@@ -120,8 +162,6 @@ piperider run
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with DuckDB Adapter ([dbt-duckdb](https://github.com/duckdb/dbt-duckdb))
-- [x] Configure [dbt-duckdb](https://github.com/duckdb/dbt-duckdb) to use `fsspec` and [read directly from GCS](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
+- [x] Configure dbt-duckdb with `fsspec` and read from [s3fs](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
+- [x] Configure dbt-duckdb with `fsspec` and read from [gcsfs](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
 - [x] Integrate with PipeRider and generate reports
-- [x] Modify the dbt models, generate a new report and compare
-- [x] Utilize the comparison on a [GitHub Pull Request](https://github.com/iobruno/data-engineering-zoomcamp/pull/2)
-- [ ] Set up a CI Pipeline with GitHub Actions

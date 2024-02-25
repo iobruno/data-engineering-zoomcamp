@@ -1,18 +1,19 @@
-## Configures dbt to read directly from Google Cloud Storage using `fsspec`
-## For setting up the parameters under the 'filesystems' key, see the docs at 
-## https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem
-
-duckdb-local:
+dbt_duckdb_analytics:
   outputs:
-    dev:
+    # Ref.: https://filesystem-spec.readthedocs.io/en/latest/api.html#fsspec.implementations.local.LocalFileSystem
+    # Ref.: https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem
+    # Ref.: https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem
+    localfs:
       type: duckdb
-      path: '/tmp/dbt_duckdb.duckdb'
+      path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '/tmp/dbt.duck') }}"
       filesystems:
-      - fs: gcs
-        project: iobruno-gcp-labs
-        access: read_only
-        token: google_default
-        cache_timeout: 0
+        - fs: gcs
+          access: read_write
+          token: google_default
+          cache_timeout: 0
+        - fs: s3
+          anon: false
+          key: "{{ env_var('AWS_ACCESS_KEY', '') }}"
+          secret: "{{ env_var('AWS_SECRET_ACCESS_KEY', '') }}"
 
-  target: dev
-  
+  target: localfs
