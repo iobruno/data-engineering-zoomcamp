@@ -6,9 +6,10 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in PostgreSQL. 
+This project is meant for experimenting with `dbt` and the `dbt-postgres` adapter for Analytics,
+using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique.
 
-**IMPORTANT NOTE**: This is **not** meant for production use at scale, but rather for educational purposes only. Consider using `RedShift`, `BigQuery`, `Snowflake` or `Databricks` instead. If those options are too costy, or if you need something for on-premises deploy, consider `Clickhouse` instead.
+**NOTE**: This is not meant for production use at scale, but rather for educational purposes only. Consider using `RedShift`, `BigQuery`, `Snowflake` or `Databricks` instead. If those options are too costy, or if you need something for on-premises deploy, consider `Clickhouse` instead.
 
 
 ## Tech Stack
@@ -64,17 +65,6 @@ export DBT_POSTGRES_USER=postgres \
 export DBT_POSTGRES_PASSWORD=postgres
 ```
 
-4.3. On [models/staging/schema.yml](models/staging/schema.yml), make sure to update the `tables` names where the staging models fetch the data from
-```shell
-  - name: raw_nyc_tlc_record_data
-    database: "{{ env_var('DBT_POSTGRES_DATABASE') }}"
-    schema:   "{{ env_var('DBT_POSTGRES_SOURCE_SCHEMA') }}"
-    tables:
-      - name: green_taxi_trips
-      - name: yellow_taxi_trips
-      - name: yellow_taxi_trips
-```
-
 **5.** Install dbt dependencies and trigger the pipeline
 
 5.1. Run `dbt deps` to install  dbt plugins
@@ -108,8 +98,7 @@ dbt docs generate
 ```shell
 dbt docs serve
 ```
-
-**7.** Access the generated docs on a web browser at the URL:
+Access the generated docs at:
 ```shell
 open http://localhost:8080
 ```
