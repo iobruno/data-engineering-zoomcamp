@@ -59,7 +59,7 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-bigquery`:
 
 ```shell
-export DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com
+export DBT_REDSHIFT_HOST=redshift.[id].[region].redshift-serverless.amazonaws.com
 export DBT_REDSHIFT_DATABASE=dev
 export DBT_REDSHIFT_USE_DATA_CATALOG=1
 export DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_tlc_tripdata
@@ -123,14 +123,14 @@ docker build -t dbt_redshift:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run \
-  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-  -e DBT_REDSHIFT_HOST=$DBT_REDSHIFT_HOST \
+docker run --rm \
+  -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY} \
+  -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+  -e DBT_REDSHIFT_HOST=${DBT_REDSHIFT_HOST} \
   -e DBT_REDSHIFT_DATABASE=dev \
   -e DBT_REDSHIFT_USE_DATA_CATALOG=1 \
-  -e DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_trip_data \
-  -e DBT_REDSHIFT_TARGET_SCHEMA=nyc_trip_record_data \
+  -e DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_tlc_tripdata \
+  -e DBT_REDSHIFT_TARGET_SCHEMA=nyc_tlc_record_data \
   --name dbt_redshift \
   dbt_redshift
 ```

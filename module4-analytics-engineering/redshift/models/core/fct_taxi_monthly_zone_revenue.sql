@@ -15,8 +15,8 @@ select
     round(sum(tolls_amount), 2)                     as monthly_tolls_amount,
     round(sum(ehail_fee), 2)                        as monthly_ehail_fee,
     round(sum(improvement_surcharge), 2)            as monthly_improvement_surcharge,
-    round(sum(total_amount), 2)                     as monthly_total_amount,
-    round(sum(congestion_surcharge), 2)             as monthly_congestion_surcharge
+    round(sum(congestion_surcharge), 2)             as monthly_congestion_surcharge,
+    round(sum(total_amount), 2)                     as monthly_total_amount
 from 
     {{ ref('dim_taxi_trips') }}
 group by 
