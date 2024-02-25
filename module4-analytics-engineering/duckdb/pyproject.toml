@@ -19,7 +19,7 @@ dependencies = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.1.8",
+    "ruff>=0.2.2",
 ]
 
 [tool.ruff]
