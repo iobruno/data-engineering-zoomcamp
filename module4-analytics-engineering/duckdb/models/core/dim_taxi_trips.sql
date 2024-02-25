@@ -54,7 +54,7 @@ select
     tt.tolls_amount             as tolls_amount,
     tt.ehail_fee                as ehail_fee,
     tt.improvement_surcharge    as improvement_surcharge,
-    tt.congestion_surcharge     as congestion_surcharge
+    tt.congestion_surcharge     as congestion_surcharge,
     tt.total_amount             as total_amount,
     tt.payment_type             as payment_type,
     tt.payment_type_description as payment_type_description
