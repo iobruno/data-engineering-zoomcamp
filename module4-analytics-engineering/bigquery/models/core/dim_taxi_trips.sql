@@ -61,6 +61,6 @@ select
 from
     taxi_trips tt
 inner join 
-    lookup_zones pickup on tt.pickup_location_id  = pickup.location_id
+    lookup_zones pickup on tt.pickup_location_id = pickup.location_id
 inner join 
     lookup_zones dropoff on tt.dropoff_location_id = dropoff.location_id
