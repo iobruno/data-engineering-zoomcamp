@@ -3,6 +3,8 @@
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![DuckDB](https://img.shields.io/badge/DuckDB-black?style=flat&logo=duckdb&logoColor=FEF000&labelColor=black)
+![gcsfs](https://img.shields.io/badge/gcsfs-black?style=flat&logo=googlecloudstorage&logoColor=FEF000&labelColor=black)
+![s3fs](https://img.shields.io/badge/s3fs-black?style=flat&logo=amazon-s3&logoColor=FEF000&labelColor=black)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
@@ -53,16 +55,31 @@ mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Set the environment variables for `dbt-bigquery`:
+4.2. Set the environment variables for `dbt-duckdb`:
 
 ```shell
-export DBT_DUCKDB_PARQUET_SOURCE_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_trip_record_data"
+export DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_trip_record_data/"
 export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
 ```
 
-4.3. Since we're doing `oauth` authentication for development, run:
+Optionally, you can also set the DuckDB schemas where the dbt staging & core models should land on:
+```shell
+# Schema for the dim_ and fct_ models; it defaults to 'main', when not set
+export DBT_DUCKDB_TARGET_SCHEMA='stg_analytics'
+
+# Schema for the stg_ models; it defaults to 'main', when not set
+export DBT_DUCKDB_STAGING_SCHEMA='analytics'
+```
+
+4.3. If you're reading data from gcs, authenticate with:
 ```shell
 gcloud auth login
+```
+
+4.4. Additionally, If you're reading data from s3, make sure to set `AWS_ACCESS_KEY` and `AWS_SECRET_ACCESS_KEY`:
+```shell
+export AWS_ACCESS_KEY=
+export AWS_SECRET_ACCESS_KEY=
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
@@ -103,8 +120,10 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-**7.** Setup and run PipeRider:
 
+## Data Reliability with PipeRider
+
+Initialize the pipeline with:
 ```shell
 piperider init 
 ```
@@ -134,7 +153,7 @@ Check connections:
 🎉 You are all set!
 ```
 
-Finally, run piperider itself:
+Next, run piperider pipeline:
 ```shell
 piperider run
 ```
@@ -143,7 +162,6 @@ piperider run
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with DuckDB Adapter ([dbt-duckdb](https://github.com/duckdb/dbt-duckdb))
+- [x] Configure dbt-duckdb with `fsspec` and read from [s3fs](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
+- [x] Configure dbt-duckdb with `fsspec` and read from [gcsfs](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
 - [x] Integrate with PipeRider and generate reports
-- [ ] Configure dbt-duckdb with `fsspec` and write to [Local Filesystem](https://filesystem-spec.readthedocs.io/en/latest/api.html#fsspec.implementations.local.LocalFileSystem)
-- [ ] Configure dbt-duckdb with `fsspec` and write to [S3 Filesytem](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
-- [ ] Configure dbt-duckdb with `fsspec` and write to [GCS Filesystem](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
