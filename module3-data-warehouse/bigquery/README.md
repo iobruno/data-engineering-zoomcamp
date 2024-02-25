@@ -14,9 +14,9 @@ This project creates Native and External tables from GCS files on BigQuery, emph
 
 **1.** Make sure to push the files/blobs to Google Cloud Storage, first.
 
-You can use the [`prefect/flows/web_csv_to_gcs.py`](https://github.com/iobruno/data-engineering-zoomcamp/blob/master/week_2_workflow_orchestration/prefect/flows/) to achieve so.
+You can use the [`web_csv_to_gcs.py`](../../module2-workflow-orchestration/prefect/flows/web_csv_to_gcs.py) to achieve so.
 
-**2.** Next, use the scripts on [`sql/`](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_3_data_warehouse/sql) folder to create the internal and external tables:
+**2.** Next, use the scripts on [`sql/`](./sql/) to create the internal and external tables
 
 
 ## TODO:
