@@ -6,7 +6,7 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This project focuses on creating dbt models using the NY Taxi Tripdata Datasets in ClickHouse.
+This project is meant for experimenting with dbt-clickhouse and ClickHouse DataWarehouse using the NYC TLC Trip Record
 
 
 ## Tech Stack
@@ -53,22 +53,12 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-clickhouse`:
 
 ```shell
-export DBT_CLICKHOUSE_HOST=localhost \
-export DBT_CLICKHOUSE_PORT=8123 \
-export DBT_CLICKHOUSE_SOURCE_DATABASE=raw_pgdata \
-export DBT_CLICKHOUSE_TARGET_DATABASE=nyc_trip_record_data \
-export DBT_CLICKHOUSE_USER=clickhouse \
+export DBT_CLICKHOUSE_HOST=localhost
+export DBT_CLICKHOUSE_PORT=8123
+export DBT_CLICKHOUSE_FQDN_NYC_TAXI=fqdb_nyc_taxi
+export DBT_CLICKHOUSE_TARGET_DATABASE=nyc_tlc_record_data
+export DBT_CLICKHOUSE_USER=clickhouse
 export DBT_CLICKHOUSE_PASSWORD=clickhouse
-```
-
-4.3. On [sources.yml](models/staging/schema.yml), make sure to update the `table.name` where the staging models fetch the data from
-```yml
-sources:
-  - name: clickhouse-federated-postgres-nyc-trip_record
-    schema: "{{ env_var('DBT_CLICKHOUSE_SOURCE_DATABASE') }}"
-    tables:
-      - name: ntl_yellow_taxi
-      - name: ntl_green_taxi
 ```
 
 **5.** Install dbt dependencies and trigger the pipeline
