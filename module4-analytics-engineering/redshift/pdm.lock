@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:359ed2290d22f26ab8ede6c08df0e92c82e42ffd9da2b7e1b684d342657de89c"
+content_hash = "sha256:709551d2f865bc6734651331c62c5d93bc0d4674e9c6b3fea850db121ff92cbe"
 
 [[package]]
 name = "agate"
