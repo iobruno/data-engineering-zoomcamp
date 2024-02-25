@@ -6,8 +6,10 @@
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-Data observability with dbt, DuckDB, and PipeRider. This project focuses on building a dbt model on DuckDB and integrating PipeRider pipelines for robust data observability.
+This project is meant for experimenting with `dbt` and the `dbt-duckdb` adapter for Analytics,
+using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique. 
 
+It also adds Data Reliability on top of that with PipeRider.
 
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
@@ -95,7 +97,7 @@ dbt docs generate
 ```shell
 dbt docs serve
 ```
-Access the generated docs on a web browser at the URL:
+Access the generated docs at:
 ```shell
 open http://localhost:8080
 ```
