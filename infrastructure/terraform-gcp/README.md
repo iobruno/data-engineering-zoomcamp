@@ -1,6 +1,6 @@
 # Terraform for Google Cloud Platform
 
-![Terraform](https://img.shields.io/badge/Terraform-1.4-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
+![Terraform](https://img.shields.io/badge/Terraform-1.7-black?style=flat&logo=terraform&logoColor=white&labelColor=573EDA)
 ![GCP](https://img.shields.io/badge/Google_Cloud-3772FF?style=flat&logo=googlecloud&logoColor=white&labelColor=3772FF)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -63,15 +63,13 @@ terraform plan
 terraform apply
 ```
 
+
 ## Terraform Best Practises
 
 Following the best practises for Terraform,
 
-The variables that might contain sensitive information were set on `terraform.tfvars` (which, **for educational purposes only**, is set to *not* be ignored in version control - **do NOT use this for real-world scenarios**)
+The variables that might contain sensitive information were set on [terraform.tfvars](terraform.tfvars) (which, **for educational purposes only**, is set to *not* be ignored in version control - **do NOT use this for real-world scenarios**)
 
-- GCP Project ID
-- Bucket name for the RAW Datalake data
-- BigQuery Dataset name for the Staging Data
 
 ## TODO:
 - [x] Configure Google Cloud Storage as the backend for Terraform States
