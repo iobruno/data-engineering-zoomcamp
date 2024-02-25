@@ -15,7 +15,7 @@ with green_taxi_trips as (
 
 yellow_taxi_trips as (
     select
-        y.*,
+        yt.*,
         'yellow' as service_type
     from 
         {{ ref('stg_yellow_tripdata') }} yt

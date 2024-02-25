@@ -20,7 +20,7 @@ select
     {{ dbt_utils.generate_surrogate_key([
         'vendor_id', 
         'lpep_pickup_datetime'
-    ]) }}                                  as   trip_id,
+    ]) }}                                   as   trip_id,
     toInt8(vendor_id)                       as vendor_id,
     toInt8(ratecode_id)                     as ratecode_id,
     toInt16(pu_location_id)                 as pickup_location_id,

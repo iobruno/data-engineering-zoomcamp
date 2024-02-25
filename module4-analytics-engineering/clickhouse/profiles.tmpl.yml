@@ -9,6 +9,7 @@ dbt_clickhouse_analytics:
       user:     "{{ env_var('DBT_CLICKHOUSE_USER', 'default') }}"
       password: "{{ env_var('DBT_CLICKHOUSE_PASSWORD', '') }}"
       secure: False
+      threads: 1
 
     prod:
       type: clickhouse
@@ -19,5 +20,6 @@ dbt_clickhouse_analytics:
       user:     "{{ env_var('DBT_CLICKHOUSE_USER') }}"
       password: "{{ env_var('DBT_CLICKHOUSE_PASSWORD') }}"
       secure: False
+      threads: 2
 
   target: dev
