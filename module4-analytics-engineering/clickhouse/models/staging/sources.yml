@@ -1,9 +1,9 @@
 version: 2
 
 sources:
-  - name: clickhouse-federated-postgres-nyc-trip_record
+  - name: fqdb_nyc_taxi
     schema: "{{ env_var('DBT_CLICKHOUSE_SOURCE_DATABASE') }}"
     tables:
-      - name: ntl_yellow_taxi
-      - name: ntl_green_taxi
-      - name: ntl_fhv_taxi
+      - name: fhv_trips
+      - name: green_taxi_trips
+      - name: yellow_taxi_trips
