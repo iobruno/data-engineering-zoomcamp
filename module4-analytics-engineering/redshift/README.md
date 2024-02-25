@@ -59,16 +59,16 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-bigquery`:
 
 ```shell
-export DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com \
-export DBT_REDSHIFT_DATABASE=dev \
-export DBT_REDSHIFT_USE_DATA_CATALOG=1 \
-export DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_trip_data \
-export DBT_REDSHIFT_TARGET_SCHEMA=nyc_trip_record_data
+export DBT_REDSHIFT_HOST=hostname.region.redshift-serverless.amazonaws.com
+export DBT_REDSHIFT_DATABASE=dev
+export DBT_REDSHIFT_USE_DATA_CATALOG=1
+export DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_tlc_tripdata
+export DBT_REDSHIFT_TARGET_SCHEMA=nyc_tlc_record_data
 ```
 
 Also, either have your AWS credentials set on `~/.aws/credentials` or set them as well:
 ```shell
-export AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID \
+export AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID
 export AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY
 ```
 
