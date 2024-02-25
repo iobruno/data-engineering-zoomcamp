@@ -20,6 +20,6 @@ dbt_clickhouse_analytics:
       user:     "{{ env_var('DBT_CLICKHOUSE_USER') }}"
       password: "{{ env_var('DBT_CLICKHOUSE_PASSWORD') }}"
       secure: False
-      threads: 2
+      threads: 4
 
   target: dev
