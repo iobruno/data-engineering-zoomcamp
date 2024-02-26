@@ -14,19 +14,9 @@ x-spark-common: &spark-common
     SPARK_SSL_ENABLED: 'no'
     SPARK_USER: 'spark'
   volumes:
-    - ${SPARK_JARS:-}/:/opt/spark-jars/
     - ${GOOGLE_APPLICATION_CREDENTIALS:-}:/.gcp/gcp_credentials.json
+    - spark_jars:/spark-jars
   restart: on-failure
-
-x-spark-worker-common: &spark-worker-common
-  <<: *spark-common
-  environment:
-    <<: *spark-common-env
-    SPARK_MODE: 'worker'
-    SPARK_MASTER_URL: 'spark://spark-master:7077'
-    SPARK_WORKER_MEMORY: '1G'
-    SPARK_WORKER_CORES: 1
-    SPARK_WORKER_WEBUI_PORT: 4040
 
 services:
   spark-master:
@@ -39,24 +29,51 @@ services:
     ports:
       - '7077:7077'
       - '4040:4040'
+    depends_on:
+      spark-init:
+        condition: service_completed_successfully
 
-  spark-worker1:
-    <<: *spark-worker-common
+  spark-worker:
+    <<: *spark-common
     container_name: spark_worker
+    environment:
+      SPARK_MODE: 'worker'
+      SPARK_MASTER_URL: 'spark://spark-master:7077'
+      SPARK_WORKER_MEMORY: '1G'
+      SPARK_WORKER_CORES: 1
+      SPARK_WORKER_WEBUI_PORT: 4041
     ports:
-      - '4041:4040'
+      - '4041:4041'
+    depends_on:
+      spark-init:
+        condition: service_completed_successfully
 
-  postgres:
+  spark-init:
+    <<: *spark-common
+    container_name: spark_init
+    user: "0:0"
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        install_packages wget
+        wget -nc https://storage.googleapis.com/hadoop-lib/gcs/gcs-connector-latest-hadoop2.jar -P /spark-jars/
+        wget -nc https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.6/hadoop-aws-3.3.6.jar -P /spark-jars/
+        chown -R 1001 /spark-jars/
+    volumes:
+      - spark_jars:/spark-jars
+    
+  metastore-db:
     image: *postgres-image
-    container_name: hive_postgres
+    container_name: metastore_db
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'metastore'
     ports:
-      - '5432:5432'
+      - '5432'
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - hive_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -66,24 +83,28 @@ services:
 
   metastore:
     image: *hive-image
-    container_name: hive_metastore
+    container_name: metastore
     environment:
       SERVICE_NAME: 'metastore'
-      SERVICE_OPTS: '-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://postgres:5432/metastore -Djavax.jdo.option.ConnectionUserName=postgres -Djavax.jdo.option.ConnectionPassword=postgres'
+      SERVICE_OPTS: |- 
+        -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver 
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://metastore-db:5432/metastore 
+        -Djavax.jdo.option.ConnectionUserName=postgres 
+        -Djavax.jdo.option.ConnectionPassword=postgres
       HIVE_AUX_JARS_PATH: /opt/hive/aux_jars/
       DB_DRIVER: 'postgres'
     depends_on:
-      postgres: 
+      metastore-db: 
         condition: service_healthy
       metastore-init:
         condition: service_completed_successfully
     volumes:
-      - warehouse:/opt/hive/data/warehouse
-      - auxjars:/opt/hive/aux_jars/
+      - hive_warehouse:/opt/hive/data/warehouse
+      - hive_auxjars:/opt/hive/aux_jars/
 
   metastore-init:
     image: *hive-image
-    container_name: hive_init
+    container_name: metastore_init
     user: 0:0
     entrypoint: /bin/bash
     command:
@@ -92,12 +113,14 @@ services:
         apt update && apt install curl -y
         curl --create-dirs -O --output-dir /tmp/aux_jars https://jdbc.postgresql.org/download/postgresql-42.7.1.jar
     volumes:
-      - auxjars:/tmp/aux_jars
+      - hive_auxjars:/tmp/aux_jars
 
 volumes:
-  pg_data:
-    name: metastore_pgdata
-  warehouse:
-    name: metastore_warehouse
-  auxjars:
-    name: metastore_auxjars
+  spark_jars:
+    name: spark_jars
+  hive_pgdata:
+    name: hive_pgdata
+  hive_warehouse:
+    name: hive_warehouse
+  hive_auxjars:
+    name: hive_auxjars
