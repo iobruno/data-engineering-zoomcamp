@@ -49,8 +49,7 @@ can take the course at your own pace
 * Homework
 
 ### [Module 5: Batch processing](module5-batch-processing)
-* [PySpark on Jupyter Playground](module5-batch-processing/pyspark/notebooks/)
-* PySpark (deploy-mode: 'cluster')  
+* [PySpark](module5-batch-processing/pyspark/)
 * Spark + Scala
 * Spark + Kotlin (TBD)
 * Homework
