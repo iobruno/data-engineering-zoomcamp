@@ -1,11 +1,11 @@
-from abc import abstractmethod, ABCMeta
+import math
+from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 from typing import List
-import math
+
 import numpy as np
 import pandas as pd
 import polars as pl
-
 
 Record = namedtuple("Record", ["url", "slices"])
 
@@ -51,7 +51,7 @@ class PolarsFetcher(DataframeFetcher):
 
 class PandasFetcher(DataframeFetcher):
     def fetch(self, endpoint: str) -> Record:
-        df = pd.read_csv(endpoint, engine='pyarrow', dtype=self.schema)
+        df = pd.read_csv(endpoint, engine="pyarrow", dtype=self.schema)
         df = df.rename(columns=self.renaming_strategy)
         return Record(endpoint, self.slice_df_in_chunks(df))
 

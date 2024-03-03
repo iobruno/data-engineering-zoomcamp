@@ -1,26 +1,26 @@
-from omegaconf import OmegaConf, DictConfig
+import logging
 from pathlib import Path
+from typing import List
+
+from omegaconf import OmegaConf
 from rich.logging import RichHandler
-from rich.progress import *
-from typer import Typer, Argument, Option
+from rich.progress import BarColumn, Progress, TextColumn, TimeElapsedColumn
+from typer import Argument, Option, Typer
 from typing_extensions import Annotated
 
-import logging
 import schemas.polars as pl_schema
 import schemas.pyarrow as pa_schema
 import schemas.renaming_strategy as rename
-
 from src.dataframe_fetcher import (
     DataframeFetcher,
-    PolarsFetcher,
     PandasFetcher,
+    PolarsFetcher,
 )
-
 from src.dataframe_repository import (
-    SQLRepository,
-    GreenTaxiRepository,
-    YellowTaxiRepository,
     FhvTaxiRepository,
+    GreenTaxiRepository,
+    SQLRepository,
+    YellowTaxiRepository,
     ZoneLookupRepository,
 )
 
@@ -54,7 +54,7 @@ def extract_load_with(
     repo: SQLRepository,
     endpoints: List[str],
     tasks: List[int],
-    if_table_exists: str = "replace",
+    write_disposition: str = "replace",
 ):
     if not endpoints:
         return
@@ -66,12 +66,12 @@ def extract_load_with(
     df_slice, *other_slices = record.slices
     completeness, total_parts = 1, len(record.slices)
 
-    # This is required since, in 'append' mode, polars.df does not create
-    # the table if it doesn't exist. It also prevents having to manually
-    # drop the table on consecutive runs
     progress.update(task_id=tid, completed=0, total=total_parts)
     progress.start_task(task_id=tid)
-    repo.save(df_slice, if_table_exists=if_table_exists)
+
+    # This is required since, in 'append' mode, polars.df does not create
+    # the table if it doesn't exist. It also guarantees idempotency
+    repo.save(df_slice, if_table_exists=write_disposition)
     progress.update(task_id=tid, completed=completeness, total=total_parts)
 
     for _ in repo.save_all(other_slices):
@@ -84,12 +84,11 @@ def extract_load_with(
 # fmt: off
 @cli.command(name="ingest", help="CLI app to extract NYC Trips data and load into Postgres")
 def ingest_db(
-    db_dialect: Annotated[str, Argument(envvar="DATABASE_DIALECT", hidden=False)],
-    db_host: Annotated[str, Argument(envvar="DATABASE_HOST", hidden=True)],
-    db_port: Annotated[str, Argument(envvar="DATABASE_PORT", hidden=True)],
     db_name: Annotated[str, Argument(envvar="DATABASE_NAME", hidden=True)],
     db_username: Annotated[str, Argument(envvar="DATABASE_USERNAME", hidden=True,)],
     db_password: Annotated[str, Argument(envvar="DATABASE_PASSWORD", hidden=True,)],
+    db_host: Annotated[str, Argument(envvar="DATABASE_HOST", hidden=True)],
+    db_port: Annotated[str, Argument(envvar="DATABASE_PORT", hidden=True)] = 5432,
     yellow: Annotated[bool, Option("--yellow", "-y", help="Fetch Yellow taxi dataset")] = False,
     green: Annotated[bool, Option("--green", "-g", help="Fetch Green cab dataset")] = False,
     fhv: Annotated[bool, Option("--fhv", "-f", help="Fetch FHV cab dataset")] = False,
@@ -97,15 +96,14 @@ def ingest_db(
     polars_ff: Annotated[bool, Option("--use-polars", help="Feature flag to enable Polars")] = False
 ):
     # fmt: on
-    log.info(f"Connecting to '{db_dialect}' with credentials on ENV VARs...")
-    db_settings = db_dialect, db_host, db_port, db_name, db_username, db_password
+    log.info("Connecting to 'postgres' with credentials on ENV VARs...")
+    db_settings = db_host, db_port, db_name, db_username, db_password
     with progress:
         green_dataset_endpoints = dataset.green_trip_data
         yellow_dataset_endpoints = dataset.yellow_trip_data
         fhv_dataset_endpoints = dataset.fhv_trip_data
         zones_dataset_endpoints = dataset.zone_lookups
         df_fetcher: DataframeFetcher
-        df_schema: DictConfig
 
         if polars_ff:
             schema_ref = pl_schema
