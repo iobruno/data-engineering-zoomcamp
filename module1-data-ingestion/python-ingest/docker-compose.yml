@@ -1,11 +1,8 @@
 version: "3.9"
 
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-mysql-image: &mysql-image mysql:${MYSQL_VERSION:-8.2}
-
 x-ingest-postgres-env: &ingest-postgres
   environment:
-    DATABASE_DIALECT: 'postgresql'
     DATABASE_HOST: 'postgres'
     DATABASE_PORT: 5432
     DATABASE_NAME: 'nyc_taxi'
@@ -15,30 +12,18 @@ x-ingest-postgres-env: &ingest-postgres
     postgres:
       condition: service_healthy
 
-x-ingest-mysql-env: &ingest-mysql
-  environment:
-    DATABASE_DIALECT: 'mysql'
-    DATABASE_HOST: 'mysql'
-    DATABASE_PORT: 3306
-    DATABASE_NAME: 'nyc_taxi'
-    DATABASE_USERNAME: 'mysql'
-    DATABASE_PASSWORD: 'mysql'
-  depends_on:
-    mysql:
-      condition: service_healthy
-
 services:
-  ingest:
+  ingest-app:
     <<: *ingest-postgres
     build: .
     image: iobruno/nyc-taxi-ingest:latest
-    container_name: ingest_taxi_data
+    container_name: ingest-app
     volumes:
       - ./datasets.yml:/app/datasets.yml
 
   postgres:
     image: *postgres-image
-    container_name: ingest_postgres
+    container_name: ingest-db
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
@@ -46,7 +31,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - ingest_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -54,29 +39,6 @@ services:
       retries: 5
     restart: on-failure
 
-  mysql:
-    image: *mysql-image
-    container_name: ingest_mysql
-    environment:
-      MYSQL_USER: 'mysql'
-      MYSQL_PASSWORD: 'mysql'
-      MYSQL_DATABASE: 'nyc_taxi'
-      MYSQL_ROOT_HOST: '%'
-      MYSQL_ROOT_PASSWORD: 'root'
-    ports:
-      - '3306:3306'
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-    restart: on-failure
-
-
 volumes:
-  pg_data:
+  ingest_pgdata:
     name: ingest_pgdata
-  mysql_data:
-    name: ingest_mysqldata
