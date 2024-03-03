@@ -45,25 +45,12 @@ pre-commit install
 ```
 
 **4.** Export ENV VARS to connect to DB:
-
-4.1.: To connect to Postgres:
 ```shell
-export DATABASE_DIALECT=postgresql
 export DATABASE_HOST=localhost
 export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=postgres
-```
-
-4.2.: To connect to MySQL:
-```shell
-export DATABASE_DIALECT=mysql
-export DATABASE_HOST=localhost
-export DATABASE_PORT=3306
-export DATABASE_NAME=nyc_taxi
-export DATABASE_USERNAME=mysql
-export DATABASE_PASSWORD=mysql
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
@@ -93,36 +80,19 @@ You can use any combination of options above to fetch more than dataset group at
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
-
 ```shell
 docker build -t iobruno/nyc-taxi-ingest:latest . --no-cache
 ```
 
 **2.** Start a container with it:
-
-2.1. Postgres:
 ```shell
 docker run --rm \
-  -e DATABASE_DIALECT=postgresql \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=5432 \
   -e DATABASE_NAME=nyc_taxi \
   -e DATABASE_USERNAME=postgres \
   -e DATABASE_PASSWORD=postgres \
   --name db_ingest_postgres \
-  iobruno/nyc-taxi-ingest
-```
-
-2.2. For MySQL:
-```shell
-docker run --rm \
-  -e DATABASE_DIALECT=mysql \
-  -e DATABASE_HOST=host.docker.internal \
-  -e DATABASE_PORT=3306 \
-  -e DATABASE_NAME=nyc_taxi \
-  -e DATABASE_USERNAME=mysql \
-  -e DATABASE_PASSWORD=mysql \
-  --name db_ingest_mysql \
   iobruno/nyc-taxi-ingest
 ```
 
