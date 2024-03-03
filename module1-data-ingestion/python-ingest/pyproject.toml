@@ -31,4 +31,4 @@ dev = [
 
 [tool.ruff]
 line-length = 100
-select = ["F", "E", "W", "I001"]
+lint.select = ["F", "E", "W", "I001"]
