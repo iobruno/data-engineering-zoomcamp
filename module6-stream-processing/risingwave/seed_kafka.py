@@ -1,16 +1,13 @@
-#!/usr/bin/env python3
-
 import datetime
+import logging
 import random
 import sys
+import time
 
+import pandas as pd
 import psycopg2
-import pyarrow.parquet as pq
 from confluent_kafka import Producer
 from confluent_kafka.admin import AdminClient, NewTopic
-import pandas
-import time
-import logging
 
 logging.basicConfig()
 logging.root.setLevel(logging.INFO)
@@ -34,22 +31,22 @@ def create_kafka_topic(env, topic_name):
     topic = NewTopic(topic=topic_name, num_partitions=8, replication_factor=1)
 
     if check_kafka_topic_created(env, topic_name):
-        logging.warning(f'Topic {topic_name} already exists, deleting it')
+        logging.warning(f"Topic {topic_name} already exists, deleting it")
         admin_client.delete_topics([topic_name])[topic_name].result()
     admin_client.create_topics([topic])[topic_name].result()
 
     if check_kafka_topic_created(env, topic_name):
-        logging.info(f'Topic {topic_name} created')
+        logging.info(f"Topic {topic_name} created")
     else:
-        logging.error(f'Topic {topic_name} not created')
-        raise Exception(f'Topic {topic_name} not created')
+        logging.error(f"Topic {topic_name} not created")
+        raise Exception(f"Topic {topic_name} not created")
 
 
 def send_records_to_kafka(env, records, real_time=False):
     producer = env.producer
     records_count = len(records)
     if not real_time:
-        logging.info(f"Sending 100,000 records to Kafka")
+        logging.info("Sending 100,000 records to Kafka")
     else:
         logging.info(f"Sending {records_count} records to Kafka")
     for i, (_, record) in enumerate(records.iterrows()):
@@ -58,23 +55,22 @@ def send_records_to_kafka(env, records, real_time=False):
             break
 
         if i == 0:
-            logging.debug("tpep_pickup_datetime", record['tpep_pickup_datetime'])
-            logging.debug("tpep_dropoff_datetime", record['tpep_dropoff_datetime'])
+            logging.debug("tpep_pickup_datetime", record["tpep_pickup_datetime"])
+            logging.debug("tpep_dropoff_datetime", record["tpep_dropoff_datetime"])
 
         if real_time:
-
-            tpep_interval = record['tpep_dropoff_datetime'] - record['tpep_pickup_datetime']
+            tpep_interval = record["tpep_dropoff_datetime"] - record["tpep_pickup_datetime"]
             tpep_dropoff_datetime = datetime.datetime.now(datetime.timezone.utc)
             tpep_pickup_datetime = tpep_dropoff_datetime - tpep_interval
-            record['tpep_pickup_datetime'] = tpep_pickup_datetime
-            record['tpep_dropoff_datetime'] = tpep_dropoff_datetime
+            record["tpep_pickup_datetime"] = tpep_pickup_datetime
+            record["tpep_dropoff_datetime"] = tpep_dropoff_datetime
             time.sleep(random.randrange(0, 100) / 1000)
             if i % 100 == 0:
                 logging.info(f"Sent {i} records")
 
         message = record.to_json()
 
-        producer.produce('trip_data', value=message.encode(), key=None)
+        producer.produce("trip_data", value=message.encode(), key=None)
         if i % env.conf["queue.buffering.max.messages"] == 0:
             producer.flush()
 
@@ -83,32 +79,30 @@ def send_records_to_kafka(env, records, real_time=False):
 
     producer.flush()
     if not real_time:
-        logging.info(f"Sent 100,000 records to Kafka")
+        logging.info("Sent 100,000 records to Kafka")
     else:
         logging.info(f"Sent {records_count} records to Kafka")
 
 
 def send_parquet_records(env, parquet_file, real_time=False):
-    table = pq.read_table(parquet_file)
-    records = table.to_pandas()
+    records = pd.read_parquet(parquet_file)
     send_records_to_kafka(env, records, real_time)
 
 
 def check_connection(conn):
     cur = conn.cursor()
-    logging.info('Checking connection to the RisingWave')
+    logging.info("Checking connection to the RisingWave")
     cur.execute("SELECT version();")
     result = cur.fetchone()
     if result is None:
-        logging.error('Connection failed')
-        raise Exception('Connection failed')
+        logging.error("Connection failed")
+        raise Exception("Connection failed")
     conn.commit()
-    logging.info(f'RisingWave started with version: {result[0]}')
+    logging.info(f"RisingWave started with version: {result[0]}")
 
 
 def send_csv_records(env, csv_file):
-    records = pandas.read_csv(csv_file)
-    # connect to risingwave via psycopg2
+    records = pd.read_csv(csv_file)
     conn = psycopg2.connect(
         host="localhost",
         database="dev",
@@ -131,47 +125,47 @@ def send_csv_records(env, csv_file):
         )
         """
     )
-    logging.info('Created taxi_zone table')
+    logging.info("Created taxi_zone table")
     for i, record in records.iterrows():
-        location_id = record['LocationID']
-        borough = record['Borough']
-        zone = record['Zone']
-        service_zone = record['service_zone']
+        location_id = record["LocationID"]
+        borough = record["Borough"]
+        zone = record["Zone"]
+        service_zone = record["service_zone"]
         cur.execute(
             """
             INSERT INTO taxi_zone (location_id, borough, zone, service_zone)
             VALUES (%s, %s, %s, %s);
             """,
-            (location_id, borough, zone, service_zone))
+            (location_id, borough, zone, service_zone),
+        )
     cur.execute("flush;")
     conn.commit()
     conn.close()
-    logging.info(f'Created {len(records)} records in taxi_zone table')
+    logging.info(f"Created {len(records)} records in taxi_zone table")
 
 
 def main():
     update = len(sys.argv) >= 2 and sys.argv[1] == "update"
-    conf = {
-        'bootstrap.servers': "localhost:9092",
-        "queue.buffering.max.messages": 1000000
-    }
+    conf = {"bootstrap.servers": "localhost:9092", "queue.buffering.max.messages": 1000000}
     env = Env(conf)
 
     # Load taxi zone data
-    logging.info('Loading taxi zone data')
-    taxi_zone_filepath = 'data/taxi_zone.csv'
-    send_csv_records(env, taxi_zone_filepath)
+    logging.info("Loading taxi zone data")
+    taxi_zone_filepath = "https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv"
+    # send_csv_records(env, taxi_zone_filepath)
 
     # Load trip data
-    logging.info('Loading trip data')
-    trip_data_topic = 'trip_data'
-    trip_data_filepath = 'data/yellow_tripdata_2022-01.parquet'
+    logging.info("Loading trip data")
+    trip_data_topic = "trip_data"
+    trip_data_filepath = (
+        "https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet"
+    )
     create_kafka_topic(env, trip_data_topic)
 
     if update:
-        logging.info('Starting real time updates')
+        logging.info("Starting real time updates")
     else:
-        logging.info('Sending historical data')
+        logging.info("Sending historical data")
     send_parquet_records(env, trip_data_filepath, real_time=update)
 
 
