@@ -21,12 +21,13 @@ x-kafka-common:
     interval: 5s
     timeout: 10s
     retries: 3
-  restart: on-failure
+  restart: on-failure:5
 
 services:
   zookeeper:
     image: *cp-zookeeper-image
     container_name: zookeeper
+    hostname: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -41,11 +42,12 @@ services:
       interval: 10s
       timeout: 30s
       retries: 10
-    restart: on-failure
+    restart: on-failure:5
 
   broker0:
     <<: *kafka-common
-    container_name: kafka_broker0
+    container_name: kafka-broker0
+    hostname: broker0
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 0
@@ -56,15 +58,32 @@ services:
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
 
+  kafka-init:
+    <<: *kafka-common
+    container_name: kafka-init
+    hostname: kafkainit
+    environment:
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+    depends_on:
+      broker0:
+        condition: service_healthy
+    command:
+      "bash -c 'echo Kafka is ready, attempting to create topics... &&
+      kafka-topics  --bootstrap-server broker0:29092 --create --if-not-exists --topic yellow-taxi-tripdata --replication-factor 1 --partitions 8 &&
+      kafka-configs --bootstrap-server broker0:29092 --alter --topic yellow-taxi-tripdata --add-config cleanup.policy=compact &&
+      echo Kafka setup is now done'"
+
   # Conduktor Platform Docs:
   # - https://docs.conduktor.io/platform/configuration/env-variables
   # - https://docs.conduktor.io/platform/installation/hardware
   conduktor:
     container_name: conduktor
+    hostname: conduktor
     image: conduktor/conduktor-platform:1.17.3
     environment:
       CDK_CLUSTERS_0_ID: 'warp'
-      CDK_CLUSTERS_0_NAME: 'kafka-cluster-dev'
+      CDK_CLUSTERS_0_NAME: 'cp-kafka-in-docker'
       CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:29092'
       CDK_ADMIN_EMAIL: 'conduktor@conduktor.io'
       CDK_ADMIN_PASSWORD: 'conduktor'
@@ -75,4 +94,4 @@ services:
     depends_on:
       broker0:
         condition: service_healthy
-    restart: on-failure
+    restart: on-failure:5
