@@ -7,9 +7,8 @@ x-kafka-common:
   &kafka-common
   image: *cp-kafka-image
   environment: &kafka-common-env
-    KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
-    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+    KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT'
     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
     KAFKA_DELETE_TOPIC_ENABLE: true
@@ -17,7 +16,7 @@ x-kafka-common:
     zookeeper: 
       condition: service_healthy
   healthcheck:
-    test: ["CMD-SHELL", "cub kafka-ready -b localhost:9092 1 10 || exit 1"]
+    test: ["CMD-SHELL", "cub kafka-ready -b localhost:29092 1 10 || exit 1"]
     start_period: 10s
     interval: 5s
     timeout: 10s
@@ -50,10 +49,9 @@ services:
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 0
-      KAFKA_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29092'
-      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9092,EXTERNAL://:29092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker0:29092'
     ports:
-      - '29092:29092'
+      - '9092:9092'
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
 
@@ -66,7 +64,7 @@ services:
     environment:
       CDK_CLUSTERS_0_ID: 'warp'
       CDK_CLUSTERS_0_NAME: 'kafka-cluster-dev'
-      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:9092'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:29092'
       CDK_ADMIN_EMAIL: 'admin@conduktor.io'
       CDK_ADMIN_PASSWORD: 'admin'
       CDK_LISTENING_PORT: 8080
