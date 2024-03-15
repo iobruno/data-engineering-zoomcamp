@@ -5,7 +5,46 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:81a36f1803e5f83403fbfed0108ab61e9ad3828b37a2a84e712d298ceae5a19f"
+content_hash = "sha256:4dc6d6b4117a71198d02be06b0b0a796c1d6dd5781ba326eda8982d5eaa92955"
+
+[[package]]
+name = "adbc-driver-manager"
+version = "0.10.0"
+requires_python = ">=3.9"
+summary = "A generic entrypoint for ADBC drivers."
+groups = ["default"]
+dependencies = [
+    "typing-extensions",
+]
+files = [
+    {file = "adbc_driver_manager-0.10.0-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:d2b6800fdf26920b50497b11c3af9069974d2e5d066db35ff35f83d30842ea55"},
+    {file = "adbc_driver_manager-0.10.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:7750cd791ba0b4f5bcd1c8cb73a8be4783f3857932562067ee928650ecb6bbe8"},
+    {file = "adbc_driver_manager-0.10.0-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f5e6dc4f860a2486580f5346bd41faeff9d2f0e80a69fe15234242a12e1f4e06"},
+    {file = "adbc_driver_manager-0.10.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:259ff9e28273de0395def083b9241b808ccf7c9e8ff4c4144892c6b2f035bcc3"},
+    {file = "adbc_driver_manager-0.10.0-cp310-cp310-win_amd64.whl", hash = "sha256:43e304558acee50d3465171c427604cf84638b9b246166f05f5352001636f936"},
+    {file = "adbc_driver_manager-0.10.0-cp311-cp311-macosx_10_15_x86_64.whl", hash = "sha256:85ba7c47fa08ba4ac76b83d420f6d3a7ffc569a03c45818309c5cc4f99a1fb7b"},
+    {file = "adbc_driver_manager-0.10.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:81bd09520ba8f5cf533e16e11ac239fcbebd415763e5e2f28743d21a6b2c4d34"},
+    {file = "adbc_driver_manager-0.10.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f047c443abaf79fcb0a623ef78a18c8d819f34f14c3214ecd69058529be0a111"},
+    {file = "adbc_driver_manager-0.10.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0a5351ae521ebddc2753e45a73d82023c6fd919b7c92ae726637806e8ba70946"},
+    {file = "adbc_driver_manager-0.10.0-cp311-cp311-win_amd64.whl", hash = "sha256:1f8b72efa7204082121bdec39c247906b9aea1d85db4fcd26fec9af64b8fb27b"},
+]
+
+[[package]]
+name = "adbc-driver-postgresql"
+version = "0.10.0"
+requires_python = ">=3.9"
+summary = "A libpq-based ADBC driver for working with PostgreSQL."
+groups = ["default"]
+dependencies = [
+    "adbc-driver-manager",
+]
+files = [
+    {file = "adbc_driver_postgresql-0.10.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:727fc6852bd504deda6a03c6b77aa1a788ba9485012f043fd9b647476f9c0501"},
+    {file = "adbc_driver_postgresql-0.10.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:9cc41c581c1c13899ff92c196ce23bc8287cb069524271d60bedeabb824a89b2"},
+    {file = "adbc_driver_postgresql-0.10.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:6bcd69ce87186bd827c9f9f459af0523d5cf14a135ea28baf313d5a9c8749fd8"},
+    {file = "adbc_driver_postgresql-0.10.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:28baf681f539fbaa9f6b192a69025b5b4f218c5172c8fc8e27fd3a4570aeda71"},
+    {file = "adbc_driver_postgresql-0.10.0-py3-none-win_amd64.whl", hash = "sha256:1bea75ced7d0bfa0672ebfc0fd051246d728a3dc77b5d2f8cdd9d4980541b904"},
+]
 
 [[package]]
 name = "annotated-types"
