@@ -1,6 +1,6 @@
 # Stream Processing in SQL with RisingWave
 
-![project](./assets/project.png)
+![project](../../assets/rw-workshop-project.png)
 
 Before beginning on this section, make sure you have setup your environment according to the [README](./README.md).
 
@@ -75,24 +75,39 @@ psql
 
 First, we verify `taxi_zone`, since this is static data:
 ```sql
-SELECT * FROM taxi_zone;
+select * from taxi_zone;
 ```
 
 We will also query for recent data, to ensure we are getting real-time data.
 
 ```sql
-SELECT pulocationid, dolocationid, tpep_pickup_datetime, tpep_dropoff_datetime
-FROM trip_data WHERE tpep_dropoff_datetime > now() - interval '1 minute';
+select  
+    pulocationid, 
+    dolocationid, 
+    tpep_pickup_datetime, 
+    tpep_dropoff_datetime
+from 
+    trip_data 
+where 
+    tpep_dropoff_datetime > now() - interval '1 minute';
 ```
 
 We can join this with `taxi_zone` to get the names of the zones.
 
 ```sql
-SELECT taxi_zone.Zone as pickup_zone, taxi_zone_1.Zone as dropoff_zone, tpep_pickup_datetime, tpep_dropoff_datetime
- FROM trip_data
- JOIN taxi_zone ON trip_data.PULocationID = taxi_zone.location_id
- JOIN taxi_zone as taxi_zone_1 ON trip_data.DOLocationID = taxi_zone_1.location_id
- WHERE tpep_dropoff_datetime > now() - interval '1 minute';
+select
+    taxi_zone.Zone as pickup_zone, 
+    taxi_zone_1.Zone as dropoff_zone, 
+    tpep_pickup_datetime, 
+    tpep_dropoff_datetime
+from
+    trip_data
+join 
+    taxi_zone on trip_data.PULocationID = taxi_zone.location_id
+join 
+    taxi_zone as taxi_zone_1 on trip_data.DOLocationID = taxi_zone_1.location_id
+where 
+    tpep_dropoff_datetime > now() - interval '1 minute';
 ```
 
 And finally make it into an MV so we can constantly query the latest realtime data:
@@ -212,7 +227,7 @@ Go to your local [RisingWave Dashboard](http://localhost:5691) to see the query 
 
 Provided a simplified a simpler version here:
 
-![query_plan](./assets/mv1_plan.png)
+![query_plan](../../assets/rw-matview-plan-simple.png)
 
 ```sql
 CREATE MATERIALIZED VIEW total_airport_pickups AS
@@ -221,8 +236,7 @@ CREATE MATERIALIZED VIEW total_airport_pickups AS
         taxi_zone.Zone
     FROM
         trip_data
-            JOIN taxi_zone
-                 ON trip_data.PULocationID = taxi_zone.location_id
+    JOIN taxi_zone ON trip_data.PULocationID = taxi_zone.location_id
     WHERE taxi_zone.Zone LIKE '%Airport'
     GROUP BY taxi_zone.Zone;
 ```
@@ -278,7 +292,7 @@ CREATE MATERIALIZED VIEW jfk_pickups_1hr_before AS
 
 Simplified query plan:
 
-![query_plan](./assets/mv2_plan.png)
+![query_plan](../../assets/rw-matview-plan-dynfilter.png)
 
 ### Materialized View 3: Top 10 busiest zones in the last 1 minute
 
