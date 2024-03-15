@@ -8,7 +8,7 @@ x-kafka-common:
   image: *cp-kafka-image
   environment: &kafka-common-env
     KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT'
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT'
     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
     KAFKA_DELETE_TOPIC_ENABLE: true
@@ -49,7 +49,8 @@ services:
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 0
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker0:29092'
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker0:29092,OUTSIDE://localhost:9092
     ports:
       - '9092:9092'
     volumes:
@@ -65,8 +66,8 @@ services:
       CDK_CLUSTERS_0_ID: 'warp'
       CDK_CLUSTERS_0_NAME: 'kafka-cluster-dev'
       CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:29092'
-      CDK_ADMIN_EMAIL: 'admin@conduktor.io'
-      CDK_ADMIN_PASSWORD: 'admin'
+      CDK_ADMIN_EMAIL: 'conduktor@conduktor.io'
+      CDK_ADMIN_PASSWORD: 'conduktor'
       CDK_LISTENING_PORT: 8080
       RUN_MODE: nano
     ports:
