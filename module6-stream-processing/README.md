@@ -60,7 +60,7 @@ open http://localhost:8080
 
 Credentials:
 - `username:` admin@conduktor.io
-- `password:` admin
+- `password:` conduktor
 
 
 ## TODO:

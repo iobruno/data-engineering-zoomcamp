@@ -1,6 +1,6 @@
 # Kafka Streams with ksqlDB
 
-![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.4.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Kafka](https://img.shields.io/badge/ConfluentKafka-7.4.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -28,25 +28,25 @@ docker exec -it ksqlcli ksql http://ksqldb0:8088
 
 **2.** Config ksql to default fetching offsets from 'earliest'
 ```sql
-ksql> SET 'auto.offset.reset' = 'earliest';
+ksql> set 'auto.offset.reset' = 'earliest';
 ```
 
 
 **3.** Create the KStreams for `green_tripdata` and `fhv_tripdata`:
 ```sql
-CREATE SOURCE STREAM green_tripdata_stream (
-    vendor_id INT,
-    pickup_location_id INT
-) WITH (
+create source stream green_tripdata_stream (
+    vendor_id int,
+    pickup_location_id int
+) with (
     kafka_topic = 'green_tripdata',
     key_format = 'kafka',
     value_format = 'json'
 );
 
-CREATE SOURCE STREAM fhv_tripdata_stream (
-    dispatching_base_number VARCHAR,
-    pickup_location_id INT
-) WITH (
+create source stream fhv_tripdata_stream (
+    dispatching_base_number varchar,
+    pickup_location_id int
+) with (
     kafka_topic  = 'fhv_tripdata',
     key_format   = 'kafka',
     value_format = 'json'
@@ -55,76 +55,84 @@ CREATE SOURCE STREAM fhv_tripdata_stream (
 
 **4.** Create KTables to count the number of trips per location
 ```sql
-CREATE OR REPLACE TABLE green_tripdata_stats WITH (
+create or replace table green_tripdata_stats with (
     kafka_topic='green_tripdata_stats',
     key_format='kafka',
     value_format='json',
     partitions=2
-) AS
-    SELECT
-        pickup_location_id,
-        COUNT(*) as num_trips
-    FROM green_tripdata_stream
-    GROUP BY pickup_location_id
-    EMIT CHANGES
-;
+) as 
+select
+    pickup_location_id,
+    count(*) as num_trips
+from 
+    green_tripdata_stream
+group by
+    pickup_location_id
+emit changes;
+```
 
-CREATE OR REPLACE TABLE fhv_tripdata_stats WITH (
+```sql
+create or replace table fhv_tripdata_stats with (
     kafka_topic='fhv_pickup_stats',
     key_format='kafka',
     value_format='json',
     partitions=2
-) AS
-    SELECT
+) as
+    select
         pickup_location_id,
-        COUNT(*) as num_trips
-    FROM fhv_tripdata_stream
-    GROUP BY pickup_location_id
-    EMIT CHANGES
-;
+        count(*) as num_trips
+    from
+        fhv_tripdata_stream
+    group by
+        pickup_location_id
+    emit changes;
 ```
 
 **5.** Create the KTable to joining the `green` and `fhv` tripdata:
 ```sql
-CREATE OR REPLACE TABLE overall_pickup_stats WITH (
+create or replace table overall_pickup_stats with (
     kafka_topic='overall_pickup_stats',
     key_format='kafka',
     value_format='json',
     partitions=2
-) AS
-    SELECT
-        ROWKEY as id,
-        g.pickup_location_id as green_location_id,
-        f.pickup_location_id as fhv_location_id,
-        COALESCE(g.num_trips, CAST(0 as BIGINT)) as green_records,
-        COALESCE(f.num_trips, CAST(0 as BIGINT)) as fhv_records,
-        COALESCE(g.num_trips, CAST(0 as BIGINT)) + COALESCE(f.num_trips, CAST(0 as BIGINT)) as total_records,
-        1 as dummy_col -- workaround for overall_pickup_agg
-    FROM green_tripdata_stats as g
-    FULL OUTER JOIN fhv_tripdata_stats as f ON g.pickup_location_id = f.pickup_location_id
+) as
+select
+    rowkey as id,
+    g.pickup_location_id as green_location_id,
+    f.pickup_location_id as fhv_location_id,
+    coalesce(g.num_trips, CAST(0 as bigint)) as green_records,
+    coalesce(f.num_trips, CAST(0 as bigint)) as fhv_records,
+    coalesce(g.num_trips, CAST(0 as bigint)) + coalesce(f.num_trips, CAST(0 as bigint)) as total_records,
+    1 as dummy_col -- workaround for overall_pickup_agg
+    from
+        green_tripdata_stats g
+    full outer join
+        fhv_tripdata_stats f on g.pickup_location_id = f.pickup_location_id
 ;
 ```
 
 **6.** Create the KTable to generate the statistics on Trips distribution:
 ```sql
 -- KTable for Statistics on Aggregation
-CREATE OR REPLACE TABLE overall_pickup_agg WITH (
+create or replace table overall_pickup_agg with (
     kafka_topic='overall_pickup_agg',
     key_format='kafka',
     value_format='json',
     partitions=2
-) AS
-    SELECT
-        SUM(green_records) as total_green_records,
-        SUM(fhv_records)   as total_fhv_records,
-        SUM(total_records) as overall_records,
+) as
+    select
+        sum(green_records) as total_green_records,
+        sum(fhv_records)   as total_fhv_records,
+        sum(total_records) as overall_records,
         dummy_col
-    FROM overall_pickup_stats
-    GROUP BY dummy_col
+    from
+        overall_pickup_stats
+    group by
+        dummy_col
 ;
 ```
-**7.** Query the statistics on Trips Distribution with:
 
+**7.** Query the statistics on Trips Distribution with:
 ```sql
 -- Bind to the console to all updates on Query:
 ksql> select * from overall_pickup_agg emit changes;
