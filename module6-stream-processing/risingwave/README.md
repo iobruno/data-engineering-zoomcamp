@@ -41,7 +41,7 @@ Now we can let that run in the background.
 
 Let's open another terminal to create the trip_data table:
 ```bash
-psql -f risingwave-sql/table/trip_data.sql
+psql -f sql/risingwave/table/trip_data.sql
 ```
 
 You may look at their definitions by running:

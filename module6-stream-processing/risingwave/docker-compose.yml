@@ -1,10 +1,26 @@
 ---
-version: "3"
-x-image: &image
-  image: ${RW_IMAGE:-risingwavelabs/risingwave:v1.6.1}
+version: "3.9"
+
+x-risingwave-image: &risingwave-image risingwavelabs/risingwave:${RISINGWAVE_VERSION:-v1.6.1}
+
 services:
-  risingwave-standalone:
-    <<: *image
+  risingwave:
+    image: *risingwave-image
+    container_name: risingwave
+    hostname: risingwave
+    environment:
+      RUST_BACKTRACE: "1"
+      ENABLE_TELEMETRY: ${ENABLE_TELEMETRY:-false}
+    ports:
+      - "4566:4566"
+      - "5690:5690"
+      - "5691:5691"
+      - "1250:1250"
+    volumes:
+      - "./risingwave.toml:/risingwave.toml"
+    depends_on:
+      - etcd-0
+      - minio-0
     command: "standalone --meta-opts=\" \
                     --listen-addr 0.0.0.0:5690 \
                     --advertise-addr 0.0.0.0:5690 \
@@ -18,7 +34,6 @@ services:
                  --compute-opts=\" \
                     --config-path /risingwave.toml \
                     --listen-addr 0.0.0.0:5688 \
-                    --prometheus-listener-addr 0.0.0.0:1250 \
                     --advertise-addr 0.0.0.0:5688 \
                     --async-stack-trace verbose \
                     --connector-rpc-endpoint 0.0.0.0:50051 \
@@ -30,35 +45,12 @@ services:
                    --config-path /risingwave.toml \
                    --listen-addr 0.0.0.0:4566 \
                    --advertise-addr 0.0.0.0:4566 \
-                   --prometheus-listener-addr 0.0.0.0:1250 \
                    --health-check-listener-addr 0.0.0.0:6786 \
                    --meta-addr http://0.0.0.0:5690\" \
                  --compactor-opts=\" \
                    --listen-addr 0.0.0.0:6660 \
-                   --prometheus-listener-addr 0.0.0.0:1250 \
                    --advertise-addr 0.0.0.0:6660 \
                    --meta-address http://0.0.0.0:5690\""
-    expose:
-      - "6660"
-      - "4566"
-      - "5688"
-      - "5690"
-      - "1250"
-      - "5691"
-    ports:
-      - "4566:4566"
-      - "5690:5690"
-      - "5691:5691"
-      - "1250:1250"
-    depends_on:
-      - etcd-0
-      - minio-0
-    volumes:
-      - "./risingwave.toml:/risingwave.toml"
-    environment:
-      RUST_BACKTRACE: "1"
-      ENABLE_TELEMETRY: ${ENABLE_TELEMETRY:-false}
-    container_name: risingwave-standalone
     healthcheck:
       test:
         - CMD-SHELL
@@ -68,16 +60,17 @@ services:
         - bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/5690; exit $$?;'
       interval: 1s
       timeout: 5s
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 28G
-        reservations:
-          memory: 28G
+    restart: on-failure:5
 
   etcd-0:
     image: "quay.io/coreos/etcd:v3.5.10"
+    container_name: etcd
+    hostname: etcd
+    ports:
+      - "2388:2388"
+      - "2389:2389"
+    volumes:
+      - "etcd-0:/etcd-data"
     command:
       - /usr/local/bin/etcd
       - "--listen-client-urls"
@@ -104,16 +97,6 @@ services:
       - "10000"
       - "--data-dir"
       - /etcd-data
-    expose:
-      - "2388"
-    ports:
-      - "2388:2388"
-      - "2389:2389"
-    depends_on: []
-    volumes:
-      - "etcd-0:/etcd-data"
-    environment: {}
-    container_name: etcd-0
     healthcheck:
       test:
         - CMD
@@ -124,10 +107,22 @@ services:
       interval: 1s
       timeout: 5s
       retries: 5
-    restart: always
+    restart: on-failure:5
 
   minio-0:
     image: "quay.io/minio/minio:latest"
+    container_name: minio
+    hostname: minio
+    environment:
+      MINIO_CI_CD: "1"
+      MINIO_ROOT_PASSWORD: hummockadmin
+      MINIO_ROOT_USER: hummockadmin
+      MINIO_DOMAIN: "minio-0"
+    ports:
+      - "9301:9301"
+      - "9400:9400"
+    volumes:
+      - "minio-0:/data"
     command:
       - server
       - "--address"
@@ -135,29 +130,12 @@ services:
       - "--console-address"
       - "0.0.0.0:9400"
       - /data
-    expose:
-      - "9301"
-      - "9400"
-    ports:
-      - "9301:9301"
-      - "9400:9400"
-    depends_on: []
-    volumes:
-      - "minio-0:/data"
     entrypoint: "
       /bin/sh -c '
       set -e
       mkdir -p \"/data/hummock001\"
       /usr/bin/docker-entrypoint.sh \"$$0\" \"$$@\"
       '"
-    environment:
-      MINIO_CI_CD: "1"
-      MINIO_PROMETHEUS_AUTH_TYPE: public
-      MINIO_PROMETHEUS_URL: "http://prometheus-0:9500"
-      MINIO_ROOT_PASSWORD: hummockadmin
-      MINIO_ROOT_USER: hummockadmin
-      MINIO_DOMAIN: "minio-0"
-    container_name: minio-0
     healthcheck:
       test:
         - CMD-SHELL
@@ -165,8 +143,7 @@ services:
       interval: 1s
       timeout: 5s
       retries: 5
-    restart: always
-
+    restart: on-failure:5
 
 volumes:
   etcd-0:
