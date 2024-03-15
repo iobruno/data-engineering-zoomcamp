@@ -24,7 +24,7 @@ docker compose up -d
 ```
 
 #### Initialize Kafka and Rising Wave with some data
-The `seed_kafka.py` file contains the logic to process the data and populate RisingWave.
+The `seed.py` file contains the logic to process the data and populate RisingWave.
 
 Here we:
 1. Process the `taxi_zone` data and insert it into RisingWave. This is just ingested with DML over `psycog`, since it's a small dataset.
@@ -34,7 +34,7 @@ In order to simulate real-time data, we will replace the `timestamp` fields in t
 
 Let's start ingestion into RisingWave by running it:
 ```bash
-python seed_kafka.py update
+python seed.py update
 ```
 
 Now we can let that run in the background.
