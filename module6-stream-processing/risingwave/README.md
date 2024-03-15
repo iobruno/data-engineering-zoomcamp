@@ -16,8 +16,6 @@
 - Clickhouse (Sink)
 - MinIO (Storage)
 - Etcd (Metadata Storage)
-- Grafana (Visualization)
-- Prometheus (Metrics)
 
 ## Up & Running 
 
