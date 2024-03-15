@@ -18,14 +18,13 @@ dependencies = [
     "pyarrow>=15.0.1,<16.0",
     "confluent-kafka>=2.3.0,<3.0",
     "psycopg2-binary==2.9.9",
-    "adbc-driver-manager>=0.10.0,<1.0",
-    "adbc-driver-postgresql>=0.10.0,<1.0",
+    "sqlalchemy>=2.0.28",
     "uvicorn>=0.28.0,<1.0",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.3.2",
+    "ruff>=0.3.3",
 ]
 
 [tool.ruff]
