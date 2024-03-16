@@ -98,7 +98,7 @@ We can now query the MV to see the latest data:
 ```sql
 select * 
 from latest_1min_trip_data 
-order by tpep_dropoff_datetime DESC;
+order by tpep_dropoff_datetime desc;
 ```
 
 
@@ -187,7 +187,7 @@ Next, we also want to keep track of the latest pickup
 ```sql
 create materialized view latest_jfk_pickup as
 select
-    max(tpep_pickup_datetime) AS latest_pickup_time
+    max(tpep_pickup_datetime) as latest_pickup_time
 from
     yellow_taxi_trips ytt
 inner join
@@ -252,7 +252,7 @@ inner join
 inner join 
     taxi_zones doz on ytt.DOLocationID = doz.location_id
 order by
-    trip_distance Desc
+    trip_distance desc
 limit 
     10;
 ```
@@ -328,7 +328,7 @@ xdg-open webapp/index.html
 
 #### Materialized View 5: Average Fare Amount vs Number of rides
 
-How does `avg_fare_amt` change relative to number of pickups per minute?
+How does `avg_fare_amount` change relative to number of pickups per minute?
 
 We use something known as a [tumble window function](https://docs.risingwave.com/docs/current/sql-function-time-window/#tumble-time-window-function), to compute this.
 
@@ -403,8 +403,12 @@ clickhouse-client-term
 
 Run some queries in `Clickhouse`
 ```sql
-select max(avg_fare_amount_per_min) from avg_fare_amount;
-select min(avg_fare_amount_per_min) from avg_fare_amount;
+select max(avg_fare_amount_per_min) 
+from avg_fare_amount;
+```
+```sql
+select min(avg_fare_amount_per_min) 
+from avg_fare_amount;
 ```
 
 ## References
@@ -412,8 +416,5 @@ select min(avg_fare_amount_per_min) from avg_fare_amount;
 - https://docs.risingwave.com/docs/current/risingwave-docker-compose/
 - https://docs.risingwave.com/docs/current/ingest-from-kafka/
 - https://docs.risingwave.com/docs/current/data-ingestion/
-- https://docs.risingwave.com/docs/current/data-delivery/
 - https://docs.risingwave.com/docs/current/sink-to-clickhouse/
-
-## TODO
-- T.B.D.
+- https://docs.risingwave.com/docs/current/data-delivery/
