@@ -3,7 +3,7 @@ import logging
 import math
 import time
 
-import pendulum as pe
+import pendulum
 import polars as pl
 from confluent_kafka import Producer as KafkaProducer
 from sqlalchemy import create_engine, text
@@ -20,20 +20,28 @@ def acked(err, msg):
         logging.error("Failed to deliver message: %s: %s" % (str(msg), str(err)))
 
 
+def fmt_message(record: dict):
+    interval = pendulum.interval(
+        start=record["tpep_pickup_datetime"],
+        end=record["tpep_dropoff_datetime"],
+    )
+    now = pendulum.now("utc")
+    record["tpep_dropoff_datetime"] = now.to_datetime_string()
+    record["tpep_pickup_datetime"] = now.subtract(seconds=interval.seconds).to_datetime_string()
+    return json.dumps(record, default=str).encode("utf-8")
+
+
 def push_to_kafka(producer: KafkaProducer, topic: str, df, chunk_size: int, delay: float = 0):
     num_chunks = math.ceil(len(df) / chunk_size)
     total_records = 0
+
     for chunk_id in range(num_chunks):
         chunk = df.slice(offset=chunk_id * chunk_size, length=chunk_size)
         real_chk_size = len(chunk)
         total_records += real_chk_size
 
         for record in chunk.iter_rows(named=True):
-            interval = pe.interval(record["tpep_dropoff_datetime"], record["tpep_pickup_datetime"])
-            record["tpep_dropoff_datetime"] = pe.now("utc")
-            record["tpep_pickup_datetime"] = pe.now("utc").add(seconds=interval.seconds)
-
-            message = json.dumps(record, default=str).encode("utf-8")
+            message = fmt_message(record)
             producer.produce(topic, key="", value=message, callback=acked)
 
         producer.flush()
@@ -61,7 +69,7 @@ def send_csv_records(
     engine: str = "sqlalchemy",
 ):
     # Workaround for RisingWave, since 'write_disposition='replace' doesn't work yet
-    # Also, Polars' adbc-driver (to use Postgres' COPY mechanism doesn't work either)
+    # Also, Polars' adbc-driver (to use Postgres' COPY mechanism) doesn't work either
     with create_engine(conn_string).connect() as conn:
         conn.execute(text("drop table if exists taxi_zone"))
 
