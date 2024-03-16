@@ -20,6 +20,7 @@
 ## Up & Running 
 
 ```shell
+docker compose -f docker-compose.kafka.yml up -d
 docker compose up -d 
 ```
 
@@ -34,6 +35,7 @@ In order to simulate real-time data, we will replace the `timestamp` fields in t
 
 Let's start ingestion into RisingWave by running it:
 ```bash
+export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 python seed.py --use-streaming
 ```
 
