@@ -1,0 +1,152 @@
+---
+version: "3.9"
+
+x-risingwave-image: &risingwave-image risingwavelabs/risingwave:${RISINGWAVE_VERSION:-v1.6.1}
+
+services:
+  risingwave:
+    image: *risingwave-image
+    container_name: risingwave
+    hostname: risingwave
+    environment:
+      RUST_BACKTRACE: "1"
+      ENABLE_TELEMETRY: ${ENABLE_TELEMETRY:-false}
+    ports:
+      - "4566:4566"
+      - "5690:5690"
+      - "5691:5691"
+      - "1250:1250"
+    volumes:
+      - "./risingwave.toml:/risingwave.toml"
+    depends_on:
+      - etcd-0
+      - minio-0
+    command: "standalone --meta-opts=\" \
+                    --listen-addr 0.0.0.0:5690 \
+                    --advertise-addr 0.0.0.0:5690 \
+                    --dashboard-host 0.0.0.0:5691 \
+                    --connector-rpc-endpoint 0.0.0.0:50051 \
+                    --backend etcd \
+                    --etcd-endpoints etcd-0:2388 \
+                    --state-store hummock+minio://hummockadmin:hummockadmin@minio-0:9301/hummock001 \
+                    --data-directory hummock_001 \
+                    --config-path /risingwave.toml\" \
+                 --compute-opts=\" \
+                    --config-path /risingwave.toml \
+                    --listen-addr 0.0.0.0:5688 \
+                    --advertise-addr 0.0.0.0:5688 \
+                    --async-stack-trace verbose \
+                    --connector-rpc-endpoint 0.0.0.0:50051 \
+                    #--parallelism 4 \
+                    #--total-memory-bytes 8589934592 \
+                    --role both \
+                    --meta-address http://0.0.0.0:5690\" \
+                 --frontend-opts=\" \
+                   --config-path /risingwave.toml \
+                   --listen-addr 0.0.0.0:4566 \
+                   --advertise-addr 0.0.0.0:4566 \
+                   --health-check-listener-addr 0.0.0.0:6786 \
+                   --meta-addr http://0.0.0.0:5690\" \
+                 --compactor-opts=\" \
+                   --listen-addr 0.0.0.0:6660 \
+                   --advertise-addr 0.0.0.0:6660 \
+                   --meta-address http://0.0.0.0:5690\""
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/6660; exit $$?;'
+        - bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/5688; exit $$?;'
+        - bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/4566; exit $$?;'
+        - bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/5690; exit $$?;'
+      interval: 1s
+      timeout: 5s
+    restart: on-failure:5
+
+  etcd-0:
+    image: "quay.io/coreos/etcd:v3.5.10"
+    container_name: etcd
+    hostname: etcd
+    ports:
+      - "2388:2388"
+      - "2389:2389"
+    volumes:
+      - "etcd-0:/etcd-data"
+    command:
+      - /usr/local/bin/etcd
+      - "--listen-client-urls"
+      - "http://0.0.0.0:2388"
+      - "--advertise-client-urls"
+      - "http://etcd-0:2388"
+      - "--listen-peer-urls"
+      - "http://0.0.0.0:2389"
+      - "--initial-advertise-peer-urls"
+      - "http://etcd-0:2389"
+      - "--listen-metrics-urls"
+      - "http://0.0.0.0:2379"
+      - "--name"
+      - risedev-meta
+      - "--max-txn-ops"
+      - "999999"
+      - "--max-request-bytes"
+      - "10485760"
+      - "--auto-compaction-mode"
+      - periodic
+      - "--auto-compaction-retention"
+      - 1m
+      - "--snapshot-count"
+      - "10000"
+      - "--data-dir"
+      - /etcd-data
+    healthcheck:
+      test:
+        - CMD
+        - etcdctl
+        - --endpoints=http://localhost:2388
+        - endpoint
+        - health
+      interval: 1s
+      timeout: 5s
+      retries: 5
+    restart: on-failure:5
+
+  minio-0:
+    image: "quay.io/minio/minio:latest"
+    container_name: minio
+    hostname: minio
+    environment:
+      MINIO_CI_CD: "1"
+      MINIO_ROOT_PASSWORD: hummockadmin
+      MINIO_ROOT_USER: hummockadmin
+      MINIO_DOMAIN: "minio-0"
+    ports:
+      - "9301:9301"
+      - "9400:9400"
+    volumes:
+      - "minio-0:/data"
+    command:
+      - server
+      - "--address"
+      - "0.0.0.0:9301"
+      - "--console-address"
+      - "0.0.0.0:9400"
+      - /data
+    entrypoint: "
+      /bin/sh -c '
+      set -e
+      mkdir -p \"/data/hummock001\"
+      /usr/bin/docker-entrypoint.sh \"$$0\" \"$$@\"
+      '"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -c 'printf \"GET / HTTP/1.1\n\n\" > /dev/tcp/127.0.0.1/9301; exit $$?;'
+      interval: 1s
+      timeout: 5s
+      retries: 5
+    restart: on-failure:5
+
+volumes:
+  etcd-0:
+    external: false
+  minio-0:
+    external: false
