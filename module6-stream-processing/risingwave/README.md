@@ -34,7 +34,7 @@ Here we:
 In order to simulate real-time data, we will replace the `timestamp` fields in the `trip_data` with `timestamp`s close to the current time.
 
 Let's start ingestion into RisingWave by running it:
-```bash
+```shell
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 python seed.py --use-streaming
 ```
@@ -42,12 +42,12 @@ python seed.py --use-streaming
 Now we can let that run in the background.
 
 Let's open another terminal to create the trip_data table:
-```bash
+```shell
 psql -f sql/risingwave/table/yellow_taxi_trips.sql
 ```
 
 You may look at their definitions by running:
-```bash
+```shell
 psql -c 'show tables;'
 ```
 
@@ -311,7 +311,7 @@ Didn't include the query plan this time, you may look at the dashboard.
 After this, you may run the visualization dashboard to see the data in real-time.
 
 Start the backend which queries RisingWave:
-```bash
+```shell
 python webapp/api.py
 ```
 
@@ -397,7 +397,7 @@ with (
 ```
 
 Now we can run queries on the data ingested into clickhouse:
-```bash
+```shell
 clickhouse-client-term
 ```
 

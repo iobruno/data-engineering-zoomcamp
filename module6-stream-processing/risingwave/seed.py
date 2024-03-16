@@ -39,6 +39,9 @@ def send_records_to_kafka(kafka_config, topic: str, dataset_url: str, streaming:
     producer = KafkaProducer(kafka_config)
     records = pl.read_parquet(dataset_url)
 
+    # TODO: Updates pickup and dropoff times to simulate rides happening now
+    
+
     if streaming:
         logging.info("Starting real time updates to Kafka")
         return push_to_kafka(producer, topic, records, chunk_size=500, delay=5)
