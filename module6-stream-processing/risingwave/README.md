@@ -34,14 +34,14 @@ In order to simulate real-time data, we will replace the `timestamp` fields in t
 
 Let's start ingestion into RisingWave by running it:
 ```bash
-python seed.py update
+python seed.py --use-streaming
 ```
 
 Now we can let that run in the background.
 
 Let's open another terminal to create the trip_data table:
 ```bash
-psql -f sql/risingwave/table/trip_data.sql
+psql -f sql/risingwave/table/yellow_taxi_trips.sql
 ```
 
 You may look at their definitions by running:
@@ -54,7 +54,7 @@ psql -c 'show tables;'
 
 First, we verify `taxi_zone`, since this is static data:
 ```sql
-select * from taxi_zone;
+select * from taxi_zones;
 ```
 
 We will also query for recent data, to ensure we are getting real-time data.
@@ -65,8 +65,8 @@ select
     dolocationid, 
     tpep_pickup_datetime, 
     tpep_dropoff_datetime
-from 
-    trip_data 
+from
+    yellow_taxi_trips ytt 
 where 
     tpep_dropoff_datetime > now() - interval '1 minute';
 ```
@@ -78,16 +78,16 @@ We can join this with `taxi_zone` to get the names of the zones and create a mat
 ```sql
 create materialized view latest_1min_trip_data as
 select
-    taxi_zone.Zone as pickup_zone, 
-    taxi_zone_1.Zone as dropoff_zone, 
+    puz.zone as pickup_zone, 
+    doz.zone as dropoff_zone, 
     tpep_pickup_datetime, 
     tpep_dropoff_datetime
 from
-    trip_data
-join 
-    taxi_zone on trip_data.PULocationID = taxi_zone.location_id
-join 
-    taxi_zone as taxi_zone_1 on trip_data.DOLocationID = taxi_zone_1.location_id
+    yellow_taxi_trips ytt
+inner join 
+    taxi_zone puz on ytt.PULocationID = puz.location_id
+inner join 
+    taxi_zone doz on ytt.DOLocationID = doz.location_id
 where 
     tpep_dropoff_datetime > now() - interval '1 minute';
 ```
@@ -108,14 +108,14 @@ This is rather simple, we just need to filter the `PULocationID` to the airport 
  
 Recall `taxi_zone` contains metadata around the taxi zones, so we can use that to figure out the airport zones.
 ```sql
-describe taxi_zone;
+describe taxi_zones;
 ```
 
 Let's first get the zone names by looking at the `taxi_zone` table:
 ```sql
 select * 
-from taxi_zone 
-where Zone LIKE '%Airport';
+from taxi_zones tz
+where zone LIKE '%Airport';
 ```
 
 Then we can simply join on their location ids to get all the trips:
@@ -123,7 +123,7 @@ Then we can simply join on their location ids to get all the trips:
 select
     *
 from
-    trip_data
+    yellow_taxi_trips ytt
 inner join 
     taxi_zone on trip_data.PULocationID = taxi_zone.location_id
 where
@@ -282,25 +282,25 @@ limit
 
 Then we can create a temporal filter to get the longest trips for the last 5 minutes:
 ```sql
-create materialized view longest_trip_1_min as 
-select
-    tpep_pickup_datetime,
-    tpep_dropoff_datetime,
-    taxi_zone_pu.Zone as pickup_zone,
-    taxi_zone_do.Zone as dropoff_zone,
-    trip_distance
-from
-    trip_data t
-inner join 
-    taxi_zone pu on t.PULocationID = pu.location_id
-inner join 
-    taxi_zone do on t.DOLocationID = do.location_id
-where
-     t.tpep_pickup_datetime > (NOW() - INTERVAL '5' MINUTE)
-order by
-    trip_distance desc
-limit
-    10;
+create materialized view longest_trip_1_min as (
+    select tpep_pickup_datetime,
+           tpep_dropoff_datetime,
+           taxi_zone_pu.Zone as pickup_zone,
+           taxi_zone_do.Zone as dropoff_zone,
+           trip_distance
+    from trip_data t
+             inner join
+         taxi_zone pu on t.PULocationID = pu.location_id
+             inner join
+         taxi_zone do
+    on t.DOLocationID = do.location_id
+    where
+        t.tpep_pickup_datetime
+        > (NOW() - INTERVAL '5' MINUTE)
+    order by
+        trip_distance desc
+    limit 10
+)
 ```
 
 Didn't include the query plan this time, you may look at the dashboard.
