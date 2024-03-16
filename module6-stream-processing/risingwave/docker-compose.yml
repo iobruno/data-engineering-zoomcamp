@@ -22,6 +22,8 @@ services:
     depends_on:
       - etcd
       - minio
+    networks:
+      - risingwave
     command: "standalone --meta-opts=\" \
                     --listen-addr 0.0.0.0:5690 \
                     --advertise-addr 0.0.0.0:5690 \
@@ -72,6 +74,8 @@ services:
       - "2389:2389"
     volumes:
       - "etcd-data:/etcd-data"
+    networks:
+      - risingwave
     command: 
       "/usr/local/bin/etcd \
         --listen-client-urls http://0.0.0.0:2388 \
@@ -109,6 +113,8 @@ services:
       - "9400:9400"
     volumes:
       - "minio-data:/data"
+    networks:
+      - risingwave
     entrypoint: "
       /bin/sh -c '
 
@@ -132,3 +138,7 @@ volumes:
     name: rw-etcd-data
   minio-data:
     name: rw-minio-data
+
+networks:
+  risingwave:
+    name: risingwave

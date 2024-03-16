@@ -37,6 +37,8 @@ services:
     volumes:
       - ${ZK_DATA:-./volumes/zk_data}:/var/lib/zookeeper/data
       - ${ZK_LOGS:-./volumes/zk_logs}:/var/lib/zookeeper/log
+    networks:
+      - risingwave
     healthcheck:
       test: ["CMD-SHELL", "cub zk-ready localhost:2181 30 || exit 1"]
       interval: 10s
@@ -57,6 +59,9 @@ services:
       - '9092:9092'
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
+    networks:
+      - risingwave
+
 
   kafka-init:
     <<: *kafka-common
@@ -68,6 +73,8 @@ services:
     depends_on:
       broker:
         condition: service_healthy
+    networks:
+      - risingwave
     command:
       "bash -c 'echo Kafka is ready, attempting to create topics... &&
       kafka-topics  --bootstrap-server broker:29092 --create --if-not-exists --topic yellow-taxi-tripdata --replication-factor 1 --partitions 8 &&
@@ -94,4 +101,10 @@ services:
     depends_on:
       broker:
         condition: service_healthy
+    networks:
+      - risingwave
     restart: on-failure:5
+
+networks:
+  risingwave:
+    name: risingwave
