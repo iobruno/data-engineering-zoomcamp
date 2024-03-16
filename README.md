@@ -57,4 +57,5 @@ can take the course at your own pace
 ### [Module 6: Streaming](module6-stream-processing)
 * [Kafka for Stream Processing with Kotlin](module6-stream-processing/kotlin)
 * [Kafka Streams with ksqlDB](module6-stream-processing/ksqldb)
+* [RisingWave: Streaming Database](module6-stream-processing/risingwave/)
 * Homework

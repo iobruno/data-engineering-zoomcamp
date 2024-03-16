@@ -24,5 +24,6 @@ create table if not exists yellow_taxi_trips (
 ) with (
     connector='kafka',
     topic='yellow-taxi-tripdata',
-    properties.bootstrap.server='host.docker.internal:9092'
+    properties.bootstrap.server='broker:29092',
+    scan.startup.mode='earliest'
 ) format plain encode json;

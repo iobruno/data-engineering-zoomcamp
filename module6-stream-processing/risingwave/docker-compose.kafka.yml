@@ -37,6 +37,8 @@ services:
     volumes:
       - ${ZK_DATA:-./volumes/zk_data}:/var/lib/zookeeper/data
       - ${ZK_LOGS:-./volumes/zk_logs}:/var/lib/zookeeper/log
+    networks:
+      - risingwave
     healthcheck:
       test: ["CMD-SHELL", "cub zk-ready localhost:2181 30 || exit 1"]
       interval: 10s
@@ -44,19 +46,22 @@ services:
       retries: 10
     restart: on-failure:5
 
-  broker0:
+  broker:
     <<: *kafka-common
-    container_name: kafka-broker0
-    hostname: broker0
+    container_name: kafka-broker
+    hostname: broker
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 0
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker0:29092,OUTSIDE://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,OUTSIDE://localhost:9092
     ports:
       - '9092:9092'
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
+    networks:
+      - risingwave
+
 
   kafka-init:
     <<: *kafka-common
@@ -66,12 +71,14 @@ services:
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
     depends_on:
-      broker0:
+      broker:
         condition: service_healthy
+    networks:
+      - risingwave
     command:
       "bash -c 'echo Kafka is ready, attempting to create topics... &&
-      kafka-topics  --bootstrap-server broker0:29092 --create --if-not-exists --topic yellow-taxi-tripdata --replication-factor 1 --partitions 8 &&
-      kafka-configs --bootstrap-server broker0:29092 --alter --topic yellow-taxi-tripdata --add-config cleanup.policy=compact &&
+      kafka-topics  --bootstrap-server broker:29092 --create --if-not-exists --topic yellow-taxi-tripdata --replication-factor 1 --partitions 8 &&
+      kafka-configs --bootstrap-server broker:29092 --alter --topic yellow-taxi-tripdata --add-config cleanup.policy=delete &&
       echo Kafka setup is now done'"
 
   # Conduktor Platform Docs:
@@ -84,7 +91,7 @@ services:
     environment:
       CDK_CLUSTERS_0_ID: 'warp'
       CDK_CLUSTERS_0_NAME: 'cp-kafka-in-docker'
-      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:29092'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker:29092'
       CDK_ADMIN_EMAIL: 'conduktor@conduktor.io'
       CDK_ADMIN_PASSWORD: 'conduktor'
       CDK_LISTENING_PORT: 8080
@@ -92,6 +99,12 @@ services:
     ports:
       - '8080:8080'
     depends_on:
-      broker0:
+      broker:
         condition: service_healthy
+    networks:
+      - risingwave
     restart: on-failure:5
+
+networks:
+  risingwave:
+    name: risingwave
