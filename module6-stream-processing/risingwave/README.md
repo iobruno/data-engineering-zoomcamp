@@ -32,8 +32,12 @@ Here we:
 2. Process the `trip_data` and insert it into RisingWave. This is ingested via Kafka.
 
 In order to simulate real-time data, we will replace the `timestamp` fields in the `trip_data` with `timestamp`s close to the current time.
-
 Let's start ingestion into RisingWave by running it:
+```shell
+conda create -n risingwave python=3.11 -y
+conda activate risingwave
+```
+
 ```shell
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 python seed.py --use-streaming
