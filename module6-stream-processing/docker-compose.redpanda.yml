@@ -1,0 +1,45 @@
+version: "3.9" 
+
+x-redpanda-image: &redpanda-image docker.redpanda.com/vectorized/redpanda:${REDPANDA_VERSION:-v22.3.5}
+
+services:
+  broker-0:
+    image: *redpanda-image
+    container_name: kafka-broker-0
+    hostname: broker-0
+    command:
+      - redpanda start
+      - --smp 1
+      - --overprovisioned
+      - --node-id 0
+      - --kafka-addr PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      - --advertise-kafka-addr PLAINTEXT://broker-0:29092,OUTSIDE://localhost:9092
+      - --pandaproxy-addr 0.0.0.0:8082
+      - --advertise-pandaproxy-addr localhost:8082
+    ports:
+      - '9092:9092'
+      - '8081:8081'
+      - '8082:8082'
+    restart: on-failure:5
+
+  # Conduktor Platform Docs:
+  # - https://docs.conduktor.io/platform/configuration/env-variables
+  # - https://docs.conduktor.io/platform/installation/hardware
+  conduktor:
+    image: conduktor/conduktor-platform:1.17.3
+    container_name: conduktor
+    hostname: conduktor
+    environment:
+      CDK_CLUSTERS_0_ID: 'warp'
+      CDK_CLUSTERS_0_NAME: 'cp-kafka-in-docker'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker-0:29092'
+      CDK_ADMIN_EMAIL: 'conduktor@conduktor.io'
+      CDK_ADMIN_PASSWORD: 'conduktor'
+      CDK_LISTENING_PORT: 8080
+      RUN_MODE: nano
+    ports:
+      - '8080:8080'
+    depends_on:
+      broker-0:
+        condition: service_started
+    restart: on-failure:5
