@@ -32,9 +32,13 @@ Here we:
 2. Process the `trip_data` and insert it into RisingWave. This is ingested via Kafka.
 
 In order to simulate real-time data, we will replace the `timestamp` fields in the `trip_data` with `timestamp`s close to the current time.
-
 Let's start ingestion into RisingWave by running it:
-```bash
+```shell
+conda create -n risingwave python=3.11 -y
+conda activate risingwave
+```
+
+```shell
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 python seed.py --use-streaming
 ```
@@ -42,12 +46,12 @@ python seed.py --use-streaming
 Now we can let that run in the background.
 
 Let's open another terminal to create the trip_data table:
-```bash
+```shell
 psql -f sql/risingwave/table/yellow_taxi_trips.sql
 ```
 
 You may look at their definitions by running:
-```bash
+```shell
 psql -c 'show tables;'
 ```
 
@@ -80,17 +84,17 @@ We can join this with `taxi_zone` to get the names of the zones and create a mat
 ```sql
 create materialized view latest_1min_trip_data as
 select
-    puz.zone as pickup_zone, 
-    doz.zone as dropoff_zone, 
-    tpep_pickup_datetime, 
+    puz.zone as pickup_zone,
+    doz.zone as dropoff_zone,
+    tpep_pickup_datetime,
     tpep_dropoff_datetime
 from
     yellow_taxi_trips ytt
-inner join 
-    taxi_zone puz on ytt.PULocationID = puz.location_id
-inner join 
-    taxi_zone doz on ytt.DOLocationID = doz.location_id
-where 
+inner join
+    taxi_zones puz on ytt.PULocationID = puz.location_id
+inner join
+    taxi_zones doz on ytt.DOLocationID = doz.location_id
+where
     tpep_dropoff_datetime > now() - interval '1 minute';
 ```
 
@@ -98,7 +102,7 @@ We can now query the MV to see the latest data:
 ```sql
 select * 
 from latest_1min_trip_data 
-order by tpep_dropoff_datetime DESC;
+order by tpep_dropoff_datetime desc;
 ```
 
 
@@ -117,7 +121,7 @@ Let's first get the zone names by looking at the `taxi_zone` table:
 ```sql
 select * 
 from taxi_zones tz
-where zone LIKE '%Airport';
+where zone like '%Airport';
 ```
 
 Then we can simply join on their location ids to get all the trips:
@@ -127,32 +131,33 @@ select
 from
     yellow_taxi_trips ytt
 inner join 
-    taxi_zone on trip_data.PULocationID = taxi_zone.location_id
+    taxi_zones tz on ytt.PULocationID = tz.location_id
 where
-    taxi_zone.Zone LIKE '%Airport';
+    tz.zone like '%Airport';
 ```
 
 And finally apply the `count(*)` aggregation for each airport.  
 We can now create a Materialized View to constantly query the latest data:
 
 ```sql
-create materialized view total_airport_pickups as 
+create materialized view total_airport_pickups as
 select
-    tz.Zone,
-    count(*) AS cnt,
+    tz.zone,
+    count(*) AS num_trips
 from
-    trip_data t
+    yellow_taxi_trips ytt
 inner join 
-    taxi_zone tz on t.PULocationID = tz.location_id
+    taxi_zones tz on ytt.PULocationID = tz.location_id
 where 
-    tz.Zone LIKE '%Airport'
+    tz.zone like '%Airport'
 group by 
-    tz.Zone;
+    tz.zone;
 ```
 
 We can now query the MV to see the latest data:
 ```sql
-select * from total_airport_pickups;
+select * 
+from total_airport_pickups;
 ```
 
 #### Visualize the Data
@@ -174,9 +179,9 @@ select
     tpep_pickup_datetime,
     pulocationid
 from
-    trip_data t
+    yellow_taxi_trips ytt
 inner join
-    taxi_zone tz on t.PULocationID = tz.location_id
+    taxi_zones tz on ytt.PULocationID = tz.location_id
 where
     tz.Borough = 'Queens' 
     and tz.Zone = 'JFK Airport';
@@ -186,30 +191,30 @@ Next, we also want to keep track of the latest pickup
 ```sql
 create materialized view latest_jfk_pickup as
 select
-    max(tpep_pickup_datetime) AS latest_pickup_time
+    max(tpep_pickup_datetime) as latest_pickup_time
 from
-    trip_data t
+    yellow_taxi_trips ytt
 inner join
-    taxi_zone tz on t.PULocationID = tz.location_id
+    taxi_zones tz on ytt.PULocationID = tz.location_id
 where
-    tz.Borough = 'Queens' 
-    and taxi_zone.Zone = 'JFK Airport';
+    tz.borough = 'Queens' 
+    and tz.zone = 'JFK Airport';
 ```
 
 Finally, let's get the counts of the pickups from JFK Airport, 1 hour before the latest pickup
 ```sql
 create materialized view jfk_pickups_1hr_before as
 select
-    count(*) AS cnt
+    count(*) AS num_trips
 from
-    airport_pu
+    airport_pu air
 inner join
-    latest_jfk_pickup on airport_pu.tpep_pickup_datetime > latest_jfk_pickup.latest_pickup_time - interval '1 hour'
+    latest_jfk_pickup jfk on air.tpep_pickup_datetime > jfk.latest_pickup_time - interval '1 hour'
 inner join 
-    taxi_zone on airport_pu.PULocationID = taxi_zone.location_id
+    taxi_zones tz on air.PULocationID = tz.location_id
 where
-    taxi_zone.Borough = 'Queens' 
-    and taxi_zone.Zone = 'JFK Airport';
+    tz.borough = 'Queens' 
+    and tz.zone = 'JFK Airport';
 ```
 
 Simplified query plan:
@@ -219,39 +224,39 @@ Simplified query plan:
 #### Materialized View 3: Top 10 busiest zones in the last 1 minute
 
 First we can write a query to get the counts of the pickups from each zone.
-
 ```sql
 select
-    taxi_zone.Zone AS dropoff_zone,
-    count(*) AS last_1_min_dropoff_cnt
+    tz.zone as dropoff_zone,
+    count(*) as last_1_min_dropoffs
 from
-    trip_data t
+    yellow_taxi_trips ytt
 inner join 
-    taxi_zone tz on t.DOLocationID = tz.location_id
-group by BY
-    tz.Zone
+    taxi_zones tz on ytt.DOLocationID = tz.location_id
+group by
+    tz.zone
 order by 
-    last_1_min_dropoff_cnt desc
+    last_1_min_dropoffs desc
 limit 10;
 ```
 
 Next, we can create a temporal filter to get the counts of the pickups from each zone in the last 1 minute.
 
 ```sql
-create materialized view busiest_zones_1_min as 
+create materialized view busiest_zones_1_min as
 select
-    taxi_zone.Zone AS dropoff_zone,
-    count(*) AS last_1_min_dropoff_cnt
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    puz.Zone as pickup_zone,
+    doz.Zone as dropoff_zone,
+    trip_distance
 from
-    trip_data t
-inner join
-    taxi_zone tz on t.DOLocationID = tz.location_id
-where
-    t.tpep_dropoff_datetime > (now() - interval '1' minute)
-group by
-    tz.Zone
-order by 
-    last_1_min_dropoff_cnt desc
+    yellow_taxi_trips ytt
+inner join 
+    taxi_zones puz on ytt.PULocationID = puz.location_id
+inner join 
+    taxi_zones doz on ytt.DOLocationID = doz.location_id
+order by
+    trip_distance desc
 limit 
     10;
 ```
@@ -267,42 +272,42 @@ First we create the query to get the longest trips:
 select
     tpep_pickup_datetime,
     tpep_dropoff_datetime,
-    taxi_zone_pu.Zone as pickup_zone,
-    taxi_zone_do.Zone as dropoff_zone,
+    puz.Zone as pickup_zone,
+    doz.Zone as dropoff_zone,
     trip_distance
 from
-    trip_data t
+    yellow_taxi_trips ytt
 inner join 
-    taxi_zone pu on t.PULocationID = pu.location_id
+    taxi_zones puz on ytt.PULocationID = puz.location_id
 inner join 
-    taxi_zone do on t.DOLocationID = do.location_id
+    taxi_zones doz on ytt.DOLocationID = doz.location_id
 order by
-    trip_distance Desc
+    trip_distance desc
 limit 
     10;
 ```
 
 Then we can create a temporal filter to get the longest trips for the last 5 minutes:
 ```sql
-create materialized view longest_trip_1_min as (
-    select tpep_pickup_datetime,
-           tpep_dropoff_datetime,
-           taxi_zone_pu.Zone as pickup_zone,
-           taxi_zone_do.Zone as dropoff_zone,
-           trip_distance
-    from trip_data t
-             inner join
-         taxi_zone pu on t.PULocationID = pu.location_id
-             inner join
-         taxi_zone do
-    on t.DOLocationID = do.location_id
-    where
-        t.tpep_pickup_datetime
-        > (NOW() - INTERVAL '5' MINUTE)
-    order by
-        trip_distance desc
-    limit 10
-)
+create materialized view longest_trip_1_min as
+select 
+    tpep_pickup_datetime,
+    tpep_dropoff_datetime,
+    puz.zone as pickup_zone,
+    doz.zone as dropoff_zone,
+    trip_distance
+from 
+    yellow_taxi_trips ytt
+inner join
+    taxi_zones puz on ytt.PULocationID = puz.location_id
+inner join
+    taxi_zones doz on ytt.DOLocationID = doz.location_id
+where
+    ytt.tpep_pickup_datetime > (now() - interval '5' minute)
+order by
+    trip_distance desc
+limit 
+    10;
 ```
 
 Didn't include the query plan this time, you may look at the dashboard.
@@ -310,15 +315,14 @@ Didn't include the query plan this time, you may look at the dashboard.
 After this, you may run the visualization dashboard to see the data in real-time.
 
 Start the backend which queries RisingWave:
-```bash
-python server.py
+```shell
+python webapp/api.py
 ```
 
 #### Visualize Data from Materialized View 3 and 4
 
 Start the frontend, in a separate terminal
-
-```bash
+```shell
 ### macOS
 open webapp/index.html
 
@@ -326,22 +330,21 @@ open webapp/index.html
 xdg-open webapp/index.html
 ```
 
-
 #### Materialized View 5: Average Fare Amount vs Number of rides
 
-How does `avg_fare_amt` change relative to number of pickups per minute?
+How does `avg_fare_amount` change relative to number of pickups per minute?
 
 We use something known as a [tumble window function](https://docs.risingwave.com/docs/current/sql-function-time-window/#tumble-time-window-function), to compute this.
 
 ```sql
-create materialized view avg_fare_amt as
+create materialized view avg_fare_amount as
 select
-    avg(fare_amount) AS avg_fare_amount_per_min,
-    count(*) AS num_rides_per_min,
+    avg(fare_amount) as avg_fare_amount_per_min,
+    count(*) as num_rides_per_min,
     window_start,
     window_end
 from
-    tumble(trip_data, tpep_pickup_datetime, interval '1' minute)
+    tumble(yellow_taxi_trips, tpep_pickup_datetime, interval '1' minute)
 group by
     window_start, 
     window_end
@@ -349,26 +352,24 @@ order by
     num_rides_per_min asc;
 ```
 
-For each window we compute the average fare amount and the number of rides.
-
-That's all for the materialized views!
+For each window we compute the average fare amount and the number of rides. That's all for the materialized views!
 
 Now we will see how to sink the data out from RisingWave.
 
+
 #### How to sink data from RisingWave to Clickhouse
 
-Reference:
-- https://docs.risingwave.com/docs/current/data-delivery/
-- https://docs.risingwave.com/docs/current/sink-to-clickhouse/
-
-We have done some simple analytics and processing of the data in RisingWave.
-
+We have done some simple analytics and processing of the data in RisingWave.  
 Now we want to sink the data out to Clickhouse, for further analysis.
 
 We will create a Clickhouse table to store the data from the materialized views.
 
+```shell
+docker compose -f docker-compose.clickhouse.yml up -d
+```
+
 ```sql
-create table avg_fare_amt(
+create table avg_fare_amount(
     avg_fare_amount_per_min numeric,
     num_rides_per_min Int64,
 ) engine = ReplacingMergeTree
@@ -381,41 +382,43 @@ primary key (
 We will create a Clickhouse sink to sink the data from the materialized views to the Clickhouse table.
 
 ```sql
-create sink if not exists avg_fare_amt_sink as 
-select 
-    avg_fare_amount_per_min, 
-    num_rides_per_min 
-from 
-    avg_fare_amt
+create sink if not exists avg_fare_amount_sink as 
+select
+    avg_fare_amount_per_min,
+    num_rides_per_min
+from
+    avg_fare_amount
 with (
     connector = 'clickhouse',
     type = 'append-only',
     clickhouse.url = 'http://clickhouse:8123',
-    clickhouse.user = '',
-    clickhouse.password = '',
+    clickhouse.user = 'clickhouse',
+    clickhouse.password = 'clickhouse',
     clickhouse.database = 'default',
-    clickhouse.table='avg_fare_amt',
+    clickhouse.table='avg_fare_amount',
     force_append_only = 'true'
 );
 ```
 
 Now we can run queries on the data ingested into clickhouse:
-```bash
+```shell
 clickhouse-client-term
 ```
 
 Run some queries in `Clickhouse`
 ```sql
-select max(avg_fare_amount_per_min) from avg_fare_amt;
-select min(avg_fare_amount_per_min) from avg_fare_amt;
+select max(avg_fare_amount_per_min) 
+from avg_fare_amount;
 ```
-
+```sql
+select min(avg_fare_amount_per_min) 
+from avg_fare_amount;
+```
 
 ## References
 - https://tutorials.risingwave.com/docs/category/basics
 - https://docs.risingwave.com/docs/current/risingwave-docker-compose/
 - https://docs.risingwave.com/docs/current/ingest-from-kafka/
 - https://docs.risingwave.com/docs/current/data-ingestion/
-
-## TODO
-- T.B.D.
+- https://docs.risingwave.com/docs/current/sink-to-clickhouse/
+- https://docs.risingwave.com/docs/current/data-delivery/

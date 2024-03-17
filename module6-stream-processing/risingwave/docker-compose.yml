@@ -73,7 +73,7 @@ services:
       - "2388:2388"
       - "2389:2389"
     volumes:
-      - "etcd-data:/etcd-data"
+      - "etcd-data:/etc-data"
     networks:
       - risingwave
     command: 
@@ -105,8 +105,8 @@ services:
     hostname: minio
     environment:
       MINIO_CI_CD: "1"
-      MINIO_ROOT_PASSWORD: hummockadmin
       MINIO_ROOT_USER: hummockadmin
+      MINIO_ROOT_PASSWORD: hummockadmin
       MINIO_DOMAIN: "minio"
     ports:
       - "9301:9301"
@@ -115,8 +115,9 @@ services:
       - "minio-data:/data"
     networks:
       - risingwave
-    entrypoint: "
-      /bin/sh -c '
+    entrypoint:
+      # TODO: This is really bad, but when refactoring to a single line, it crashes. Will refactor later
+      "/bin/sh -c '
 
       set -e
 
