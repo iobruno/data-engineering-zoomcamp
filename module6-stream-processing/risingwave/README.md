@@ -36,7 +36,13 @@ conda activate risingwave
 
 ```shell
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+```
+```shell
+# For Streaming: chunk_size=100 records (default), delay=1 sec (default)
 python seed.py --use-streaming
+
+# For Batch: chunk_size=100_000 records (Default), delay=10 secs (enforced)
+python seed.py --delay=10
 ```
 
 ### Configure Kafka as DataSource for RisingWave
