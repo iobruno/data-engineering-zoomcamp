@@ -35,15 +35,15 @@ conda activate risingwave
 pdm sync
 ```
 
-**3.** Export ENV VARS to connect to Kafka:
-```shell
-export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-```
-
-**4.** Start Kafka Cluster and RisingWave
+**3.** Start Kafka Cluster and RisingWave
 ```shell
 docker compose -f docker-compose.kafka.yml up -d
 docker compose up -d 
+```
+
+**4.** Export ENV VARS to connect to Kafka:
+```shell
+export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
 ```
 
 **5.** Run seed.py script:
@@ -72,10 +72,11 @@ usql postgres://root@localhost:4566/dev -f sql/risingwave/table/yellow_taxi_trip
 
 #### Validating the ingested data
 ```sql
-select * from taxi_zones;
+usql postgres://root@localhost:4566/dev -c 'select * from taxi_zones'
 ```
+
 ```sql
-select * from yellow_taxi_trips;
+usql postgres://root@localhost:4566/dev -c 'select count(1) from yellow_taxi_trips';
 ```
 
 ### RisingWave: Materialized Views
