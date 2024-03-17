@@ -49,16 +49,16 @@ def push_to_kafka(producer: KafkaProducer, topic: str, df, chunk_size: int, dela
         time.sleep(delay)
 
 
-def send_records_to_kafka(kafka_config, topic: str, dataset_url: str, streaming: bool):
+def send_records_to_kafka(kafka_config, topic: str, dataset_url: str, streaming: bool, delay: int):
     producer = KafkaProducer(kafka_config)
     df = pl.read_parquet(dataset_url)
 
     if streaming:
         logging.info("Starting real time updates to Kafka")
-        return push_to_kafka(producer, topic, df, chunk_size=100, delay=1)
+        return push_to_kafka(producer, topic, df, chunk_size=100, delay=delay)
 
     logging.info("Sending historical data to Kafka")
-    return push_to_kafka(producer, topic, df, chunk_size=100_000)
+    return push_to_kafka(producer, topic, df, chunk_size=100_000, delay=delay)
 
 
 def send_csv_records(
@@ -97,6 +97,7 @@ def seed(
     rw_user: Annotated[str, Argument(envvar="RISINGWAVE_USER")] = "root",
     rw_pass: Annotated[str, Argument(envvar="RISINGWAVE_PASS")] = "",
     stream_ff: Annotated[bool, Option("--use-streaming")] = False,
+    secs_delay: Annotated[int, Option("--delay", help="Delay in secs between each chunk")] = 1,
 ):
     logging.info("Loading taxi zone data to RisingWave...")
     num_records = send_csv_records(
@@ -115,6 +116,7 @@ def seed(
         topic="yellow-taxi-tripdata",
         dataset_url="https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_2022-01.parquet",
         streaming=stream_ff,
+        delay=secs_delay,
     )
 
 

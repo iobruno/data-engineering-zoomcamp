@@ -7,36 +7,60 @@
 ![etcd](https://img.shields.io/badge/etcd-1E6897?style=flat&logo=etcd&logoColor=FFFFFF&labelColor=275C80)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
-![project](../../assets/rw-workshop-project.png)
+![RisingWaveProject](../../assets/rw-workshop-project.png)
 
 
 ## Tech Stack
-- RisingWave (Stream Processing)
-- Kafka (Data Source)
-- Clickhouse (Sink)
-- MinIO (Storage)
-- Etcd (Metadata Storage)
+- [RisingWave]() (Stream Processing)
+- [Kafka](https://docs.confluent.io/platform/current/installation/configuration/index.html) (Data Source)
+- [ClickHouse](https://clickhouse.com/docs/en/sql-reference/statements/create/table) (Sink)
+- [MinIO](https://min.io/docs/minio/container) (Object Storage)
+- [etcd](https://etcd.io/docs/v2.3/docker_guide/) (Metadata Storage)
+- [PDM](https://pdm-project.org/latest/usage/dependency/)
+- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [Docker](https://docs.docker.com/get-docker/)
 
 ## Up & Running 
 
-### Start Kafka Cluster and RisingWave
-```shell
-docker compose -f docker-compose.kafka.yml up -d
-docker compose up -d 
-```
-
-The `seed.py` file contains the logic to process the data and populate RisingWave. Here we'll:
-- Process the `taxi_zones` data and insert it into RisingWave. This is just ingested with DML over `psycog`, since it's a small dataset.
-- Process the `yellow_taxi_trip_data` and ingest into Kafka (which will be the source for RisingWave)
+### Developer Setup
+**1.** Create and activate a virtualenv for Python 3.11 with conda:
 
 ```shell
 conda create -n risingwave python=3.11 -y
 conda activate risingwave
 ```
 
+**2.** Install the dependencies on pyproject.toml:
+```shell
+pdm sync
+```
+
+**3.** Export ENV VARS to connect to Kafka:
 ```shell
 export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+```
+
+**4.** Start Kafka Cluster and RisingWave
+```shell
+docker compose -f docker-compose.kafka.yml up -d
+docker compose up -d 
+```
+
+**5.** Run seed.py script:
+
+The `seed.py` file contains the logic to process the data and populate RisingWave. Here we'll:
+
+- Process the `taxi_zones` data and insert it into RisingWave. This is just ingested with DML over `psycog`, since it's a small dataset.
+- Process the `yellow_taxi_trip_data` and ingest into Kafka (which will be the source for RisingWave)
+
+```shell
+# For Streaming: chunk_size=100 records (default), delay=1 sec (default)
 python seed.py --use-streaming
+```
+
+```shell
+# For Batch: chunk_size=100_000 records (Default), delay=10 secs (enforced)
+python seed.py --delay=10
 ```
 
 ### Configure Kafka as DataSource for RisingWave
@@ -46,7 +70,7 @@ but it supports a wide variety of DBs, not just postgres.
 usql postgres://root@localhost:4566/dev -f sql/risingwave/table/yellow_taxi_trips.sql
 ```
 
-### Validating the ingested data
+#### Validating the ingested data
 ```sql
 select * from taxi_zones;
 ```
@@ -136,6 +160,7 @@ where
 ```
 
 Simplified query plan:
+
 ![query_plan](../../assets/rw-matview-plan-dynfilter.png)
 
 #### Materialized View: Top 10 busiest zones in the last 1 min
@@ -202,7 +227,7 @@ You can always access the [RisingWave Dashboard](http://localhost:5691) to see t
 open http://localhost:5691
 ```
 
-### TabularioJS for Real-time Dataviz 
+### Tabulator for Real-time Dataviz 
 Start the backend which queries RisingWave:
 ```shell
 python webapp/api.py
