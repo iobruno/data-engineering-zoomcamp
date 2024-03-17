@@ -55,10 +55,10 @@ def send_records_to_kafka(kafka_config, topic: str, dataset_url: str, streaming:
 
     if streaming:
         logging.info("Starting real time updates to Kafka")
-        return push_to_kafka(producer, topic, df, chunk_size=500, delay=5)
+        return push_to_kafka(producer, topic, df, chunk_size=100, delay=1)
 
     logging.info("Sending historical data to Kafka")
-    return push_to_kafka(producer, topic, df, chunk_size=500_000)
+    return push_to_kafka(producer, topic, df, chunk_size=100_000)
 
 
 def send_csv_records(

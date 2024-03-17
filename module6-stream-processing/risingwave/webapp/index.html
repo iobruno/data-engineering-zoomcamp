@@ -37,7 +37,7 @@
   }
 
   async function query_longest_trips() {
-    const response = await fetch('http://127.0.0.1:5000/get_longest_trips')
+    const response = await fetch('http://127.0.0.1:8000/longest_trips')
     return await response.json();
   }
 
@@ -68,7 +68,7 @@
   }
 
   async function query_busiest_zones() {
-    const response = await fetch('http://127.0.0.1:8000/get_busiest_zones')
+    const response = await fetch('http://127.0.0.1:8000/busiest_zones')
     return await response.json();
   }
 

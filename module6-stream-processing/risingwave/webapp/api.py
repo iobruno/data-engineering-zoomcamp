@@ -31,15 +31,15 @@ def run_query(query):
     return result
 
 
-@app.get("/get_busiest_zones")
+@app.get("/busiest_zones")
 def get_busiest_zones():
     stmt = "select * from busiest_zones_1_min"
     return run_query(stmt)
 
 
-@app.get("/get_longest_trips")
+@app.get("/longest_trips")
 def get_longest_trips():
-    stmt = "stmt * from longest_trip_1_min"
+    stmt = "select * from longest_trip_1_min"
     return run_query(stmt)
 
 
