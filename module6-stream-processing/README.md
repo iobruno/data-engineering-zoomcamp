@@ -15,7 +15,7 @@
 
 Copyright 2017-2022 Confluent Inc.
 
-CLI v7.4.3, Server v7.4.3 located at http://ksqldb-server:8088
+CLI v7.6.0, Server v7.6.0 located at http://ksqldb-0:8088
 Server Status: RUNNING
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
@@ -44,7 +44,7 @@ docker compose up -d
 
 **2.** Connect to ksqlDB through the ksqlDB CLI
 ```
-docker exec -it ksqlcli ksql http://ksqldb0:8088
+docker exec -it ksqlcli ksql http://ksqldb-0:8088
 ```
 
 You should be getting into this console:
@@ -57,10 +57,6 @@ ksql>
 ```shell
 open http://localhost:8080
 ```
-
-Credentials:
-- `username:` admin@conduktor.io
-- `password:` conduktor
 
 
 ## TODO:
