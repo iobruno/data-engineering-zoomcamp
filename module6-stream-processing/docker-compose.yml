@@ -7,28 +7,12 @@ x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUEN
 x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.6.0}
 x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUENT_PLATFORM_VERSION:-7.6.0}
 
-x-depends-on-kafka-brokers:
-  depends_on: &depends-on-kafka-brokers
-    broker0: 
-      condition: service_healthy
-    broker1: 
-      condition: service_healthy
-    broker2: 
-      condition: service_healthy
-
-x-depends-on-kafka-cluster:
-  depends_on: &depends-on-kafka-cluster
-    <<: *depends-on-kafka-brokers
-    schemaregistry: 
-      condition: service_healthy
-
 x-kafka-common: 
   &kafka-common
   image: *cp-kafka-image
   environment: &kafka-common-env
     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT_INTERNAL'
-    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT'
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,OUTSIDE:PLAINTEXT'
     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
     KAFKA_DELETE_TOPIC_ENABLE: true
@@ -42,6 +26,21 @@ x-kafka-common:
     timeout: 10s
     retries: 3
   restart: on-failure:5
+
+x-depends-on-kafka-brokers:
+  depends_on: &depends-on-kafka-brokers
+    broker-0:
+      condition: service_healthy
+    broker-1:
+      condition: service_healthy
+    broker-2:
+      condition: service_healthy
+
+x-depends-on-kafka-cluster:
+  depends_on: &depends-on-kafka-cluster
+    <<: *depends-on-kafka-brokers
+    schema-registry:
+      condition: service_healthy
 
 x-ksqldb-common:
   &ksqldb-common
@@ -76,52 +75,55 @@ services:
       retries: 10
     restart: on-failure:5
 
-  broker0:
+  broker-0:
     <<: *kafka-common
-    container_name: kafka_broker0
-    hostname: broker0
+    container_name: kafka-broker-0
+    hostname: broker-0
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 0
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker0:29092'
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-0:29092,OUTSIDE://localhost:9092
     ports:
       - '9092:9092'
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
 
-  broker1:
+  broker-1:
     <<: *kafka-common
-    container_name: kafka_broker1
-    hostname: broker1
+    container_name: kafka-broker-1
+    hostname: broker-1
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9192,PLAINTEXT_INTERNAL://broker1:29092'
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9192
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:29092,OUTSIDE://localhost:9192
     ports:
       - '9192:9192'
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker1:/var/lib/kafka/data
 
-  broker2:
+  broker-2:
     <<: *kafka-common
-    container_name: kafka_broker2
-    hostname: broker2
+    container_name: kafka-broker-2
+    hostname: broker-2
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 2
-      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9292,PLAINTEXT_INTERNAL://broker2:29092'
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9292
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-2:29092,OUTSIDE://localhost:9292
     ports:
       - '9292:9292'
     volumes:
       - ${KAFKA_DATA:-./volumes/kafka}/broker2:/var/lib/kafka/data
 
-  schemaregistry:
+  schema-registry:
     image: *cp-schema-registry-image
-    container_name: schemaregistry
-    hostname: schemaregistry
+    container_name: schema-registry
+    hostname: schema-registry
     environment:
-      SCHEMA_REGISTRY_HOST_NAME: 'schemaregistry'
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker0:29092,broker1:29092,broker2:29092'
+      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker-0:29092,broker-1:29092,broker-2:29092'
       SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8081'
       SCHEMA_REGISTRY_DEBUG: true
     ports:
@@ -135,14 +137,14 @@ services:
       retries: 3
     restart: on-failure:5
 
-  kafkarest:
+  kafka-rest:
     image: *cp-restproxy-image
-    container_name: kafkarest
-    hostname: kafkarest
+    container_name: kafka-rest
+    hostname: kafka-rest
     environment:
       KAFKA_REST_HOST_NAME: 'restproxy'
-      KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker0:29092,broker1:29092,broker2:29092'
-      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schemaregistry:8081'
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker-0:29092,broker-1:29092,broker-2:29092'
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
       KAFKA_REST_LISTENERS: 'http://0.0.0.0:8082'
     ports:
       - '8082:8082'
@@ -155,15 +157,15 @@ services:
       retries: 3
     restart: on-failure:5
 
-  ksqldb0:
+  ksqldb-0:
     <<: *ksqldb-common
-    container_name: ksqldb0
-    hostname: ksqldb0
+    container_name: ksqldb-0
+    hostname: ksqldb-0
     environment:
       <<: *ksqldb-common-env
-      KSQL_KSQL_SERVICE_ID: 'ksqldb0'
-      KSQL_BOOTSTRAP_SERVERS: 'broker0:29092,broker1:29092,broker2:29092'
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://schemaregistry:8081'
+      KSQL_KSQL_SERVICE_ID: 'ksqldb-0'
+      KSQL_BOOTSTRAP_SERVERS: 'broker-0:29092,broker-1:29092,broker-2:29092'
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
     ports:
       - '8088:8088'
     depends_on: *depends-on-kafka-cluster
@@ -181,7 +183,7 @@ services:
     entrypoint: /bin/bash
     tty: true
     depends_on:
-      ksqldb0:
+      ksqldb-0:
         condition: service_healthy
     restart: on-failure:5
  
@@ -195,10 +197,10 @@ services:
     environment:
       CDK_CLUSTERS_0_ID: 'warp'
       CDK_CLUSTERS_0_NAME: 'cp-kafka-in-docker'
-      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:29092,broker1:29092,broker2:29092'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker-0:29092,broker-1:29092,broker-2:29092'
       CDK_CLUSTERS_0_SCHEMAREGISTRY_ID: 'cp-schema-registry'
-      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://schemaregistry:8081'
-      CDK_ADMIN_EMAIL: 'admin@conduktor.io'
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://schema-registry:8081'
+      CDK_ADMIN_EMAIL: 'conduktor@conduktor.io'
       CDK_ADMIN_PASSWORD: 'conduktor'
       CDK_LISTENING_PORT: 8080
       RUN_MODE: nano
