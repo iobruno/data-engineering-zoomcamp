@@ -1,34 +1,27 @@
 # Stream Processing with Kafka & ksqlDB
 
-```
+![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.6.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
-                  ===========================================
-                  =       _              _ ____  ____       =
-                  =      | | _____  __ _| |  _ \| __ )      =
-                  =      | |/ / __|/ _` | | | | |  _ \      =
-                  =      |   <\__ \ (_| | | |_| | |_) |     =
-                  =      |_|\_\___/\__, |_|____/|____/      =
-                  =                   |_|                   =
-                  =        The Database purpose-built       =
-                  =        for stream processing apps       =
-                  ===========================================
+![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-Copyright 2017-2022 Confluent Inc.
+This submodule focuses on various approaches for Stream Processing, such as:
 
-CLI v7.6.0, Server v7.6.0 located at http://ksqldb-0:8088
-Server Status: RUNNING
+- [Kotlin](kotlin/): Producing and Consuming messages from/to Kafka with Kotlin/Java
+- [kSQLDB](ksqldb/): Stream Processing with kSQLDB (Kafka Streams)
+- [RisingWave](risingwave/): Stream Processing with RisingWave
 
-Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
+Hop into their respective folders for details on how to spin them up.
 
-ksql>
-```
+**Note**: They all use the same [docker-compose.yml](docker-compose.yml) to bootstrap the kafka cluster. So read the **Up and Running** instructions down below on how to set it up.
+
 
 ## Tech Stack
 - Confluent Kafka
 - Confluent Schema Registry
 - Confluent REST Proxy
 - [ksqlDB](https://ksqldb.io/)
-- [Conduktor Platform](https://www.conduktor.io/console/)
+- [Conduktor Platform](https://v2.conduktor.io/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 
@@ -36,33 +29,27 @@ ksql>
 
 ### Developer Setup
 
-**1.** Start up Kafka Cluster with:
-
+**1.** Start the Kafka Cluster:
 ```shell
 docker compose up -d
 ```
 
-**2.** Connect to ksqlDB through the ksqlDB CLI
-```
-docker exec -it ksqlcli ksql http://ksqldb-0:8088
-```
-
-You should be getting into this console:
-```
-ksql>
+Alternatively, you can use the multi-broker setup with:
+```shell
+docker compose -f docker-compose.multi.yml up -d
 ```
 
-**3.** Access Conduktor Web UI for Kafka
 
+**2.** Access Conduktor Web UI for Kafka
 ```shell
 open http://localhost:8080
 ```
 
-
 ## TODO:
-- [x] Set up a Kafka Cluster with ZooKeeper
-- [x] Set up Confluent Schema Registry
-- [x] Set up Confluent Rest Proxy
-- [x] Set up ksqlDB Server and CLI
-- [x] Set up `Conduktor Platform` Web UI
+- [ ] Single-broker Kafka Cluster
+- [x] Multi-broker Kafka Cluster
+- [x] Confluent Schema Registry
+- [x] Confluent Rest Proxy
+- [x] ksqlDB Server and CLI
+- [x] Kafka Admin UI: `Conduktor Console`
 - [ ] Deploy Kafka Cluster on K8s with Helm Charts

@@ -1,12 +1,33 @@
 # Kafka Streams with ksqlDB
 
-![Kafka](https://img.shields.io/badge/ConfluentKafka-7.4.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.6.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This contains the SQL statements to build the KStreams and KTables for ksqlDB to allow an overview of Green and FHV Trips distribution
 
+```shell
+        ===========================================
+        =       _              _ ____  ____       =
+        =      | | _____  __ _| |  _ \| __ )      =
+        =      | |/ / __|/ _` | | | | |  _ \      =
+        =      |   <\__ \ (_| | | |_| | |_) |     =
+        =      |_|\_\___/\__, |_|____/|____/      =
+        =                   |_|                   =
+        =        The Database purpose-built       =
+        =        for stream processing apps       =
+        ===========================================
+
+Copyright 2017-2022 Confluent Inc.
+
+CLI v7.6.0, Server v7.6.0 located at http://ksqldb-0:8088
+Server Status: RUNNING
+
+Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
+
+ksql>
+```
 
 ## Tech Stack
 - [Confluent Kafka](https://docs.confluent.io/platform/current/installation/overview.html)
@@ -16,21 +37,25 @@ This contains the SQL statements to build the KStreams and KTables for ksqlDB to
 
 ## Up & Running
 
-**0.** Make sure `ksqlDB-server` and `ksql-cli` are up, with [INSTRUCTIONS](https://github.com/iobruno/data-engineering-zoomcamp/tree/master/week_6_stream_processing):
-```
-docker-compose up -d
-```
-
-**1.** Log into ksql-cli Console with:
-```
-docker exec -it ksqlcli ksql http://ksqldb0:8088
+**0.** Make sure `ksqlDB-server` and `ksql-cli` are up. Check the instructions on [README](../README.md) for more details:
+```shell
+docker compose -f ../docker-compose.yml up -d
 ```
 
-**2.** Config ksql to default fetching offsets from 'earliest'
-```sql
+**1.** Connect to ksqlDB through the ksqlDB CLI:
+```shell
+docker exec -it ksqlcli ksql http://ksqldb-0:8088
+```
+
+You should be getting into this console:
+```
+ksql>
+```
+
+**2.** Config ksql to default fetching offsets from 'earliest':
+```shell
 ksql> set 'auto.offset.reset' = 'earliest';
 ```
-
 
 **3.** Create the KStreams for `green_tripdata` and `fhv_tripdata`:
 ```sql

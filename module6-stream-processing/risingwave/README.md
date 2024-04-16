@@ -1,7 +1,7 @@
 # Stream Processing with RisingWave
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![Kafka](https://img.shields.io/badge/ConfluentKafka-7.6.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.6.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
 ![ClickHouse](https://img.shields.io/badge/ClickHouse-151515?style=flat&logo=clickhouse&logoColor=FBFD73&labelColor=151515)
 ![MinIO](https://img.shields.io/badge/MinIO-000110?style=flat&logo=minio&logoColor=C72C49&labelColor=000110)
 ![etcd](https://img.shields.io/badge/etcd-1E6897?style=flat&logo=etcd&logoColor=FFFFFF&labelColor=275C80)
