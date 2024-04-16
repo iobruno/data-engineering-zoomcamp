@@ -27,7 +27,7 @@ x-kafka-common:
     start_period: 10s
     interval: 5s
     timeout: 10s
-    retries: 3
+    retries: 5
   restart: on-failure:5
 
 x-depends-on-kafka-brokers:
