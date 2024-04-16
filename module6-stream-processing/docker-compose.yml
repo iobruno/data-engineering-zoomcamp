@@ -198,7 +198,7 @@ services:
     hostname: conduktor-console
     environment:
       CDK_CLUSTERS_0_ID: 'kafka-in-docker'
-      CDK_CLUSTERS_0_NAME: 'multi-broker-kafka-in-docker'
+      CDK_CLUSTERS_0_NAME: 'multi-broker-kafka'
       CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker-0:29092,broker-1:29092,broker-2:29092'
       CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://schema-registry:8081'
       CDK_CLUSTERS_0_KSQLDBS_0_NAME: 'ksqldb-0'
