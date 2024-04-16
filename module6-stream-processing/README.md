@@ -46,7 +46,7 @@ open http://localhost:8080
 ```
 
 ## TODO:
-- [ ] Single-broker Kafka Cluster
+- [x] Single-broker Kafka Cluster
 - [x] Multi-broker Kafka Cluster
 - [x] Confluent Schema Registry
 - [x] Confluent Rest Proxy
