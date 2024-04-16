@@ -32,7 +32,7 @@ x-kafka-common:
 
 x-depends-on-kafka-cluster:
   depends_on: &depends-on-kafka-cluster
-    broker:
+    broker-0:
       condition: service_healthy
     schema-registry:
       condition: service_healthy
@@ -42,9 +42,15 @@ x-ksqldb-common:
   image: *cp-ksqldb-server-image
   environment:
     &ksqldb-common-env
+    KSQL_BOOTSTRAP_SERVERS: 'broker-0:29092'
+    KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
     KSQL_LISTENERS: 'http://0.0.0.0:8088'
-    KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: true
-    KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: true
+    KSQL_KSQL_SINK_REPLICAS: 1
+    KSQL_KSQL_STREAMS_REPLICATION_FACTOR: 1
+    KSQL_KSQL_INTERNAL_TOPIC_REPLICAS: 1
+    KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
+    KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'false'
+    KSQL_KSQL_EXTENSION_DIR: '/opt/ksqldb-udf'
   depends_on:
     <<: *depends-on-kafka-cluster
   restart: on-failure:5
@@ -70,19 +76,19 @@ services:
       retries: 10
     restart: on-failure:5
 
-  broker:
+  broker-0:
     <<: *kafka-common
-    container_name: kafka-broker
-    hostname: broker
+    container_name: kafka-broker-0
+    hostname: broker-0
     environment:
       <<: *kafka-common-env
       KAFKA_BROKER_ID: 0
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,OUTSIDE://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-0:29092,OUTSIDE://localhost:9092
     ports:
       - '9092:9092'
     volumes:
-      - ${KAFKA_DATA:-./volumes/kafka}/broker:/var/lib/kafka/data
+      - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
 
   schema-registry:
     image: *cp-schema-registry-image
@@ -90,13 +96,13 @@ services:
     hostname: schema-registry
     environment:
       SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker:29092'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker-0:29092'
       SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8081'
       SCHEMA_REGISTRY_DEBUG: true
     ports:
       - '8081:8081'
     depends_on:
-      broker:
+      broker-0:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "cub sr-ready localhost 8081 30 || exit 1"]
@@ -106,38 +112,19 @@ services:
       retries: 3
     restart: on-failure:5
 
-  kafka-rest:
-    image: *cp-restproxy-image
-    container_name: kafka-rest
-    hostname: kafka-rest
-    environment:
-      KAFKA_REST_HOST_NAME: 'restproxy'
-      KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker:29092'
-      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8082'
-    ports:
-      - '8082:8082'
-    depends_on: *depends-on-kafka-cluster
-    healthcheck:
-      test: ["CMD-SHELL", "cub kr-ready localhost 8082 30 || exit 1"]
-      start_period: 10s
-      interval: 5s
-      timeout: 10s
-      retries: 3
-    restart: on-failure:5
-
-  ksqldb:
+  ksqldb-0:
     <<: *ksqldb-common
-    container_name: ksqldb
-    hostname: ksqldb
+    container_name: ksqldb-0
+    hostname: ksqldb-0
     environment:
       <<: *ksqldb-common-env
-      KSQL_KSQL_SERVICE_ID: 'ksqldb'
-      KSQL_BOOTSTRAP_SERVERS: 'broker:29092'
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      KSQL_KSQL_SERVICE_ID: 'ksqldb0_'
     ports:
       - '8088:8088'
-    depends_on: *depends-on-kafka-cluster
+    volumes:
+      - ${KSQL_UDF_EXTENSIONS_DIR:-./volumes/ksqldb-udf}:/opt/ksqldb-udf
+    depends_on: 
+      <<: *depends-on-kafka-cluster
     healthcheck:
       test: ["CMD-SHELL", "cub ksql-server-ready localhost 8088 30 || exit 1"]
       interval: 10s
@@ -152,9 +139,31 @@ services:
     entrypoint: /bin/bash
     tty: true
     depends_on:
-      ksqldb:
+      ksqldb-0:
         condition: service_healthy
     restart: on-failure:5
+
+  kafka-rest:
+    image: *cp-restproxy-image
+    container_name: kafka-rest
+    hostname: kafka-rest
+    environment:
+      KAFKA_REST_HOST_NAME: 'restproxy'
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker-0:29092'
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8089'
+    ports:
+      - '8089:8089'
+    depends_on: 
+      <<: *depends-on-kafka-cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cub kr-ready localhost 8089 30 || exit 1"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    restart: on-failure:5
+
 
   # Conduktor Platform Docs:
   # https://docs.conduktor.io/platform/configuration/env-variables
@@ -165,10 +174,10 @@ services:
     environment:
       CDK_CLUSTERS_0_ID: 'kafka-in-docker'
       CDK_CLUSTERS_0_NAME: 'single-broker-kafka'
-      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker:29092'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker-0:29092'
       CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://schema-registry:8081'
-      CDK_CLUSTERS_0_KSQLDBS_0_NAME: 'ksqldb'
-      CDK_CLUSTERS_0_KSQLDBS_0_URL: 'http://ksqldb:8088'
+      CDK_CLUSTERS_0_KSQLDBS_0_NAME: 'ksqldb-0'
+      CDK_CLUSTERS_0_KSQLDBS_0_URL: 'http://ksqldb-0:8088'
       CDK_DATABASE_URL: "postgresql://postgres:postgres@conduktor-db:5432/conduktor"
       CDK_LISTENING_PORT: 8080
     ports:
