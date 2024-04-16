@@ -1,4 +1,4 @@
-version: "3.9" 
+version: "3.9"
 
 x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
 x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
@@ -10,7 +10,7 @@ x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUE
 x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.22.0}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
-x-kafka-common: 
+x-kafka-common:
   &kafka-common
   image: *cp-kafka-image
   environment: &kafka-common-env
@@ -20,7 +20,7 @@ x-kafka-common:
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
     KAFKA_DELETE_TOPIC_ENABLE: true
   depends_on:
-    zookeeper: 
+    zookeeper:
       condition: service_healthy
   healthcheck:
     test: ["CMD-SHELL", "cub kafka-ready -b localhost:29092 1 10 || exit 1"]
@@ -189,7 +189,7 @@ services:
       ksqldb-0:
         condition: service_healthy
     restart: on-failure:5
- 
+
   # Conduktor Platform Docs:
   # https://docs.conduktor.io/platform/configuration/env-variables
   conduktor-console:
