@@ -29,10 +29,16 @@ Hop into their respective folders for details on how to spin them up.
 
 ### Developer Setup
 
-**1.** Start up Kafka Cluster with:
+**1.** Start the Kafka Cluster:
 ```shell
 docker compose up -d
 ```
+
+Alternatively, you can use the multi-broker setup with:
+```shell
+docker compose -f docker-compose.multi.yml up -d
+```
+
 
 **2.** Access Conduktor Web UI for Kafka
 ```shell
@@ -40,7 +46,8 @@ open http://localhost:8080
 ```
 
 ## TODO:
-- [x] Kafka Cluster with ZooKeeper
+- [ ] Single-broker Kafka Cluster
+- [x] Multi-broker Kafka Cluster
 - [x] Confluent Schema Registry
 - [x] Confluent Rest Proxy
 - [x] ksqlDB Server and CLI
