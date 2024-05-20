@@ -47,7 +47,6 @@ pre-commit install
 **4.** Export ENV VARS to connect to DB:
 ```shell
 export DATABASE_HOST=localhost
-export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=postgres
