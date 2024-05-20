@@ -1,27 +1,23 @@
 version: "3.9"
 
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-ingest-postgres-env: &ingest-postgres
-  environment:
-    DATABASE_HOST: 'postgres'
-    DATABASE_PORT: 5432
-    DATABASE_NAME: 'nyc_taxi'
-    DATABASE_USERNAME: 'postgres'
-    DATABASE_PASSWORD: 'postgres'
-  depends_on:
-    postgres:
-      condition: service_healthy
 
 services:
   ingest-app:
-    <<: *ingest-postgres
-    build: .
     image: iobruno/nyc-taxi-ingest:latest
     container_name: ingest-app
+    environment:
+      DATABASE_HOST: 'ingest-db'
+      DATABASE_NAME: 'nyc_taxi'
+      DATABASE_USERNAME: 'postgres'
+      DATABASE_PASSWORD: 'postgres'
     volumes:
       - ./datasets.yml:/app/datasets.yml
+    depends_on:
+      ingest-db:
+        condition: service_healthy
 
-  postgres:
+  ingest-db:
     image: *postgres-image
     container_name: ingest-db
     environment:
