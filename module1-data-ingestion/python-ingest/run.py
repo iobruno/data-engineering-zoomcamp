@@ -2,14 +2,14 @@ import logging
 from pathlib import Path
 from typing import List
 
-from omegaconf import OmegaConf
+from hydra import compose, initialize
 from rich.logging import RichHandler
 from rich.progress import BarColumn, Progress, TextColumn, TimeElapsedColumn
 from typer import Argument, Option, Typer
 from typing_extensions import Annotated
 
-import schemas.polars as pl_schema
-import schemas.pyarrow as pa_schema
+import schemas.polars as polars_schema
+import schemas.pyarrow as pyarrow_schema
 import schemas.renaming_strategy as rename
 from src.dataframe_fetcher import (
     DataframeFetcher,
@@ -24,8 +24,6 @@ from src.dataframe_repository import (
     ZoneLookupRepository,
 )
 
-root_folder = Path(__file__).parent
-dataset = OmegaConf.load(root_folder.joinpath("datasets.yml"))
 log = logging.getLogger("py_ingest")
 
 cli = Typer(no_args_is_help=True)
@@ -81,6 +79,11 @@ def extract_load_with(
     extract_load_with(fetcher, repo, remain_endpoints, remain_tasks, write_disposition="append")
 
 
+def load_conf():
+    with initialize(config_path=".", job_name="python-ingest"):
+        return compose("datasets")
+
+
 @cli.command(name="ingest", help="CLI app to extract NYC Trips data and load into Postgres")
 def ingest_db(
     db_name: Annotated[str, Argument(envvar="DATABASE_NAME", hidden=True)],
@@ -96,19 +99,20 @@ def ingest_db(
 ):
     log.info("Connecting to 'postgres' with credentials on ENV VARs...")
     db_settings = db_host, db_port, db_name, db_username, db_password
+    dataset = load_conf()
+
     with progress:
         green_dataset_endpoints = dataset.green_trip_data
         yellow_dataset_endpoints = dataset.yellow_trip_data
         fhv_dataset_endpoints = dataset.fhv_trip_data
         zones_dataset_endpoints = dataset.zone_lookups
-        df_fetcher: DataframeFetcher
 
         if polars_ff:
-            schema_ref = pl_schema
+            schema_ref = polars_schema
             df_fetcher = PolarsFetcher()
             log.info("Using 'polars' as Dataframe library")
         else:
-            schema_ref = pa_schema
+            schema_ref = pyarrow_schema
             df_fetcher = PandasFetcher()
             log.info("Using 'pandas' as Dataframe library")
 
