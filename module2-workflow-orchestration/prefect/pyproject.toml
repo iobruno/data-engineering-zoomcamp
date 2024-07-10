@@ -1,7 +1,7 @@
 [project]
 name = ""
 version = "1.0"
-description = "Workflow Orchestration playground with Prefect"
+description = "Workflow orchestration with Prefect"
 license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
 authors = [
