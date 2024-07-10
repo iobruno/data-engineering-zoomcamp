@@ -27,8 +27,8 @@ based on the endpoints in [datasets.yml](./datasets.yml).
 
 **1.** Create and activate a virtualenv for Python 3.11 with conda:
 ```shell
-conda create -n pandas-sqlalchemy python=3.11 -y
-conda activate pandas-sqlalchemy
+conda create -n pyingest python=3.12 -y
+conda activate pyingest
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
