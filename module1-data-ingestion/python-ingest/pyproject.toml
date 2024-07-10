@@ -18,8 +18,7 @@ dependencies = [
     "adbc-driver-manager>=1.1.0,<2.0",
     "adbc-driver-postgresql>=1.1.0,<2.0",
     "sqlalchemy>=2.0.31,<3.0",
-    # psycopg2 is required here for 'adbc' as it's not yet compatible yet with psycopg >= 3.0
-    "psycopg2-binary>=2.9.9,<3.0",
+    "psycopg[binary]>=3.2.1,<4.0",
     "hydra-core>=1.3.2,<2.0",
 ]
 
