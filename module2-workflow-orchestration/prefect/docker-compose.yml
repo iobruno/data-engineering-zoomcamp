@@ -6,7 +6,6 @@ services:
   postgres:
     image: *postgres-image
     container_name: postgres
-    restart: on-failure:3
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
@@ -15,6 +14,12 @@ services:
       - '5432:5432'
     volumes:
       - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure:3
 
 volumes:
   pg_data:
