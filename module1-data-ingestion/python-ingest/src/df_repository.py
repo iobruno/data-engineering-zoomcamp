@@ -5,7 +5,7 @@ import pandas as pd
 import polars as pl
 
 
-class SQLRepository(metaclass=ABCMeta):
+class SQLRepo(metaclass=ABCMeta):
     def __init__(self, conn_string: str, adbc_conn_string):
         self.conn_string = conn_string
         self.adbc_conn_string = adbc_conn_string
@@ -49,7 +49,7 @@ class SQLRepository(metaclass=ABCMeta):
         raise NotImplementedError()
 
     @classmethod
-    def with_config(cls, *db_settings) -> "SQLRepository":
+    def with_config(cls, *db_settings) -> "SQLRepo":
         (db_host, db_port, db_name, db_user, db_passwd) = db_settings
         db_port = 5432 if db_port is None else db_port
         conn_string = f"postgresql+psycopg://{db_user}:{db_passwd}@{db_host}:{db_port}/{db_name}"
@@ -57,25 +57,25 @@ class SQLRepository(metaclass=ABCMeta):
         return cls.__call__(conn_string=conn_string, adbc_conn_string=adbc_conn_string)
 
 
-class GreenTaxiRepository(SQLRepository):
+class GreenTaxiRepo(SQLRepo):
     @property
     def tbl_name(self) -> str:
         return "green_taxi_trips"
 
 
-class YellowTaxiRepository(SQLRepository):
+class YellowTaxiRepo(SQLRepo):
     @property
     def tbl_name(self) -> str:
         return "yellow_taxi_trips"
 
 
-class FhvTaxiRepository(SQLRepository):
+class FhvTaxiRepo(SQLRepo):
     @property
     def tbl_name(self) -> str:
         return "fhv_trips"
 
 
-class ZoneLookupRepository(SQLRepository):
+class ZoneLookupRepo(SQLRepo):
     @property
     def tbl_name(self) -> str:
         return "zone_lookup"
