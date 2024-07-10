@@ -10,8 +10,8 @@ from typing_extensions import Annotated
 import schemas.polars as polars_schema
 import schemas.pyarrow as pyarrow_schema
 import schemas.renaming_strategy as rename
-from src.dataframe_fetcher import *
-from src.dataframe_repository import *
+from src.df_fetcher import *
+from src.df_repository import *
 
 log = logging.getLogger("py_ingest")
 
