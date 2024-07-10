@@ -1,6 +1,6 @@
 # Python data ingestion with polars and pandas
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Polars](https://img.shields.io/badge/polars-24292E?style=flat&logo=polars&logoColor=CC792B&labelColor=24292E)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
@@ -8,7 +8,7 @@
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
-based on the endpoints in [datasets.yml](./datasets.yml).
+based on the endpoints in [datasets.yaml](./datasets.yaml).
 
 
 ## Tech Stack
@@ -25,10 +25,10 @@ based on the endpoints in [datasets.yml](./datasets.yml).
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.11 with conda:
+**1.** Create and activate a virtualenv with conda:
 ```shell
-conda create -n pandas-sqlalchemy python=3.11 -y
-conda activate pandas-sqlalchemy
+conda create -n pyingest python=3.12 -y
+conda activate pyingest
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
@@ -47,7 +47,6 @@ pre-commit install
 **4.** Export ENV VARS to connect to DB:
 ```shell
 export DATABASE_HOST=localhost
-export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=postgres
