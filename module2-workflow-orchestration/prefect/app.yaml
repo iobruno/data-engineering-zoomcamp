@@ -1,8 +1,7 @@
 prefect:
   sqlalchemy:
-    nyc_taxi:
-      alias: "postgres-docker"
-      database: "nyc_taxi"
+    alias: "postgres-on-docker"
+    database: "nyc_taxi"
 
   gcp_credentials:
     alias: "prefect-gcs-bigquery"

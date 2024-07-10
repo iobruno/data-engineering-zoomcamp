@@ -69,10 +69,10 @@ For the very first run:
 - Make sure to set the environment variables: `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`,
 - Also, configure the database name it should connect to on `app.yml` under the key: `prefect_block.sqlalchemy.ny_taxi.database`
 ```shell
-export DATABASE_USERNAME=sqlalchemy \
-export DATABASE_PASSWORD=sqlalchemy \
-export DATABASE_HOST=localhost \
-export DATABASE_PORT=5433 \
+export DATABASE_USERNAME=sqlalchemy
+export DATABASE_PASSWORD=sqlalchemy
+export DATABASE_HOST=localhost
+export DATABASE_PORT=5433
 export DATABASE_NAME=nyc_taxi
 ```
 
