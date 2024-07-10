@@ -66,4 +66,4 @@ datasets:
     - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_2019-12.csv.gz
 
   zone_lookups:
-    - https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv
+    - https://github.com/DataTalksClub/nyc-tlc-data/releases/download/misc/taxi_zone_lookup.csv
