@@ -1,25 +1,16 @@
-import os
+from os import getenv
 from pathlib import Path
+from typing import Tuple
 
 import pandas as pd
-
-from omegaconf import DictConfig, OmegaConf
-from prefect import flow, task
+from hydra import compose, initialize
 from prefect_gcp import GcpCredentials, GcsBucket
-from pandas import DataFrame
+
+from prefect import flow, get_run_logger, task
 
 
-root_dir = Path(__file__).parent.parent
-
-config_file = root_dir.joinpath("app.yml")
-schema_file = root_dir.joinpath("schemas.yml")
-
-cfg = OmegaConf.load(config_file)
-schemas = OmegaConf.load(schema_file)
-
-
-@task(log_prints=True)
-def upload_from_df(gcs_bucket: GcsBucket, df: DataFrame, to_path: str, serialization_fmt: str):
+@task(name="serialize-df-to-gcs")
+def upload_from_df(gcs_bucket: GcsBucket, df: pd.DataFrame, to_path: str, serialization_fmt: str):
     """Upload a Pandas DataFrame to Google Cloud Storage in various formats.
     GitHub PR> https://github.com/PrefectHQ/prefect-gcp/pull/140
 
@@ -42,36 +33,39 @@ def upload_from_df(gcs_bucket: GcsBucket, df: DataFrame, to_path: str, serializa
     )
 
 
-@task(log_prints=True)
+@task(name="fix-datatypes-for-parquet")
 def fix_datatypes_for(df: pd.DataFrame, schema: dict) -> pd.DataFrame:
     return df.astype(schema)
 
 
-@task(log_prints=True, retries=3)
+@task(name="fetch-dataset", retries=3)
 def fetch_csv_from(url: str) -> pd.DataFrame:
-    print(f"Now fetching: {url}")
+    log = get_run_logger()
+    log.info(f"Now fetching: {url}")
     return pd.read_csv(url, engine="pyarrow")
 
 
-def prepare_gcs_block(prefect) -> (GcsBucket, str):
+@task(name="prepare-gcs-blocks")
+def prepare_gcs_blocks(prefect) -> Tuple[GcsBucket, str]:
     gcp_credentials = prefect.gcp_credentials.alias
     lakehouse_raw_block = prefect.gcs.lakehouse_raw
+    log = get_run_logger()
 
     try:
-        print(f"Attempting to load GcsBucket Block '{lakehouse_raw_block.alias}'")
+        log.info(f"Attempting to load GcsBucket Block '{lakehouse_raw_block.alias}'")
         gcs_bucket = GcsBucket.load(lakehouse_raw_block.alias)
-        print(f"GcsBucket loaded successfully!")
+        log.info(f"GcsBucket loaded successfully!")
     except (ValueError, RuntimeError):
-        print(f"GcsBucket Block not found. Working on creating it...")
-        print(f"Fetching GcpCredentials from 'GOOGLE_APPLICATION_CREDENTIALS' env var")
-        credentials_file = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+        log.warn(f"GcsBucket Block not found. Working on creating it...")
+        log.info(f"Fetching GcpCredentials from 'GOOGLE_APPLICATION_CREDENTIALS' env var")
+        credentials_file = getenv("GOOGLE_APPLICATION_CREDENTIALS")
         credentials_connector = GcpCredentials(service_account_file=credentials_file)
         credentials_connector.save(gcp_credentials, overwrite=True)
         gcs_bucket = GcsBucket(
             bucket=lakehouse_raw_block.bucket, gcp_credentials=credentials_connector
         )
         gcs_bucket.save(lakehouse_raw_block.alias, overwrite=True)
-        print(
+        log.info(
             f"GcsBucket {lakehouse_raw_block.alias} created successfully. "
             f"Next runs will use this block instead."
         )
@@ -79,23 +73,32 @@ def prepare_gcs_block(prefect) -> (GcsBucket, str):
     return gcs_bucket, lakehouse_raw_block.get("blob_prefix", "")
 
 
-@flow(name="Web CSV Dataset to GCS", log_prints=True)
-def ingest_csv_to_gcs():
-    print("Fetching URL Datasets from .yml")
-    datasets: DictConfig = cfg.datasets
+def load_conf():
+    with initialize(version_base=None, config_path="../", job_name="py-ingest"):
+        return compose(config_name="app")
 
-    print("Preparing Prefect Block...")
-    gcs_bucket, blob_prefix = prepare_gcs_block(cfg.prefect)
+
+@flow(name="web-csv-to-gcs")
+def ingest_csv_to_gcs():
+    log = get_run_logger()
+    log.info("Fetching URL Datasets from .yml")
+    cfg = load_conf()
+    datasets = cfg.datasets
+
+    log.info("Preparing Prefect Block...")
+    gcs_bucket, blob_prefix = prepare_gcs_blocks(cfg.prefect)
 
     for dataset, endpoints in datasets.items():
         if endpoints is None:
-            print(f"Dataset '{dataset}' contains no valid endpoints entries. Skipping...")
+            log.info(f"Dataset '{dataset}' contains no valid endpoints entries. Skipping...")
             endpoints = []
 
         for endpoint in endpoints:
             filename = Path(endpoint).name
             expected_blob_name = Path(blob_prefix, dataset, filename)
             raw_df = fetch_csv_from(url=endpoint)
+
+            schemas = {}
             df_schema = schemas.get(dataset)
 
             if df_schema:
@@ -113,7 +116,7 @@ def ingest_csv_to_gcs():
                     to_path=str(expected_blob_name),
                     serialization_fmt="csv_gzip",
                 )
-            print(f"Upload complete: 'gs://{gcs_bucket.bucket}/{blob_name}'")
+            log.info(f"Upload complete: 'gs://{gcs_bucket.bucket}/{blob_name}'")
 
 
 if __name__ == "__main__":
