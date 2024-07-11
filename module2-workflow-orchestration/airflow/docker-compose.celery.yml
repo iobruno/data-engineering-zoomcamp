@@ -1,8 +1,6 @@
-version: "3.9"
-
 x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.7.3-python3.11}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2.5}
 
 x-airflow-common:
   &airflow-common
@@ -138,4 +136,4 @@ services:
 
 volumes:
   pg_data:
-    name: airflow_pgdata
+    name: airflow_pg_data
