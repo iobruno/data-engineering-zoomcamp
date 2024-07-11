@@ -1,8 +1,71 @@
-version: "3.9"
-
+x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-2.19-python3.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 services:
+  prefect-server:
+    image: *prefect-image
+    container_name: prefect-server
+    entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "server", "start"]
+    environment:
+      PREFECT_UI_URL: 'http://localhost:4200/api'
+      PREFECT_API_URL: 'http://localhost:4200/api'
+      PREFECT_SERVER_API_HOST: '0.0.0.0'
+      PREFECT_API_DATABASE_CONNECTION_URL: 'postgresql+asyncpg://prefect:prefect@prefect-db:5432/prefect'
+      EXTRA_PIP_PACKAGES: 'prefect-gcp'
+    ports:
+      - "4200:4200"
+    volumes:
+      - prefect:/root/.prefect
+    depends_on:
+      prefect-db:
+        condition: service_healthy
+    restart: on-failure
+
+  prefect-agent:
+    image: *prefect-image
+    container_name: prefect-agent
+    entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "agent", "start", "-q", "prefect_q0"]
+    environment:
+      PREFECT_API_URL: "http://prefect-server:4200/api"
+#      PREFECT_API_KEY: "PREFECT_CLOUD_API_KEY" # When connecting to an Agent in Prefect Cloud
+    depends_on:
+      prefect-server:
+        condition: service_started
+    restart: on-failure
+
+  prefect-db:
+    image: *postgres-image
+    container_name: prefect-db
+    environment:
+      POSTGRES_USER: 'prefect'
+      POSTGRES_PASSWORD: 'prefect'
+      POSTGRES_DB: 'prefect'
+    ports:
+      - '5432'
+    volumes:
+      - prefect_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prefect"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+  prefect-cli:
+    image: *prefect-image
+    container_name: prefect-cli
+    entrypoint: /bin/bash
+    working_dir: "/prefect/flows"
+    tty: true
+    environment:
+      PREFECT_API_URL: "http://prefect-server:4200/api"
+#      PREFECT_API_KEY: "PREFECT_CLOUD_API_KEY" # When connecting to an Agent in Prefect Cloud
+    volumes:
+      - "./flows:/prefect/flows"
+    depends_on:
+      prefect-server:
+        condition: service_started
+
   postgres:
     image: *postgres-image
     container_name: postgres
@@ -22,5 +85,9 @@ services:
     restart: on-failure
 
 volumes:
+  prefect:
+    name: prefect
+  prefect_pg_data:
+    name: prefect_pg_data
   pg_data:
-    name: prefect_pgdata
+    name: pg_data

@@ -1,9 +1,8 @@
-# Prefect Workflow Orchestration
+# Workflow Orchestration with Prefect
 
 ![Python](https://img.shields.io/badge/Python-3.12-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![Prefect](https://img.shields.io/badge/Prefect-2.14-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
+![Prefect](https://img.shields.io/badge/Prefect-2.19-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -80,8 +79,8 @@ export DATABASE_NAME=nyc_taxi
 python flows/sqlalchemy_ingest.py
 ```
 
-
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
+- [x] Deploy Prefect Server / Agent on Docker
 - [x] Code format/lint with Ruff
 - [ ] Run Prefect flows on Docker
