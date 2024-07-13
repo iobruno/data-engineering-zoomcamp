@@ -104,7 +104,6 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
@@ -124,7 +123,6 @@ docker run --rm \
   --name dbt-postgres \
   dbt-postgres
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
