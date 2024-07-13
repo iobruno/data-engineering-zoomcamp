@@ -1,7 +1,5 @@
-version: "3.9"
-
-x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.0}
-x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.0-beta-1}
+x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.1}
+x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.0}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 x-spark-common: &spark-common
@@ -21,7 +19,7 @@ x-spark-common: &spark-common
 services:
   spark-master:
     <<: *spark-common
-    container_name: spark_master
+    container_name: spark-master
     environment:
       SPARK_MODE: 'master'
       SPARK_MASTER_PORT: 7077
@@ -35,7 +33,7 @@ services:
 
   spark-worker:
     <<: *spark-common
-    container_name: spark_worker
+    container_name: spark-worker
     environment:
       SPARK_MODE: 'worker'
       SPARK_MASTER_URL: 'spark://spark-master:7077'
@@ -50,7 +48,7 @@ services:
 
   spark-init:
     <<: *spark-common
-    container_name: spark_init
+    container_name: spark-init
     user: "0:0"
     entrypoint: /bin/bash
     command:
@@ -63,9 +61,9 @@ services:
     volumes:
       - spark_jars:/spark-jars
     
-  metastore-db:
+  hive-db:
     image: *postgres-image
-    container_name: metastore_db
+    container_name: hive-db
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
@@ -73,7 +71,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - hive_pgdata:/var/lib/postgresql/data
+      - hive_pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -88,23 +86,23 @@ services:
       SERVICE_NAME: 'metastore'
       SERVICE_OPTS: |- 
         -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver 
-        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://metastore-db:5432/metastore 
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-db:5432/metastore 
         -Djavax.jdo.option.ConnectionUserName=postgres 
         -Djavax.jdo.option.ConnectionPassword=postgres
       HIVE_AUX_JARS_PATH: /opt/hive/aux_jars/
       DB_DRIVER: 'postgres'
     depends_on:
-      metastore-db: 
+      hive-db: 
         condition: service_healthy
-      metastore-init:
+      hive-init:
         condition: service_completed_successfully
     volumes:
       - hive_warehouse:/opt/hive/data/warehouse
       - hive_auxjars:/opt/hive/aux_jars/
 
-  metastore-init:
+  hive-init:
     image: *hive-image
-    container_name: metastore_init
+    container_name: hive-init
     user: 0:0
     entrypoint: /bin/bash
     command:
@@ -118,8 +116,8 @@ services:
 volumes:
   spark_jars:
     name: spark_jars
-  hive_pgdata:
-    name: hive_pgdata
+  hive_pg_data:
+    name: hive_pg_data
   hive_warehouse:
     name: hive_warehouse
   hive_auxjars:
