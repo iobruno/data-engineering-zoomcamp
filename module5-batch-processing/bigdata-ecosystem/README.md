@@ -25,8 +25,20 @@ Big Data playground in Docker, compatible with Apple Sillicon:
 docker compose up -d
 ```
 
+**2.** Web UIs can be accessed through:
+
+**2.1.** Presto
+```shell
+open http://localhost:8080
+```
+
+**2.2.** Hive Server
+```shell
+open http://localhost:10002
+```
+
 
 ## TODO:
-- [ ] Setup Hive Metastore in Docker
-- [ ] Setup Presto/Trino as the Query Engine in Docker
+- [x] Setup Hive Metastore in Docker
+- [x] Setup Presto/Trino as the Query Engine in Docker
 - [ ] Automate the schema registration Delta files with Hive+Presto
