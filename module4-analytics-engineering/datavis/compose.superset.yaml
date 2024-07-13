@@ -47,7 +47,7 @@ x-superset-common:
 services:
   superset-db:
     image: *postgres-image
-    container_name: superset_db
+    container_name: superset-db
     environment:
       POSTGRES_DB: 'superset'
       POSTGRES_USER: 'superset'
@@ -58,7 +58,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - superset_pgdata:/var/lib/postgresql/data
+      - superset_pg_data:/var/lib/postgresql/data
       - ./superset/examples-init.sh:/docker-entrypoint-initdb.d/examples-init.sh
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U superset"]
@@ -69,7 +69,7 @@ services:
 
   superset-cache:
     image: *redis-image
-    container_name: superset_cache
+    container_name: superset-cache
     ports:
       - '6379'
     volumes:
@@ -83,7 +83,7 @@ services:
 
   superset:
     <<: *superset-common
-    container_name: superset_app
+    container_name: superset-app
     command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     ports:
       - 8088:8088
@@ -95,7 +95,7 @@ services:
 
   superset-worker:
     <<: *superset-common
-    container_name: superset_worker
+    container_name: superset-worker
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
     depends_on:
       <<: *superset-common-depends-on
@@ -107,7 +107,7 @@ services:
 
   superset-worker-beat:
     <<: *superset-common
-    container_name: superset_worker_beat
+    container_name: superset-worker-beat
     command: ["/app/docker/docker-bootstrap.sh", "beat"]
     depends_on:
       <<: *superset-common-depends-on
@@ -119,7 +119,7 @@ services:
 
   superset-init:
     <<: *superset-common
-    container_name: superset_init
+    container_name: superset-init
     command: ["/app/docker/docker-init.sh"]
     healthcheck:
       disable: true
@@ -127,7 +127,7 @@ services:
 volumes:
   superset_home:
     name: 'superset_home'
-  superset_pgdata:
-    name: 'superset_pgdata'
+  superset_pg_data:
+    name: 'superset_pg_data'
   superset_redis_cache:
     name: 'superset_redis_cache'
