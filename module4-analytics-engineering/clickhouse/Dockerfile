@@ -1,5 +1,5 @@
 # Builder stage
-FROM python:3.11-slim AS builder
+FROM python:3.12-slim AS builder
 
 ADD pyproject.toml pdm.lock /app/
 WORKDIR /app/
@@ -10,7 +10,7 @@ RUN pip install -U pip setuptools wheel && \
     pdm sync --prod --no-editable
 
 # Runner stage
-FROM python:3.11-slim AS runner
+FROM python:3.12-slim AS runner
 
 ENV DBT_PROFILES_DIR=/dbt/
 ENV DBT_CLICKHOUSE_HOST=
@@ -24,8 +24,8 @@ ENV DBT_CLICKHOUSE_PASSWORD=
 ENV DBT_CLICKHOUSE_FQ_PGDATA_SCHEMA=
 
 ENV PYTHONPATH=/usr/local/lib/python/
-COPY --from=builder /app/__pypackages__/3.11/lib /usr/local/lib/python/
-COPY --from=builder /app/__pypackages__/3.11/bin /usr/local/bin
+COPY --from=builder /app/__pypackages__/3.12/lib /usr/local/lib/python/
+COPY --from=builder /app/__pypackages__/3.12/bin /usr/local/bin
 
 ADD analyses /dbt/analyses
 ADD macros   /dbt/macros
