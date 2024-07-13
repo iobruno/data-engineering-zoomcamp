@@ -22,7 +22,7 @@ x-metabase-common: &metabase-common
 services:
   metabase-db:
     image: *postgres-image
-    container_name: metabase_db
+    container_name: metabase-db
     environment:
       POSTGRES_USER: 'metabase'
       POSTGRES_PASSWORD: 'metabase'
@@ -40,7 +40,7 @@ services:
 
   metabase:
     <<: *metabase-common
-    container_name: metabase_app
+    container_name: metabase-app
     ports:
       - 3000:3000
     depends_on:
@@ -57,7 +57,7 @@ services:
 
   metabase-init:
     <<: *metabase-common
-    container_name: metabase_init
+    container_name: metabase-init
     user: "0:0"
     entrypoint: /bin/bash
     command:
