@@ -1,8 +1,10 @@
-version: "3.9"
+x-superset-image: &superset-image apache/superset:${SUPERSET_VERSION:-4.0.0}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2.5}
 
 x-superset-common:
   &superset-common
-  image: apachesuperset.docker.scarf.sh/apache/superset:${TAG:-latest-dev}
+  image: *superset-image
   user: 'root'
   environment:
     &superset-common-env
@@ -44,7 +46,7 @@ x-superset-common:
 
 services:
   superset-db:
-    image: postgres:16-alpine
+    image: *postgres-image
     container_name: superset_db
     environment:
       POSTGRES_DB: 'superset'
@@ -66,7 +68,7 @@ services:
     restart: on-failure
 
   superset-cache:
-    image: redis:7.2
+    image: *redis-image
     container_name: superset_cache
     ports:
       - '6379'

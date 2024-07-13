@@ -22,30 +22,28 @@
 
 **0.** (Optional) Pre-loaded examples (demo charts/dashboards):
 
-Superset can be bootstrapped with pre-loaded example charts and dashboards. In order to enable that:
+Superset can be bootstrapped withexample charts and dashboards. In order to enable that, set:
 ```shell
 export SUPERSET_LOAD_EXAMPLES=yes
 ```
 
-Database Migrations and `load_examples` processes are run everytime by the initContainer `superset-init` in [docker-compose.yml file](./docker-compose.yml), which all other superset-services depend on. 
-
-Be sure to `unset SUPERSET_LOAD_EXAMPLES` or `export SUPERSET_LOAD_EXAMPLES=no` after the first run of `superset-init` is completed successfully, as the `load_examples` alone might take a few minutes.
+Make sure to: `unset SUPERSET_LOAD_EXAMPLES` or `export SUPERSET_LOAD_EXAMPLES=no`  after the **first run** of `superset-init` is completed successfully, as `load_examples` alone can take a few minutes.
 
 **1.** Spin up Apache Superset infrastructure with:
 ```shell
-docker compose -f docker-compose.superset.yml up -d
+docker compose -f compose.superset.yaml up -d
 ```
 
 **2.** Additional database drivers:
 
-Superset supports PostgreSQL, MySQL and out-of-the-box. To enable additional data sources, include the respective SQLAlchemy driver as a dependency on [requirements-local.txt](./superset/requirements-local.txt). 
+Superset supports PostgreSQL, MySQL and out-of-the-box. To enable additional data sources, include the respective `SQLAlchemy` driver as a dependency in [requirements-local.txt](./superset/requirements-local.txt). 
 
-The complete list of supported data sources can be found [here](https://superset.apache.org/docs/databases/installing-database-drivers/).
+A complete list of supported data sources can be found [here](https://superset.apache.org/docs/databases/installing-database-drivers/).
 
 ```python
-sqlalchemy-bigquery==1.9.0
+sqlalchemy-bigquery==1.11.0
 sqlalchemy-redshift==0.8.14
-clickhouse-connect==0.6.23
+clickhouse-connect==0.7.16
 ```
 
 **3.** After the `superset_app` container is in a healthy state, you can acccess Superset at:
