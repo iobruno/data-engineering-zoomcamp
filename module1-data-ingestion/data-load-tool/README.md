@@ -1,6 +1,6 @@
 # data load tool (dlt)
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![dltHub](https://img.shields.io/badge/dltHub-59C1D5?style=flat&logo=pandas&logoColor=C6D300&labelColor=59C1D5)
 ![DuckDB](https://img.shields.io/badge/DuckDB-black?style=flat&logo=duckdb&logoColor=FEF000&labelColor=black)
 
@@ -19,9 +19,9 @@ This is meant for experimenting with [data load tool (dlt)](https://dlthub.com/)
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.11 with conda:
+**1.** Create and activate a virtualenv with conda:
 ```shell
-conda create -n dlt python=3.11 -y
+conda create -n dlt python=3.12 -y
 conda activate dlt
 ```
 
@@ -39,8 +39,7 @@ pre-commit install
 ```
 
 **4.** Run the dlt pipeline
-
-T.B.D.
+- T.B.D.
 
 
 ## TODO:
