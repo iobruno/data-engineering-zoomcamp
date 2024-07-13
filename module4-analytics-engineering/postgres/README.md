@@ -1,7 +1,7 @@
 # dbt and PostgreSQL for Analytics Engineering
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white&labelColor=336791)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -24,9 +24,9 @@ using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-d
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.10 / 3.11 with conda:
+**1.** Create and activate a virtualenv with conda:
 ```shell
-conda create -n dbt-postgres python=3.11 -y
+conda create -n dbt-postgres python=3.12 -y
 conda activate dbt-postgres
 ```
 
@@ -54,7 +54,6 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
 4.2. Set the environment variables for `dbt-postgres`:
-
 ```shell
 export DBT_POSTGRES_HOST=localhost
 export DBT_POSTGRES_PORT=5432
@@ -79,25 +78,27 @@ dbt seed
 
 5.3. Run dbt run to trigger the dbt models to run
 ```shell
-dbt build
+dbt build --target [prod|dev]
 
 # Alternatively you can run only a subset of the models with:
 
 ## +models/staging: Runs the dependencies/preceding models first that lead 
 ## to 'models/staging', and then the target models
-dbt [build|run] --select +models/staging
+dbt [build|run] --select +models/staging --target [prod|dev]
 
 ## models/staging+: Runs the target models first, and then all models that depend on it
-dbt [build|run] --select models/staging+
+dbt [build|run] --select models/staging+ --target [prod|dev]
 ```
 
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
 ```
+
 ```shell
 dbt docs serve
 ```
+
 Access the generated docs at:
 ```shell
 open http://localhost:8080
@@ -107,9 +108,8 @@ open http://localhost:8080
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
-
 ```shell
-docker build -t dbt_postgres:latest . --no-cache
+docker build -t dbt-postgres:latest . --no-cache
 ```
 
 **2.** Start a container with it:
@@ -121,8 +121,8 @@ docker run --rm \
   -e DBT_POSTGRES_TARGET_SCHEMA=nyc_tlc_record_data \
   -e DBT_POSTGRES_USER=postgres \
   -e DBT_POSTGRES_PASSWORD=postgres \
-  --name dbt_postgres \
-  dbt_postgres
+  --name dbt-postgres \
+  dbt-postgres
 ```
 
 
@@ -132,4 +132,3 @@ docker run --rm \
 - [x] Generate and serve docs and Data Lineage Graphs locally
 - [x] Add dbt macro to configure target schemas dinamically
 - [x] Run `dbt-core` in Docker
-- [ ] Add migrations to initialize PostgreSQL with some data
