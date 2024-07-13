@@ -1,5 +1,3 @@
-version: "3.9"
-
 x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
 x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
 x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
@@ -7,7 +5,7 @@ x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUEN
 x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
 x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
 
-x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.22.0}
+x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.24.1}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 x-kafka-common:
@@ -78,7 +76,7 @@ services:
 
   broker-0:
     <<: *kafka-common
-    container_name: kafka-broker-0
+    container_name: broker-0
     hostname: broker-0
     environment:
       <<: *kafka-common-env
@@ -151,19 +149,18 @@ services:
       KAFKA_REST_HOST_NAME: 'restproxy'
       KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker-0:29092'
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8089'
+      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8082'
     ports:
-      - '8089:8089'
+      - '8082:8082'
     depends_on: 
       <<: *depends-on-kafka-cluster
     healthcheck:
-      test: ["CMD-SHELL", "cub kr-ready localhost 8089 30 || exit 1"]
+      test: ["CMD-SHELL", "cub kr-ready localhost 8082 30 || exit 1"]
       start_period: 10s
       interval: 5s
       timeout: 10s
       retries: 3
     restart: on-failure:5
-
 
   # Conduktor Platform Docs:
   # https://docs.conduktor.io/platform/configuration/env-variables
@@ -202,7 +199,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - conduktor_pgdata:/var/lib/postgresql/data
+      - conduktor_pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -213,5 +210,5 @@ services:
 volumes:
   conduktor_data:
     name: conduktor_data
-  conduktor_pgdata:
-    name: conduktor_pgdata
+  conduktor_pg_data:
+    name: conduktor_pg_data
