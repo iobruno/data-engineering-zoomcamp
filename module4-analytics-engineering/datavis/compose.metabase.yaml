@@ -1,7 +1,5 @@
-version: "3.9"
-
+x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-v0.50.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-latest}
 
 x-metabase-common: &metabase-common
   image: *metabase-image
@@ -24,7 +22,7 @@ x-metabase-common: &metabase-common
 services:
   metabase-db:
     image: *postgres-image
-    container_name: metabase_db
+    container_name: metabase-db
     environment:
       POSTGRES_USER: 'metabase'
       POSTGRES_PASSWORD: 'metabase'
@@ -32,7 +30,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - metabase_pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -42,7 +40,7 @@ services:
 
   metabase:
     <<: *metabase-common
-    container_name: metabase_app
+    container_name: metabase-app
     ports:
       - 3000:3000
     depends_on:
@@ -59,20 +57,19 @@ services:
 
   metabase-init:
     <<: *metabase-common
-    container_name: metabase_init
+    container_name: metabase-init
     user: "0:0"
     entrypoint: /bin/bash
     command:
       - -c
       - |
         mkdir -p $${MB_PLUGINS_DIR}
-        curl -L -o $${MB_PLUGINS_DIR}/clickhouse.metabase-driver.jar https://github.com/ClickHouse/metabase-clickhouse-driver/releases/download/1.3.3/clickhouse.metabase-driver.jar
+        curl -L -o $${MB_PLUGINS_DIR}/clickhouse.metabase-driver.jar https://github.com/ClickHouse/metabase-clickhouse-driver/releases/download/1.50.1/clickhouse.metabase-driver.jar
         chown -R $${MUID}:$${MGID} $${MB_PLUGINS_DIR}
 
-
 volumes:
-  pg_data:
-    name: metabase_pgdata
+  metabase_pg_data:
+    name: metabase_pg_data
   metabase_data:
     name: metabase_data
   metabase_plugins:
