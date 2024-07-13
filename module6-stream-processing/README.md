@@ -36,7 +36,7 @@ docker compose up -d
 
 Alternatively, you can use the multi-broker setup with:
 ```shell
-docker compose -f docker-compose.multi.yml up -d
+docker compose -f compose.multi.yaml up -d
 ```
 
 
