@@ -1,5 +1,3 @@
-version: "3.9"
-
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 services:
@@ -13,7 +11,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - dbt_pgdata:/var/lib/postgresql/data
+      - dbt_pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -22,5 +20,5 @@ services:
     restart: on-failure
 
 volumes:
-  dbt_pgdata:
-    name: dbt_pgdata
+  dbt_pg_data:
+    name: dbt_pg_data
