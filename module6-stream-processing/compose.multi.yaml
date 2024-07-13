@@ -183,13 +183,13 @@ services:
       KAFKA_REST_HOST_NAME: 'restproxy'
       KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker-0:29092,broker-1:29092,broker-2:29092'
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8089'
+      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8082'
     ports:
-      - '8089:8089'
+      - '8082:8082'
     depends_on:
       <<: *depends-on-kafka-cluster
     healthcheck:
-      test: ["CMD-SHELL", "cub kr-ready localhost 8089 30 || exit 1"]
+      test: ["CMD-SHELL", "cub kr-ready localhost 8082 30 || exit 1"]
       start_period: 10s
       interval: 5s
       timeout: 10s
