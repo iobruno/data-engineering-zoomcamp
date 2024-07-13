@@ -1,11 +1,17 @@
-version: "3.9" 
+x-redpanda-image: &redpanda-image redpandadata/redpanda:${REDPANDA_VERSION:-v23.3.18}
+x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.24.1}
+x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.6.1}
 
-x-redpanda-image: &redpanda-image docker.redpanda.com/vectorized/redpanda:${REDPANDA_VERSION:-v22.3.5}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 services:
+  # Redpanda Setup 
+  ### 9092 - Redpanda Broker
+  ### 8081 - Schema Registry (doesn't support JSON)
+  ### 8082 - REST Proxy
   broker-0:
     image: *redpanda-image
-    container_name: kafka-broker-0
+    container_name: broker-0
     hostname: broker-0
     command:
       - redpanda start
@@ -23,23 +29,49 @@ services:
     restart: on-failure:5
 
   # Conduktor Platform Docs:
-  # - https://docs.conduktor.io/platform/configuration/env-variables
-  # - https://docs.conduktor.io/platform/installation/hardware
-  conduktor:
-    image: conduktor/conduktor-platform:1.17.3
-    container_name: conduktor
-    hostname: conduktor
+  # https://docs.conduktor.io/platform/configuration/env-variables
+  conduktor-console:
+    image: *conduktor-console-image
+    container_name: conduktor-console
+    hostname: conduktor-console
     environment:
-      CDK_CLUSTERS_0_ID: 'warp'
-      CDK_CLUSTERS_0_NAME: 'cp-kafka-in-docker'
+      CDK_CLUSTERS_0_ID: 'kafka-in-docker'
+      CDK_CLUSTERS_0_NAME: 'single-broker-kafka'
       CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker-0:29092'
-      CDK_ADMIN_EMAIL: 'conduktor@conduktor.io'
-      CDK_ADMIN_PASSWORD: 'conduktor'
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://broker-0:8081'
+      CDK_DATABASE_URL: "postgresql://postgres:postgres@conduktor-db:5432/conduktor"
       CDK_LISTENING_PORT: 8080
-      RUN_MODE: nano
     ports:
       - '8080:8080'
+    volumes:
+      - conduktor_data:/var/conduktor
     depends_on:
       broker-0:
         condition: service_started
     restart: on-failure:5
+
+  conduktor-db:
+    image: *postgres-image
+    container_name: conduktor-db
+    hostname: postgresql
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'conduktor'
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+    ports:
+      - '5432'
+    volumes:
+      - conduktor_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure:5
+
+volumes:
+  conduktor_data:
+    name: conduktor_data
+  conduktor_pg_data:
+    name: conduktor_pg_data
