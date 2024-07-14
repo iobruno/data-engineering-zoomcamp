@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.2"
-content_hash = "sha256:c5cd35a3b5773f585ba9a31ad9c2f656376e7691a87f91bd06a8a670632c70a8"
+content_hash = "sha256:d6b979db2215acfc78cb366e6aeb5cfcd2229c6d5fb1890a7b835290ac4c0358"
 
 [[package]]
 name = "aiohttp"
@@ -1956,6 +1956,21 @@ groups = ["default"]
 files = [
     {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
     {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
+]
+
+[[package]]
+name = "polars"
+version = "1.1.0"
+requires_python = ">=3.8"
+summary = "Blazingly fast DataFrame library"
+groups = ["default"]
+files = [
+    {file = "polars-1.1.0-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:9cd1e4aabf75fed5d0b2c99094a27077c409f62b59e0e8e0998e063cee93b04c"},
+    {file = "polars-1.1.0-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:c53cfcbefeac8f31b7bab33c2d7e07dde3cd785afee6e97d217c5412b5ae31b1"},
+    {file = "polars-1.1.0-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:967ee75160315e881e414bbb3198b5534d6ea4a086f06fa8fdfb4cd95a2b8e8f"},
+    {file = "polars-1.1.0-cp38-abi3-manylinux_2_24_aarch64.whl", hash = "sha256:6fe8a2cf96fa69fb62b15737d389668a9d9e909b734715e7edfe88ebcc5bce0f"},
+    {file = "polars-1.1.0-cp38-abi3-win_amd64.whl", hash = "sha256:0fef976ff8e2c1f8a9844bc156c0639da7f87456f64983aa503495d874028df8"},
+    {file = "polars-1.1.0.tar.gz", hash = "sha256:75fe824243006ada0f2dd30c8aba0ec03595d9087b29c3ca8f106ef1a975b9cb"},
 ]
 
 [[package]]
