@@ -1,10 +1,12 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     kotlin("jvm") version "2.0.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.gitlab.arturbosch.detekt") version("1.23.6")
 }
 
 val artifactName = "kafka-stream-processing"
@@ -68,6 +70,22 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.mockk:mockk:$mockKVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+}
+
+detekt {
+    toolVersion = "1.23.6"
+    config.setFrom(file("detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        md.required.set(true)
+        txt.required.set(false)
+        sarif.required.set(false)
+    }
 }
 
 tasks.withType<KotlinJvmCompile>().configureEach {
