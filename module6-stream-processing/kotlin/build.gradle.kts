@@ -70,23 +70,22 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 }
 
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+    }
+}
+
 tasks.withType<ShadowJar> {
     manifest {
         attributes(mapOf("Main-Class" to "club.datatalks.kafka.CliApplication"))
     }
-
     archiveBaseName.set(artifactName)
     version = "1.0"
     archiveClassifier.set("")
     isZip64 = true
     mergeServiceFiles()
-}
-
-tasks.withType<KotlinJvmCompile>().configureEach {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
-    }
 }
 
 tasks.withType<Test> {
