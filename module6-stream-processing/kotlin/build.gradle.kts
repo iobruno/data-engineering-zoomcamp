@@ -1,5 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     kotlin("jvm") version "2.0.0"
@@ -12,6 +13,10 @@ val artifactVersion = "1.0-SNAPSHOT"
 repositories {
     mavenLocal()
     mavenCentral()
+    maven {
+        name = "Confluent Maven Repository"
+        url = uri("https://packages.confluent.io/maven/")
+    }
 }
 
 dependencies {
@@ -77,9 +82,10 @@ tasks.withType<ShadowJar> {
     mergeServiceFiles()
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "17"
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
 }
 
