@@ -59,5 +59,4 @@ data class FhvTaxiDTO(
 
     override fun messageKey(): String = pickupLocationId.toString()
 
-
 }

@@ -100,4 +100,3 @@ data class GreenTaxiDTO(
     override fun messageKey(): String = pickupLocationId.toString()
 
 }
-

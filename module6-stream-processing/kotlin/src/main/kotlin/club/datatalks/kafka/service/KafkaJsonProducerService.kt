@@ -2,7 +2,7 @@ package club.datatalks.kafka.service
 
 import club.datatalks.kafka.infrastructure.KafkaJsonProducer
 import club.datatalks.kafka.infrastructure.KafkaSerializable
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.io.BufferedReader
 import java.nio.file.Files
 import java.nio.file.Path

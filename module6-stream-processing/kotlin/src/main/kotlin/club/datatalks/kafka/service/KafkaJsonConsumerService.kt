@@ -2,7 +2,8 @@ package club.datatalks.kafka.service
 
 import club.datatalks.kafka.infrastructure.KafkaJsonConsumer
 import club.datatalks.kafka.infrastructure.KafkaSerializable
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
+
 import java.time.Duration
 
 class KafkaJsonConsumerService<T>(
