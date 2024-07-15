@@ -1,10 +1,9 @@
-from pathlib import Path
-
 from hydra import compose, initialize
 from rich.logging import RichHandler
-from rich.progress import BarColumn, Progress, TextColumn, TimeElapsedColumn
+from rich.progress import BarColumn, TextColumn, TimeElapsedColumn
 from typer import Argument, Option, Typer
 from typing_extensions import Annotated
+
 from src.processor import *
 
 log = logging.getLogger("py_ingest")
@@ -26,13 +25,6 @@ progress = Progress(
     "•",
     TimeElapsedColumn(),
 )
-
-
-def gen_progress_tasks_for(endpoints: List[str]):
-    filenames = [Path(endpoint).stem for endpoint in endpoints]
-    return [
-        progress.add_task(name, start=False, total=float("inf"), completed=0) for name in filenames
-    ]
 
 
 def load_conf():
@@ -60,27 +52,23 @@ def ingest_db(
     with progress:
         if green:
             endpoints = cfg.datasets.green_trip_data
-            tasks = gen_progress_tasks_for(endpoints)
             processor = GreenTaxiProcessor(polars_ff=polars_ff)
-            processor.run(endpoints, db_settings, "replace", tasks, progress)
+            processor.run(endpoints, db_settings, "replace", progress)
 
         if yellow:
             endpoints = cfg.datasets.yellow_trip_data
-            tasks = gen_progress_tasks_for(endpoints)
             processor = YellowTaxiProcessor(polars_ff=polars_ff)
-            processor.run(endpoints, db_settings, "replace", tasks, progress)
+            processor.run(endpoints, db_settings, "replace", progress)
 
         if fhv:
             endpoints = cfg.datasets.fhv_trip_data
-            tasks = gen_progress_tasks_for(endpoints)
             processor = FhvProcessor(polars_ff=polars_ff)
-            processor.run(endpoints, db_settings, "replace", tasks, progress)
+            processor.run(endpoints, db_settings, "replace", progress)
 
         if zones:
             endpoints = cfg.datasets.zone_lookups
-            tasks = gen_progress_tasks_for(endpoints)
             processor = ZoneLookupProcessor(polars_ff=polars_ff)
-            processor.run(endpoints, db_settings, "replace", tasks, progress)
+            processor.run(endpoints, db_settings, "replace", progress)
 
 
 if __name__ == "__main__":
