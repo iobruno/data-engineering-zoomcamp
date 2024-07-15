@@ -17,6 +17,7 @@ dependencies = [
     "pyarrow>=16.1.0,<17.0",
     "pandas>=2.2.2,<3.0",
     "google-cloud-bigquery-storage>=2.25.0,<3.0",
+    "httpx>=0.27.0,<1.0",
 ]
 
 [tool.pdm.dev-dependencies]
