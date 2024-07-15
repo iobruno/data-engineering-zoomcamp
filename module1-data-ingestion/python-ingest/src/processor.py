@@ -1,10 +1,13 @@
-from abc import ABCMeta, abstractmethod
-from src.df_fetcher import PandasFetcher, PolarsFetcher
-from src.df_repository import SQLRepo, GreenTaxiRepo, YellowTaxiRepo, FhvTaxiRepo, ZoneLookupRepo
-from src.schemas import Schema, GreenTaxiSchema, YellowTaxiSchema, FhvSchema, ZoneLookupSchema
-from typing import List, Literal, Type
 import logging
+from abc import ABCMeta, abstractmethod
+from pathlib import Path
+from typing import List, Literal, Type
 
+from rich.progress import Progress, TaskID
+
+from src.df_fetcher import PandasFetcher, PolarsFetcher
+from src.df_repository import FhvTaxiRepo, GreenTaxiRepo, SQLRepo, YellowTaxiRepo, ZoneLookupRepo
+from src.schemas import FhvSchema, GreenTaxiSchema, Schema, YellowTaxiSchema, ZoneLookupSchema
 
 log = logging.getLogger("py-ingest-processor")
 
@@ -57,8 +60,9 @@ class Processor(metaclass=ABCMeta):
             progress=progress,
         )
 
-    def run(self, endpoints, db_settings, write_disposition, tasks, progress):
+    def run(self, endpoints, db_settings, write_disposition, progress):
         repo = self.repo.with_config(*db_settings)
+        tasks = self.gen_progress_tasks_for(endpoints, progress)
         self.extract_and_load_with(repo, endpoints, write_disposition, tasks, progress)
 
     @property
@@ -74,6 +78,14 @@ class Processor(metaclass=ABCMeta):
     @property
     def renaming(self):
         return self.schema.rename_to
+
+    @classmethod
+    def gen_progress_tasks_for(cls, endpoints: List[str], progress: Progress) -> List[TaskID]:
+        filenames = [Path(endpoint).stem for endpoint in endpoints]
+        return [
+            progress.add_task(name, start=False, total=float("inf"), completed=0)
+            for name in filenames
+        ]
 
 
 class GreenTaxiProcessor(Processor):

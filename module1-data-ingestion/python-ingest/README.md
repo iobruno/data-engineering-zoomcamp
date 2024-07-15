@@ -80,7 +80,7 @@ You can use any combination of options above to fetch more than dataset group at
 
 **1.** Build the Docker Image with:
 ```shell
-docker build -t iobruno/nyc-taxi-ingest:latest . --no-cache
+docker build -t iobruno/pyingest:latest . --no-cache
 ```
 
 **2.** Start a container with it:
@@ -91,8 +91,8 @@ docker run --rm \
   -e DATABASE_NAME=nyc_taxi \
   -e DATABASE_USERNAME=postgres \
   -e DATABASE_PASSWORD=postgres \
-  --name db_ingest_postgres \
-  iobruno/nyc-taxi-ingest
+  --name pyingest \
+  iobruno/pyingest
 ```
 
 

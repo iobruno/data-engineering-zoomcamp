@@ -2,8 +2,10 @@ x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 services:
   ingest-app:
-    image: iobruno/nyc-taxi-ingest:latest
+    image: iobruno/pyingest:latest
     container_name: ingest-app
+    build:
+      dockerfile: ./Dockerfile
     environment:
       DATABASE_HOST: 'ingest-db'
       DATABASE_NAME: 'nyc_taxi'
