@@ -1,6 +1,7 @@
 import dlt
 import duckdb
-from datatalksclub import green_trip_data, yellow_trip_data, fhv_trip_data, zone_lookup_data
+import datatalksclub as dtc
+from github import releases as gh_releases
 
 
 def main():
@@ -10,13 +11,16 @@ def main():
         destination=dlt.destinations.duckdb(conn),
         dataset_name='dlt'
     )
+
+    source = gh_releases(owner="DataTalksClub", repo="nyc-tlc-data")
     pipeline.run(
-        green_trip_data(endpoints=[
-            "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-04.csv.gz"
-        ])
+        source.download_links_group_by("tag_name")
+        | dtc.process_datasets
+        | print,
+        write_disposition='replace'
     )
-    print("Finished successfully")
 
 
 if __name__ == "__main__":
     main()
+

@@ -5,27 +5,29 @@ from typing import List, Generator
 
 def fetch_all(endpoints: List[str], schema=None) -> Generator:
     for endpoint in endpoints:
+        print(f"Now downloading: {endpoint}")
         yield pl.read_csv(endpoint, schema_overrides=schema).to_arrow()
 
 
-@dlt.resource(name="green_trip_data")
-def green_trip_data(endpoints: List[str]):
-    yield fetch_all(endpoints=endpoints, schema=_green_trip_data_schema())
+@dlt.transformer
+def process_datasets(payload):
+    return payload
 
 
-@dlt.resource(name="yellow_trip_data")
-def yellow_trip_data(endpoints: List[str]):
-    yield fetch_all(endpoints=endpoints, schema=_yellow_trip_data_schema())
+def fhv_trip_data(endpoints):
+    return fetch_all(endpoints=endpoints, schema=_fhv_trip_data_schema())
 
 
-@dlt.resource(name="fhv_trip_data")
-def fhv_trip_data(endpoints: List[str]):
-    yield fetch_all(endpoints=endpoints, schema=_fhv_trip_data_schema())
+def green_trip_data(endpoints):
+    return fetch_all(endpoints=endpoints, schema=_green_trip_data_schema())
 
 
-@dlt.resource(name="zone_lookup")
-def zone_lookup_data(endpoints: List[str]):
-    yield fetch_all(endpoints=endpoints, schema=_zone_lookups_schema())
+def yellow_trip_data(endpoints):
+    return fetch_all(endpoints=endpoints, schema=_yellow_trip_data_schema())
+
+
+def zone_lookup_data(endpoints):
+    return fetch_all(endpoints=endpoints, schema=_zone_lookups_schema())
 
 
 def _green_trip_data_schema():
