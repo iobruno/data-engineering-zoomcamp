@@ -1,8 +1,5 @@
-version: "3.9"
-
 x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.7.3-python3.11}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2}
 
 x-airflow-common:
   &airflow-common
@@ -13,12 +10,10 @@ x-airflow-common:
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-db/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-metastore/airflow
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@airflow-db/airflow
-    AIRFLOW__CELERY__BROKER_URL: redis://:@airflow-redis:6379/0
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
     - ${AIRFLOW_PROJ_DIR:-.}/dags:/opt/airflow/dags
@@ -26,13 +21,11 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
   depends_on:
-    airflow-db:
-      condition: service_healthy
-    airflow-redis:
+    airflow-metastore:
       condition: service_healthy
 
 services:
-  airflow-db:
+  airflow-metastore:
     image: *postgres-image
     container_name: airflow_postgres
     restart: always
@@ -46,18 +39,6 @@ services:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-
-  airflow-redis:
-    image: *redis-image
-    container_name: airflow_redis
-    restart: always
-    ports:
-      - '6379'
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -84,22 +65,6 @@ services:
       - '8974'
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:8974/health"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-
-  airflow-worker:
-    <<: *airflow-common
-    container_name: airflow_worker
-    restart: always
-    command: ["airflow", "celery", "worker"]
-    environment:
-      <<: *airflow-common-env
-      DUMB_INIT_SETSID: "0"
-    healthcheck:
-      test:
-        - "CMD-SHELL"
-        - 'celery --app airflow.providers.celery.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}" || celery --app airflow.executors.celery_executor.app inspect ping -d "celery@$${HOSTNAME}"'
       interval: 5s
       timeout: 10s
       retries: 5
