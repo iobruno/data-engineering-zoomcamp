@@ -1,7 +1,7 @@
 # Airflow Workflow Orchestration
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![Airflow](https://img.shields.io/badge/Airflow-2.7-3772FF?style=flat&logo=apacheairflow&logoColor=white&labelColor=3772FF)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Airflow](https://img.shields.io/badge/Airflow-2.9-3772FF?style=flat&logo=apacheairflow&logoColor=white&labelColor=3772FF)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -12,7 +12,6 @@ This setups the infrastructure for Airflow, in Docker, as close as possible to a
 ## Tech Stack
 - [Airflow](https://airflow.apache.org/docs/apache-airflow/stable/start.html)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 
@@ -22,14 +21,14 @@ This setups the infrastructure for Airflow, in Docker, as close as possible to a
 
 **1.** Start setting up the infrastructure in Docker with:
 
-**Airflow with LocalExecutor**:
-```shell
-docker compose up -d
-```
-
 **Airflow with CeleryExecutor**:
 ```shell
-docker compose -f docker-compose.celery.yml up -d
+docker compose -f compose.celery.yaml up -d
+```
+
+**Airflow with LocalExecutor**:
+```shell
+docker compose -f compose.local.yaml up -d
 ```
 
 
