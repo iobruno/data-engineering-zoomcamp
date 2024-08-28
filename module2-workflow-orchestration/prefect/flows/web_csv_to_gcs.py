@@ -74,7 +74,7 @@ def prepare_gcs_blocks(prefect) -> Tuple[GcsBucket, str]:
 
 
 def load_conf():
-    with initialize(version_base=None, config_path="../", job_name="py-ingest"):
+    with initialize(version_base=None, config_path="../", job_name="csv_to_gcs"):
         return [
             compose(config_name="prefect"),
             compose(config_name='schemas'),
