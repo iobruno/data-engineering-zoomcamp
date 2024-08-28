@@ -6,7 +6,7 @@ with fhv_trips as (
     select
         fhv.*
     from
-        {{ source('nyc_tlc_trip_record_data_parquet', 'fhv') }} fhv
+        {{ source('nyc_tlc_dataset_parquet', 'fhv_trip_data') }} fhv
     where
         dispatching_base_num is not null        
 )

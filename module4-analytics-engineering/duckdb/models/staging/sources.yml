@@ -1,10 +1,10 @@
 version: 2
 
 sources:
-  - name: nyc_tlc_trip_record_data_parquet
+  - name: nyc_tlc_dataset_parquet
     meta:
       external_location: "{{ env_var('DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH') ~ '{name}/*.parquet' }}"
     tables:
-      - name: fhv
-      - name: green_taxi
-      - name: yellow_taxi
+      - name: fhv_trip_data
+      - name: green_trip_data
+      - name: yellow_trip_data
