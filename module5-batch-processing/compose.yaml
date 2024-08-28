@@ -1,4 +1,4 @@
-x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.1}
+x-spark-image: &spark-image bitnami/spark:${BITNAMI_SPARK_VERSION:-3.5.2}
 x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.0}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
