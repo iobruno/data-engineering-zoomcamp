@@ -7,7 +7,7 @@ services:
     build:
       dockerfile: ./Dockerfile
     environment:
-      DATABASE_HOST: 'ingest-db'
+      DATABASE_HOST: 'postgres'
       DATABASE_NAME: 'nyc_taxi'
       DATABASE_USERNAME: 'postgres'
       DATABASE_PASSWORD: 'postgres'
@@ -17,7 +17,7 @@ services:
       ingest-db:
         condition: service_healthy
 
-  ingest-db:
+  postgres:
     image: *postgres-image
     container_name: ingest-db
     environment:
