@@ -7,7 +7,7 @@ with yellow_taxi_trips as (
         row_number() over(partition by VendorID, tpep_pickup_datetime) as row_num,
         gt.*
     from
-        {{ source('nyc_tlc_trip_record_data_parquet', 'yellow_taxi') }} gt
+        {{ source('nyc_tlc_dataset_parquet', 'yellow_trip_data') }} gt
     where
         VendorID is not null
 )

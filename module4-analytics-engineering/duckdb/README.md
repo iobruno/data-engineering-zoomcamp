@@ -1,7 +1,7 @@
 # dbt and DuckDB for Analytics Engineering
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![DuckDB](https://img.shields.io/badge/DuckDB-black?style=flat&logo=duckdb&logoColor=FEF000&labelColor=black)
 ![gcsfs](https://img.shields.io/badge/gcsfs-black?style=flat&logo=googlecloudstorage&logoColor=FEF000&labelColor=black)
 ![s3fs](https://img.shields.io/badge/s3fs-black?style=flat&logo=amazon-s3&logoColor=FEF000&labelColor=black)
@@ -17,7 +17,6 @@ It also adds Data Reliability on top of that with PipeRider.
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-duckdb](https://docs.getdbt.com/reference/warehouse-setups/duckdb-setup)
 - [fsspec](https://filesystem-spec.readthedocs.io/en/latest/api.html#other-known-implementations)
-- [PipeRider](https://github.com/InfuseAI/piperider)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 
@@ -26,9 +25,9 @@ It also adds Data Reliability on top of that with PipeRider.
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.10 / 3.11 with conda:
+**1.** Create and activate a virtualenv with conda:
 ```shell
-conda create -n dbt-duckdb python=3.11 -y
+conda create -n dbt-duckdb python=3.12 -y
 conda activate dbt-duckdb
 ```
 
@@ -58,7 +57,7 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-duckdb`:
 
 ```shell
-export DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_trip_record_data/"
+export DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_dataset/"
 export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
 ```
 
@@ -121,47 +120,8 @@ open http://localhost:8080
 ```
 
 
-## Data Reliability with PipeRider
-
-Initialize the pipeline with:
-```shell
-piperider init 
-```
-```shell
-piperider diagnose
-```
-The output should be similar to:
-```shell
-Diagnosing...
-
-Check format of data sources:
-  dev: [OK]
-✅ PASS
-
-Check connections:
-  DBT: [OK]
-    Version: 1.7.2
-    Adapter: duckdb
-    Profile: duckdb-local
-    Target:  dev 
-  Name: dev
-  Type: duckdb
-  Connector: [OK]
-  Connection: [OK]
-✅ PASS
-
-🎉 You are all set!
-```
-
-Next, run piperider pipeline:
-```shell
-piperider run
-```
-
-
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
 - [x] Bootstrap dbt with DuckDB Adapter ([dbt-duckdb](https://github.com/duckdb/dbt-duckdb))
-- [x] Configure dbt-duckdb with `fsspec` and read from [s3fs](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
 - [x] Configure dbt-duckdb with `fsspec` and read from [gcsfs](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
-- [x] Integrate with PipeRider and generate reports
+- [x] Configure dbt-duckdb with `fsspec` and read from [s3fs](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
