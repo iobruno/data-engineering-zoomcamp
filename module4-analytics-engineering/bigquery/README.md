@@ -53,8 +53,8 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs
-export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data
-export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data
+export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data
+export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_trip_data
 export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
@@ -114,8 +114,8 @@ docker build -t dbt_bigquery:latest . --no-cache
 ```shell
 docker run --rm \
   -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data \
-  -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data \
+  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data \
+  -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_trip_data \
   -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
   -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
   --name dbt_bigquery \
