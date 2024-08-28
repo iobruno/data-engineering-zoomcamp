@@ -71,7 +71,7 @@ For the very first run:
 export DATABASE_USERNAME=sqlalchemy
 export DATABASE_PASSWORD=sqlalchemy
 export DATABASE_HOST=localhost
-export DATABASE_PORT=5433
+export DATABASE_PORT=5432
 export DATABASE_NAME=nyc_taxi
 ```
 
