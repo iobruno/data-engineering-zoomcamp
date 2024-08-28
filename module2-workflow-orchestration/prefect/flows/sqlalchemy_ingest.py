@@ -65,21 +65,22 @@ def prepare_sqlalchemy_block(sqlalchemy) -> SqlAlchemyConnector:
 
 
 def load_conf():
-    with initialize(version_base=None, config_path="../", job_name="py-ingest"):
-        return compose(config_name="app")
+    with initialize(version_base=None, config_path="../", job_name="sqlalchemy_ingest"):
+        return [
+            compose(config_name="prefect"),
+            compose(config_name='schemas'),
+            compose(config_name='datasets')
+        ]
 
 
 @flow(name="web-csv-to-sqlalchemy")
 def sqlalchemy_ingest():
     log = get_run_logger()
     log.info("Fetching URL Datasets from .yaml")
-    cfg = load_conf()
-
-    prefect_cfg = cfg.prefect
-    datasets = cfg.datasets
+    prefectcfg, schemas, datasets = load_conf()
 
     log.info("Preparing Prefect Block...")
-    conn_block = prepare_sqlalchemy_block(prefect_cfg.sqlalchemy)
+    conn_block = prepare_sqlalchemy_block(prefectcfg.sqlalchemy)
 
     for dataset, endpoints in datasets.items():
         if endpoints is None:

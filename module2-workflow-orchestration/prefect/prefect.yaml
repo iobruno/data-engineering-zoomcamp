@@ -1,0 +1,12 @@
+sqlalchemy:
+  alias: "postgres-on-docker"
+  database: "nyc_taxi"
+
+gcp_credentials:
+  alias: "prefect-gcs-bigquery"
+
+gcs:
+  lakehouse_raw:
+    alias: "gcs-lakehouse-raw"
+    bucket: "iobruno-lakehouse-raw"
+    blob_prefix: "nyc_tlc_dataset/"
