@@ -8,16 +8,17 @@ authors = [
     {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "dbt-bigquery>=1.7.6,<2.0",
+    "dbt-bigquery>=1.8.2,<2.0",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.2.2",
+    "ruff>=0.6.2",
 ]
 
 [tool.ruff]
 line-length = 100
+lint.select = ["F", "E", "W", "I001"]

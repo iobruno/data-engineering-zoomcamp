@@ -1,7 +1,7 @@
 # dbt and BigQuery for Analytics Engineering
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -20,9 +20,9 @@ using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-d
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.10 / 3.11 with conda:
+**1.** Create and activate a virtualenv with conda:
 ```shell
-conda create -n dbt-bigquery python=3.11 -y
+conda create -n dbt-bigquery python=3.12 -y
 conda activate dbt-bigquery
 ```
 
@@ -53,8 +53,8 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs
-export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data
-export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data
+export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data
+export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_trip_data
 export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
@@ -114,8 +114,8 @@ docker build -t dbt_bigquery:latest . --no-cache
 ```shell
 docker run --rm \
   -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
-  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_record_data \
-  -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_record_data \
+  -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data \
+  -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_trip_data \
   -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
   -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
   --name dbt_bigquery \
