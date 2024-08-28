@@ -14,12 +14,12 @@ services:
     volumes:
       - ./datasets.yml:/app/datasets.yml
     depends_on:
-      ingest-db:
+      postgres:
         condition: service_healthy
 
   postgres:
     image: *postgres-image
-    container_name: ingest-db
+    container_name: postgres
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
