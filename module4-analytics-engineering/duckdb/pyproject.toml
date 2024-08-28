@@ -8,20 +8,20 @@ authors = [
     {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "dbt-duckdb>=1.7.2,<2.0",
-    "duckdb>=0.10.0,<1.0",
-    "s3fs>=2024.2.0,<2024.3.0",
-    "gcsfs>=2024.2.0,<2024.3.0",
-    "piperider[duckdb]>=0.41.0,<1.0",
+    "dbt-duckdb>=1.8.3,<2.0",
+    "duckdb>=1.0.0,<2.0",
+    "s3fs==2024.6.1",
+    "gcsfs==2024.6.1",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.2.2",
+    "ruff>=0.6.2",
 ]
 
 [tool.ruff]
 line-length = 100
+lint.select = ["F", "E", "W", "I001"]
