@@ -75,18 +75,21 @@ def prepare_gcs_blocks(prefect) -> Tuple[GcsBucket, str]:
 
 def load_conf():
     with initialize(version_base=None, config_path="../", job_name="py-ingest"):
-        return compose(config_name="app")
+        return [
+            compose(config_name="prefect"),
+            compose(config_name='schemas'),
+            compose(config_name='datasets')
+        ]
 
 
 @flow(name="web-csv-to-gcs")
 def ingest_csv_to_gcs():
     log = get_run_logger()
     log.info("Fetching URL Datasets from .yml")
-    cfg = load_conf()
-    datasets = cfg.datasets
+    prefectcfg, schemas, datasets = load_conf()
 
     log.info("Preparing Prefect Block...")
-    gcs_bucket, blob_prefix = prepare_gcs_blocks(cfg.prefect)
+    gcs_bucket, blob_prefix = prepare_gcs_blocks(prefectcfg)
 
     for dataset, endpoints in datasets.items():
         if endpoints is None:
@@ -97,12 +100,11 @@ def ingest_csv_to_gcs():
             filename = Path(endpoint).name
             expected_blob_name = Path(blob_prefix, dataset, filename)
             raw_df = fetch_csv_from(url=endpoint)
+            schema = schemas.get(dataset)
 
-            schemas = {}
-            df_schema = schemas.get(dataset)
-
-            if df_schema:
-                cleansed_df = fix_datatypes_for(df=raw_df, schema=df_schema)
+            if schema:
+                log.info(f"{filename} (schema found)")
+                cleansed_df = fix_datatypes_for(df=raw_df, schema=schema)
                 blob_name = upload_from_df(
                     gcs_bucket=gcs_bucket,
                     df=cleansed_df,
@@ -110,6 +112,7 @@ def ingest_csv_to_gcs():
                     serialization_fmt="parquet_snappy",
                 )
             else:
+                log.warn(f"{filename} (schema not found)")
                 blob_name = upload_from_df(
                     gcs_bucket=gcs_bucket,
                     df=raw_df,
