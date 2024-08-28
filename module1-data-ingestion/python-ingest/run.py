@@ -28,7 +28,7 @@ progress = Progress(
 
 
 def load_conf():
-    with initialize(version_base=None, config_path=".", job_name="py-ingest"):
+    with initialize(version_base=None, config_path=".", job_name="pyingest"):
         return compose(config_name="datasets")
 
 
@@ -47,26 +47,26 @@ def ingest_db(
 ):
     log.info("Connecting to 'postgres' with credentials on ENV VARs...")
     db_settings = db_host, db_port, db_name, db_username, db_password
-    cfg = load_conf()
+    datasets = load_conf()
 
     with progress:
         if green:
-            endpoints = cfg.datasets.green_trip_data
+            endpoints = datasets.green_trip_data
             processor = GreenTaxiProcessor(polars_ff=polars_ff)
             processor.run(endpoints, db_settings, "replace", progress)
 
         if yellow:
-            endpoints = cfg.datasets.yellow_trip_data
+            endpoints = datasets.yellow_trip_data
             processor = YellowTaxiProcessor(polars_ff=polars_ff)
             processor.run(endpoints, db_settings, "replace", progress)
 
         if fhv:
-            endpoints = cfg.datasets.fhv_trip_data
+            endpoints = datasets.fhv_trip_data
             processor = FhvProcessor(polars_ff=polars_ff)
             processor.run(endpoints, db_settings, "replace", progress)
 
         if zones:
-            endpoints = cfg.datasets.zone_lookups
+            endpoints = datasets.zone_lookups
             processor = ZoneLookupProcessor(polars_ff=polars_ff)
             processor.run(endpoints, db_settings, "replace", progress)
 
