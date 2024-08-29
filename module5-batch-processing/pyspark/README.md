@@ -1,6 +1,6 @@
 # PySpark Playground
 
-![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Python](https://img.shields.io/badge/Python-3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![PySpark](https://img.shields.io/badge/pySpark-3.5-E36B22?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=3C3A3E)
 ![Jupyter](https://img.shields.io/badge/Jupyter-31393F.svg?style=flat&logo=jupyter&logoColor=F37726&labelColor=31393F)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
@@ -17,7 +17,7 @@ Welcome to
    /__ / .__/\_,_/_/ /_/\_\   version 3.5.1
       /_/
 
-Using Python version 3.12.4 (main, Jun  6 2024 18:26:44)
+Using Python version 3.11.9 (main, Jun  6 2024 18:26:44)
 Spark context Web UI available at http://192.168.15.29:4040
 Spark context available as 'sc' (master = local[*], app id = local-1724831152309).
 SparkSession available as 'spark'.
