@@ -1,4 +1,4 @@
-x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.9.3-python3.11}
+x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.0-python3.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
 
 x-airflow-common:
