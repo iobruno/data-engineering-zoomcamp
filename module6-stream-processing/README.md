@@ -46,10 +46,11 @@ open http://localhost:8080
 ```
 
 ## TODO:
-- [x] Single-broker Kafka Cluster
-- [x] Multi-broker Kafka Cluster
+- [x] Single-broker Kafka Cluster (with Zookeeper)
+- [x] Multi-broker Kafka Cluster (with Zookeeper)
+- [ ] Multi-broker Kafka (with KRaft)
 - [x] Confluent Schema Registry
 - [x] Confluent Rest Proxy
 - [x] ksqlDB Server and CLI
 - [x] Kafka Admin UI: `Conduktor Console`
-- [ ] Deploy Kafka Cluster on K8s with Helm Charts
+- [ ] Deploy Kafka Cluster (with Zookeeper or KRaft) on K8s using Helm Charts
