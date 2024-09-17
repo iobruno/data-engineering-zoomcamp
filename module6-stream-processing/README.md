@@ -29,14 +29,18 @@ Hop into their respective folders for details on how to spin them up.
 
 ### Developer Setup
 
-**1.** Start the Kafka Cluster:
+**1.** Start the Kafka Cluster (Single broker setup with KRaft):
 ```shell
 docker compose up -d
 ```
 
 Alternatively, you can use the multi-broker setup with:
 ```shell
-docker compose -f compose.multi.yaml up -d
+# For Kafka+KRaft
+docker compose -f compose.kraft-multi-broker.yaml up -d
+
+# for Kafka with Zookeeper
+docker compose -f compose.zookeeper-multi-broker.yaml up -d
 ```
 
 
@@ -46,10 +50,11 @@ open http://localhost:8080
 ```
 
 ## TODO:
-- [x] Single-broker Kafka Cluster
-- [x] Multi-broker Kafka Cluster
+- [x] Single-broker Kafka Cluster (with KRaft)
+- [x] Multi-broker Kafka Cluster (with KRaft)
+- [x] Multi-broker Kafka Cluster (with Zookeeper)
 - [x] Confluent Schema Registry
 - [x] Confluent Rest Proxy
 - [x] ksqlDB Server and CLI
 - [x] Kafka Admin UI: `Conduktor Console`
-- [ ] Deploy Kafka Cluster on K8s with Helm Charts
+- [ ] Deploy Kafka Cluster (with Zookeeper or KRaft) on K8s using Helm Charts

@@ -21,7 +21,7 @@ This contains the SQL statements to build the KStreams and KTables for ksqlDB to
 
 Copyright 2017-2022 Confluent Inc.
 
-CLI v7.6.0, Server v7.6.0 located at http://ksqldb-0:8088
+CLI v7.7.1, Server v7.7.1 located at http://ksqldb0:8088
 Server Status: RUNNING
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
@@ -39,12 +39,12 @@ ksql>
 
 **0.** Make sure `ksqlDB-server` and `ksql-cli` are up. Check the instructions on [README](../README.md) for more details:
 ```shell
-docker compose -f ../docker-compose.yml up -d
+docker compose -f ../compose.yml up -d
 ```
 
 **1.** Connect to ksqlDB through the ksqlDB CLI:
 ```shell
-docker exec -it ksqlcli ksql http://ksqldb-0:8088
+docker exec -it ksqlcli ksql http://ksqldb0:8088
 ```
 
 You should be getting into this console:
