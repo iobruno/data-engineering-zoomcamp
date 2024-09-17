@@ -1,0 +1,231 @@
+x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+
+x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.24.1}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+
+x-kafka-common:
+  &kafka-common
+  image: *cp-kafka-image
+  environment: &kafka-common-env
+    CLUSTER_ID: 'jE1AUDtrP1sE4Cuse/wKvw=='
+    KAFKA_PROCESS_ROLES: 'broker,controller'
+    KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+    KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT'
+    KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
+    KAFKA_DELETE_TOPIC_ENABLE: true
+  healthcheck:
+    test: ["CMD-SHELL", "cub kafka-ready -b localhost:29092 1 10 || exit 1"]
+    start_period: 10s
+    interval: 5s
+    timeout: 10s
+    retries: 5
+  restart: on-failure:5
+
+x-depends-on-kafka-brokers:
+  depends_on: &depends-on-kafka-brokers
+    broker0:
+      condition: service_healthy
+    broker1:
+      condition: service_healthy
+    broker2:
+      condition: service_healthy
+
+x-depends-on-kafka-cluster:
+  depends_on: &depends-on-kafka-cluster
+    <<: *depends-on-kafka-brokers
+    schema-registry:
+      condition: service_healthy
+
+x-ksqldb-common:
+  &ksqldb-common
+  image: *cp-ksqldb-server-image
+  environment:
+    &ksqldb-common-env
+    KSQL_BOOTSTRAP_SERVERS: 'broker0:29092,broker1:29092,broker2:29092'
+    KSQL_KSQL_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+    KSQL_LISTENERS: 'http://0.0.0.0:8088'
+    KSQL_KSQL_SINK_REPLICAS: 3
+    KSQL_KSQL_STREAMS_REPLICATION_FACTOR: 3
+    KSQL_KSQL_INTERNAL_TOPIC_REPLICAS: 3
+    KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
+    KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'false'
+    KSQL_KSQL_EXTENSION_DIR: '/opt/ksqldb-udf'
+  depends_on:
+    <<: *depends-on-kafka-brokers
+  restart: on-failure:5
+
+services:
+  broker0:
+    <<: *kafka-common
+    container_name: broker0
+    hostname: broker0
+    environment:
+      <<: *kafka-common-env
+      KAFKA_NODE_ID: 0
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker0:29092,EXTERNAL://localhost:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '0@broker0:29093,1@broker1:29093,2@broker2:29093'
+    ports:
+      - '9092:9092'
+    volumes:
+      - ${KAFKA_DATA:-./volumes/kafka}/broker0:/var/lib/kafka/data
+
+  broker1:
+    <<: *kafka-common
+    container_name: broker1
+    hostname: broker1
+    environment:
+      <<: *kafka-common-env
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9192
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker1:29092,EXTERNAL://localhost:9192
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '0@broker0:29093,1@broker1:29093,2@broker2:29093'
+    ports:
+      - '9192:9192'
+    volumes:
+      - ${KAFKA_DATA:-./volumes/kafka}/broker1:/var/lib/kafka/data
+
+  broker2:
+    <<: *kafka-common
+    container_name: broker2
+    hostname: broker2
+    environment:
+      <<: *kafka-common-env
+      KAFKA_NODE_ID: 2
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9292
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://broker2:29092,EXTERNAL://localhost:9292
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '0@broker0:29093,1@broker1:29093,2@broker2:29093'
+    ports:
+      - '9292:9292'
+    volumes:
+      - ${KAFKA_DATA:-./volumes/kafka}/broker2:/var/lib/kafka/data
+
+  schema-registry:
+    image: *cp-schema-registry-image
+    container_name: schema-registry
+    hostname: schema-registry
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker0:29092,broker1:29092,broker2:29092'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8081'
+      SCHEMA_REGISTRY_DEBUG: true
+    ports:
+      - '8081:8081'
+    depends_on: *depends-on-kafka-brokers
+    healthcheck:
+      test: ["CMD-SHELL", "cub sr-ready localhost 8081 30 || exit 1"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    restart: on-failure:5
+
+  ksqldb0:
+    <<: *ksqldb-common
+    container_name: ksqldb0
+    hostname: ksqldb0
+    environment:
+      <<: *ksqldb-common-env
+      KSQL_KSQL_SERVICE_ID: 'ksqldb0_'
+    ports:
+      - '8088:8088'
+    volumes:
+      - ${KSQL_UDF_EXTENSIONS_DIR:-./volumes/ksqldb-udf}:/opt/ksqldb-udf
+    depends_on:
+      <<: *depends-on-kafka-cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cub ksql-server-ready localhost 8088 30 || exit 1"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+    restart: on-failure:5
+
+  ksqlcli:
+    image: *cp-ksqldb-cli-image
+    container_name: ksqlcli
+    hostname: ksqlcli
+    entrypoint: /bin/bash
+    tty: true
+    depends_on:
+      ksqldb0:
+        condition: service_healthy
+    restart: on-failure:5
+
+  kafka-rest:
+    image: *cp-restproxy-image
+    container_name: kafka-rest
+    hostname: kafka-rest
+    environment:
+      KAFKA_REST_HOST_NAME: 'restproxy'
+      KAFKA_REST_BOOTSTRAP_SERVERS: 'PLAINTEXT://broker0:29092,broker1:29092,broker2:29092'
+      KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      KAFKA_REST_LISTENERS: 'http://0.0.0.0:8082'
+    ports:
+      - '8082:8082'
+    depends_on:
+      <<: *depends-on-kafka-cluster
+    healthcheck:
+      test: ["CMD-SHELL", "cub kr-ready localhost 8082 30 || exit 1"]
+      start_period: 10s
+      interval: 5s
+      timeout: 10s
+      retries: 3
+    restart: on-failure:5
+
+  # Conduktor Platform Docs:
+  # https://docs.conduktor.io/platform/configuration/env-variables
+  conduktor-console:
+    image: *conduktor-console-image
+    container_name: conduktor-console
+    hostname: conduktor-console
+    environment:
+      CDK_CLUSTERS_0_ID: 'kafka-kraft-in-docker'
+      CDK_CLUSTERS_0_NAME: 'multi-broker-kraft-kafka'
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: 'broker0:29092,broker1:29092,broker2:29092'
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://schema-registry:8081'
+      CDK_CLUSTERS_0_KSQLDBS_0_NAME: 'ksqldb0'
+      CDK_CLUSTERS_0_KSQLDBS_0_URL: 'http://ksqldb0:8088'
+      CDK_DATABASE_URL: "postgresql://postgres:postgres@conduktor-db:5432/conduktor"
+      CDK_LISTENING_PORT: 8080
+    ports:
+      - '8080:8080'
+    volumes:
+      - conduktor_data:/var/conduktor
+    depends_on:
+      <<: *depends-on-kafka-cluster
+      conduktor-db:
+        condition: service_healthy
+    restart: on-failure:5
+
+  conduktor-db:
+    image: *postgres-image
+    container_name: conduktor-db
+    hostname: postgresql
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'conduktor'
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+    ports:
+      - '5432'
+    volumes:
+      - conduktor_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure:5
+
+volumes:
+  conduktor_data:
+    name: conduktor_data
+  conduktor_pg_data:
+    name: conduktor_pg_data
