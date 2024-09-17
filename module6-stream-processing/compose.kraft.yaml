@@ -1,5 +1,4 @@
 x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
-x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
 x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
 x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
 x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
