@@ -50,9 +50,9 @@ open http://localhost:8080
 ```
 
 ## TODO:
-- [x] Single-broker Kafka Cluster (with Zookeeper)
+- [x] Single-broker Kafka Cluster (with KRaft)
+- [x] Multi-broker Kafka Cluster (with KRaft)
 - [x] Multi-broker Kafka Cluster (with Zookeeper)
-- [x] Multi-broker Kafka (with KRaft)
 - [x] Confluent Schema Registry
 - [x] Confluent Rest Proxy
 - [x] ksqlDB Server and CLI
