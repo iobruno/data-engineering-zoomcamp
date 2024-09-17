@@ -1,5 +1,3 @@
-version: "3.9"
-
 x-risingwave-image: &risingwave-image risingwavelabs/risingwave:${RISINGWAVE_VERSION:-v1.6.1}
 x-etcd-image: &etcd-image quay.io/coreos/etcd:${ETCD_VERSION:-v3.5.10}
 x-minio-image: &minio-image quay.io/minio/minio:${MINIO_VERSION:-latest}
