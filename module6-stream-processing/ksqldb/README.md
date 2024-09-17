@@ -39,7 +39,7 @@ ksql>
 
 **0.** Make sure `ksqlDB-server` and `ksql-cli` are up. Check the instructions on [README](../README.md) for more details:
 ```shell
-docker compose -f ../docker-compose.yml up -d
+docker compose -f ../compose.yml up -d
 ```
 
 **1.** Connect to ksqlDB through the ksqlDB CLI:
