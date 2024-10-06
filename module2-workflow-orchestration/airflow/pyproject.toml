@@ -1,5 +1,5 @@
 [project]
-name = ""
+name = "airflow-playground"
 version = "0.1"
 description = "Airflow DAGs for workflow orchestration"
 license = {text = "CC-BY-SA-4.0"}
@@ -16,8 +16,9 @@ dependencies = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.1.6",
+    "ruff>=0.6.9",
 ]
 
 [tool.ruff]
 line-length = 100
+lint.select = ["F", "E", "W", "I001"]
