@@ -33,7 +33,7 @@ conda activate pyingest
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -85,7 +85,7 @@ docker build -t iobruno/pyingest:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run --rm \
+docker run -d --rm \
   -e DATABASE_HOST=host.docker.internal \
   -e DATABASE_PORT=5432 \
   -e DATABASE_NAME=nyc_taxi \
