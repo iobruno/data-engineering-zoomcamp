@@ -31,7 +31,7 @@ conda activate prefect
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3.** (Optional) Install pre-commit:

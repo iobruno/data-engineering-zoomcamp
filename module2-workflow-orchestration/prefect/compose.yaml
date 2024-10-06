@@ -1,5 +1,5 @@
-x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-2.19-python3.12}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-3.0.4-python3.12-kubernetes}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
   prefect-server:
