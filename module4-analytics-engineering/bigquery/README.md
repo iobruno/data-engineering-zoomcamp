@@ -28,7 +28,7 @@ conda activate dbt-bigquery
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -92,10 +92,9 @@ dbt [build|run] --select models/staging+
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
-```
-```shell
 dbt docs serve
 ```
+
 Access the generated docs at:
 ```shell
 open http://localhost:8080
@@ -107,19 +106,19 @@ open http://localhost:8080
 **1.** Build the Docker Image with:
 
 ```shell
-docker build -t dbt_bigquery:latest . --no-cache
+docker build -t dbt-bigquery:latest . --no-cache
 ```
 
 **2.** Start a container with it:
 ```shell
-docker run --rm \
+docker run -d --rm \
   -e DBT_BIGQUERY_PROJECT=iobruno-gcp-labs \
   -e DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data \
   -e DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_trip_data \
   -e DBT_BIGQUERY_DATASET_LOCATION=us-central1 \
-  -v /PATH/TO/YOUR/GCP_CREDENTIALS.json:/secrets/gcp_credentials.json \
-  --name dbt_bigquery \
-  dbt_bigquery
+  -v /PATH/TO/YOUR/gcp_credentials.json:/secrets/gcp_credentials.json \
+  --name dbt-bigquery \
+  dbt-bigquery
 ```
 
 
