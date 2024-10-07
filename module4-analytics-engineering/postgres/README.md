@@ -32,7 +32,7 @@ conda activate dbt-postgres
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -93,9 +93,6 @@ dbt [build|run] --select models/staging+ --target [prod|dev]
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
-```
-
-```shell
 dbt docs serve
 ```
 
@@ -114,7 +111,7 @@ docker build -t dbt-postgres:latest . --no-cache
 
 **2.** Start a container with it:
 ```shell
-docker run --rm \
+docker run -d --rm \
   -e DBT_POSTGRES_HOST=host.docker.internal \
   -e DBT_POSTGRES_DATABASE=nyc_taxi \
   -e DBT_POSTGRES_SOURCE_SCHEMA=public \

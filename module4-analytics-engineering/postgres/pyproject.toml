@@ -1,5 +1,5 @@
 [project]
-name = ""
+name = "dbt-postgres-analytics"
 version = "1.0"
 description = "Analytics Engineering with dbt and PostgreSQL"
 license = {text = "CC-BY-SA-4.0"}
@@ -16,7 +16,7 @@ dependencies = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.5.1",
+    "ruff>=0.6.9",
 ]
 
 [tool.ruff]
