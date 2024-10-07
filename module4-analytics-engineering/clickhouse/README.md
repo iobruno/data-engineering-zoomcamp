@@ -30,7 +30,7 @@ conda activate dbt-clickhouse
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -90,9 +90,6 @@ dbt [build|run] --select models/staging+ --target [prod|dev]
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
-```
-
-```shell
 dbt docs serve
 ```
 
@@ -104,14 +101,20 @@ open http://localhost:8080
 
 ## Containerization and Testing
 
-**1.** Build the Docker Image with:
+**1.** With your instance of Clickhouse and Postgres up, connect to ClickHouse and run:
+```sql
+CREATE DATABASE fqdb_nyc_taxi
+ENGINE = PostgreSQL('host.docker.internal:5432', 'nyc_taxi', 'postgres', 'postgres', 'public', 0);
+```
+
+**2.** Build the Docker Image with:
 ```shell
 docker build -t dbt-clickhouse:latest . --no-cache
 ```
 
-**2.** Fire up the container with it:
+**3.** Fire up the container with it:
 ```shell
-docker run --rm \
+docker run -d --rm \
   -e DBT_CLICKHOUSE_HOST=host.docker.internal \
   -e DBT_CLICKHOUSE_FQDN_NYC_TAXI=fqdb_nyc_taxi \
   -e DBT_CLICKHOUSE_TARGET_DATABASE=nyc_tlc_record_data \
