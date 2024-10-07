@@ -57,7 +57,7 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 4.2. Set the environment variables for `dbt-duckdb`:
 ```shell
 export DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_dataset/"
-export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
+export DBT_DUCKDB_TARGET_PATH=~/.duckdb/dbt.duckdb
 ```
 
 Optionally, you can also set the DuckDB schemas where the dbt staging & core models should land on:
@@ -109,10 +109,9 @@ dbt [build|run] --select models/staging+
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
-```
-```shell
 dbt docs serve
 ```
+
 Access the generated docs at:
 ```shell
 open http://localhost:8080
@@ -122,14 +121,13 @@ open http://localhost:8080
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
-
 ```shell
 docker build -t dbt-duckdb:latest . --no-cache
 ```
 
 **2.** Start a container with it:
 ```shell
-docker run --rm \
+docker run -d --rm \
   -e DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_dataset/" \
   -e DBT_DUCKDB_TARGET_PATH=/duckdb/dbt.duckdb \
   -e DBT_DUCKDB_TARGET_SCHEMA=analytics \
@@ -138,6 +136,8 @@ docker run --rm \
   --name dbt-duckdb \
   dbt-duckdb
 ```
+
+Note: If the container suddenly gets killed, it means it has run out-of-ram to process the full workload. Increase the amount of available RAM a container can use (on Docker settings).
 
 
 ## TODO:
