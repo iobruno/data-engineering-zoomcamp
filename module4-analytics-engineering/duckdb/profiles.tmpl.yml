@@ -3,7 +3,7 @@ dbt_duckdb_analytics:
     # Ref.: https://filesystem-spec.readthedocs.io/en/latest/api.html#fsspec.implementations.local.LocalFileSystem
     # Ref.: https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem
     # Ref.: https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem
-    localfs:
+    dev:
       type: duckdb
       path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '/tmp/dbt.duck') }}"
       filesystems:
@@ -16,4 +16,4 @@ dbt_duckdb_analytics:
           key: "{{ env_var('AWS_ACCESS_KEY', '') }}"
           secret: "{{ env_var('AWS_SECRET_ACCESS_KEY', '') }}"
 
-  target: localfs
+  target: dev
