@@ -1,10 +1,8 @@
-version: "3.9"
+x-mage-image: &mage-image mageai/mageai:${MAGE_VERSION:-0.9.74}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.0-alpine}
 
-x-mage-image: &mage-image mageai/mageai:${MAGE_VERSION:-0.9.62}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2}
-
-x-mage-common: 
+x-mage-common:
   &mage-common
   image: *mage-image
   environment:
@@ -100,13 +98,13 @@ services:
     image: *mage-image
     container_name: mage_init
     entrypoint: /bin/bash
-    environment: 
+    environment:
       <<: *mage-common-env
     command:
       - -c
       - |
         export MOUNT_POINT=/mnt/mage
-        export MOUNT_PROJ_DIR=$${MOUNT_POINT}/$${MAGE_PROJ_NAME}        
+        export MOUNT_PROJ_DIR=$${MOUNT_POINT}/$${MAGE_PROJ_NAME}
         export TMP_PROJ_DIR=/tmp/$$MOUNT_PROJ_DIR
 
         if [ ! -d "$$MOUNT_PROJ_DIR" ]; then
