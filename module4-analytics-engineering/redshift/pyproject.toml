@@ -1,5 +1,5 @@
 [project]
-name = ""
+name = "dbt-redshift-analytics"
 version = "1.0"
 description = "Analytics Engineering with dbt and Redshift"
 license = {text = "CC-BY-SA-4.0"}
@@ -8,17 +8,18 @@ authors = [
     {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "dbt-redshift>=1.7.3,<2.0",
-    "awscli>=1.32.7,<2.0",
+    "dbt-redshift>=1.8.1,<2.0",
+    "awscli>=1.35.0,<2.0",
 ]
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.2.2",
+    "ruff>=0.6.9",
 ]
 
 [tool.ruff]
 line-length = 100
+lint.select = ["F", "E", "W", "I001"]
