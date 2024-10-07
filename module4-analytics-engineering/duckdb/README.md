@@ -33,7 +33,7 @@ conda activate dbt-duckdb
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -55,7 +55,6 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
 4.2. Set the environment variables for `dbt-duckdb`:
-
 ```shell
 export DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_dataset/"
 export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
@@ -64,10 +63,10 @@ export DBT_DUCKDB_TARGET_PATH=/tmp/dbt.duckdb
 Optionally, you can also set the DuckDB schemas where the dbt staging & core models should land on:
 ```shell
 # Schema for the dim_ and fct_ models; it defaults to 'main', when not set
-export DBT_DUCKDB_TARGET_SCHEMA='stg_analytics'
+export DBT_DUCKDB_TARGET_SCHEMA=analytics
 
 # Schema for the stg_ models; it defaults to 'main', when not set
-export DBT_DUCKDB_STAGING_SCHEMA='analytics'
+export DBT_DUCKDB_STAGING_SCHEMA=stg_analytics
 ```
 
 4.3. If you're reading data from gcs, authenticate with:
@@ -117,6 +116,27 @@ dbt docs serve
 Access the generated docs at:
 ```shell
 open http://localhost:8080
+```
+
+
+## Containerization and Testing
+
+**1.** Build the Docker Image with:
+
+```shell
+docker build -t dbt-duckdb:latest . --no-cache
+```
+
+**2.** Start a container with it:
+```shell
+docker run --rm \
+  -e DBT_DUCKDB_SOURCE_PARQUET_BASE_PATH="gs://iobruno-lakehouse-raw/nyc_tlc_dataset/" \
+  -e DBT_DUCKDB_TARGET_PATH=/duckdb/dbt.duckdb \
+  -e DBT_DUCKDB_TARGET_SCHEMA=analytics \
+  -v ~/.duckdb:/duckdb \
+  -v PATH/TO/YOUR/gcp_credentials.json:/secrets/gcp_credentials.json \
+  --name dbt-duckdb \
+  dbt-duckdb
 ```
 
 
