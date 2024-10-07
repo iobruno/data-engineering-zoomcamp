@@ -7,7 +7,7 @@ WORKDIR /app/
 RUN pip install -U pip setuptools wheel && \
     pip install pdm && \
     mkdir -p __pypackages__ && \
-    pdm sync --prod --no-editable
+    pdm sync --prod --no-self --no-editable
 
 # Runner stage
 FROM python:3.12-slim AS runner
