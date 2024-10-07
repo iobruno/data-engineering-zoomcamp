@@ -1,7 +1,7 @@
 # Workflow Orchestration with Prefect
 
 ![Python](https://img.shields.io/badge/Python-3.12-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![Prefect](https://img.shields.io/badge/Prefect-2.19-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
+![Prefect](https://img.shields.io/badge/Prefect-3.0-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
