@@ -1,5 +1,5 @@
-x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-2.19-python3.12}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-3.0.4-python3.12-kubernetes}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
   prefect-server:
@@ -21,17 +21,17 @@ services:
         condition: service_healthy
     restart: on-failure
 
-  prefect-agent:
+  prefect-worker:
     image: *prefect-image
-    container_name: prefect-agent
-    entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "agent", "start", "-q", "prefect_q0"]
+    container_name: prefect-worker
+    entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "worker", "start", "-p", "workflow_p0"]
     environment:
       PREFECT_API_URL: "http://prefect-server:4200/api"
 #      PREFECT_API_KEY: "PREFECT_CLOUD_API_KEY" # When connecting to an Agent in Prefect Cloud
     depends_on:
       prefect-server:
         condition: service_started
-    restart: on-failure
+    restart: on-failure:5
 
   prefect-db:
     image: *postgres-image
