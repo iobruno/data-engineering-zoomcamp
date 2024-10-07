@@ -1,7 +1,7 @@
 # dbt and Redshift for Analytics Engineering
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.7-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![Redshift](https://img.shields.io/badge/AWS_Redshift-2766A7?style=flat&logo=Amazon%20RedShift&logoColor=white&labelColor=2766A7)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -29,13 +29,13 @@ GRANT ALL ON DATABASE <DATABASE_NAME> to "IAM:my_iam_user";
 
 **1.** Create and activate a virtualenv for Python 3.10 / 3.11 with conda:
 ```shell
-conda create -n dbt-redshift python=3.11 -y
+conda create -n dbt-redshift python=3.12 -y
 conda activate dbt-redshift
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+pdm sync --no-self
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -101,10 +101,9 @@ dbt [build|run] --select models/staging+
 **6.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
-```
-```shell
 dbt docs serve
 ```
+
 Access the generated docs at:
 ```shell
 open http://localhost:8080
@@ -116,12 +115,12 @@ open http://localhost:8080
 **1.** Build the Docker Image with:
 
 ```shell
-docker build -t dbt_redshift:latest . --no-cache
+docker build -t dbt-redshift:latest . --no-cache
 ```
 
 **2.** Start a container with it:
 ```shell
-docker run --rm \
+docker run -d --rm \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY} \
   -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
   -e DBT_REDSHIFT_HOST=${DBT_REDSHIFT_HOST} \
@@ -129,8 +128,8 @@ docker run --rm \
   -e DBT_REDSHIFT_USE_DATA_CATALOG=1 \
   -e DBT_REDSHIFT_SOURCE_GLUE_CATALOG_DB=raw_nyc_tlc_tripdata \
   -e DBT_REDSHIFT_TARGET_SCHEMA=nyc_tlc_record_data \
-  --name dbt_redshift \
-  dbt_redshift
+  --name dbt-redshift \
+  dbt-redshift
 ```
 
 
