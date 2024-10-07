@@ -1,2 +1,2 @@
 CREATE DATABASE fqdb_nyc_taxi
-ENGINE = MySQL('mysql:3306', 'nyc_taxi', 'mysql', 'mysql');
+ENGINE = MySQL('host.docker.internal:3306', 'nyc_taxi', 'mysql', 'mysql');
