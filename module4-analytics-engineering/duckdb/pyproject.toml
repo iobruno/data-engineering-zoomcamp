@@ -1,7 +1,7 @@
 [project]
 name = "dbt-duckdb-analytics"
 version = "1.0"
-description = "Analytics Engineering with dbt, duckdb and piperider"
+description = "Analytics Engineering with dbt and duckdb"
 license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
 authors = [
