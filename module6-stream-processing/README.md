@@ -29,20 +29,27 @@ Hop into their respective folders for details on how to spin them up.
 
 ### Developer Setup
 
-**1.** Start the Kafka Cluster (Single broker setup with KRaft):
+**1.** Spin up Kafka Broker with one of the following options:
+
+1.1. Kafka Cluster (Single-broker) with KRaft:
 ```shell
 docker compose up -d
 ```
 
-Alternatively, you can use the multi-broker setup with:
+1.2. Kafka Cluster (Multi-broker) with KRaft:
 ```shell
-# For Kafka+KRaft
 docker compose -f compose.kraft-multi-broker.yaml up -d
+```
 
-# for Kafka with Zookeeper
+1.3. Kafka Cluster (Multi-broker) with Zookeeper:
+```shell
 docker compose -f compose.zookeeper-multi-broker.yaml up -d
 ```
 
+1.4. Redpanda:
+```shell
+docker compose -f compose.redpanda.yaml up -d
+```
 
 **2.** Access Conduktor Web UI for Kafka
 ```shell
