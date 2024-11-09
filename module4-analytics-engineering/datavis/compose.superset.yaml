@@ -1,6 +1,6 @@
-x-superset-image: &superset-image apache/superset:${SUPERSET_VERSION:-4.0.0}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.2.5}
+x-superset-image: &superset-image apache/superset:${SUPERSET_VERSION:-4.0.2}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.1-alpine}
 
 x-superset-common:
   &superset-common
@@ -36,7 +36,7 @@ x-superset-common:
   volumes: 
     &superset-common-volumes
     - ./superset:/app/docker
-    - superset_home:/app/superset_home
+    - vol-superset-home:/app/superset_home
   depends_on:
     &superset-common-depends-on
     superset-db:
@@ -58,7 +58,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - superset_pg_data:/var/lib/postgresql/data
+      - vol-superset-db:/var/lib/postgresql/data
       - ./superset/examples-init.sh:/docker-entrypoint-initdb.d/examples-init.sh
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U superset"]
@@ -73,7 +73,7 @@ services:
     ports:
       - '6379'
     volumes:
-      - superset_redis_cache:/data
+      - vol-superset-cache:/data
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping"]
       interval: 5s
@@ -83,7 +83,7 @@ services:
 
   superset:
     <<: *superset-common
-    container_name: superset-app
+    container_name: superset
     command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     ports:
       - 8088:8088
@@ -125,9 +125,9 @@ services:
       disable: true
 
 volumes:
-  superset_home:
-    name: 'superset_home'
-  superset_pg_data:
-    name: 'superset_pg_data'
-  superset_redis_cache:
-    name: 'superset_redis_cache'
+  vol-superset-home:
+    name: 'vol-superset-home'
+  vol-superset-db:
+    name: 'vol-superset-db'
+  vol-superset-cache:
+    name: 'vol-superset-cache'
