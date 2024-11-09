@@ -1,26 +1,26 @@
 [project]
-name = ""
+name = "mageai-playground"
 version = "0.1"
-description = "Mage pipelines for workflow orchestration"
+description = "Mage pipelines for Workflow orchestration"
 license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
 authors = [
     {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "mage-ai>=0.9.58,<1.0",
-    "pandas>=2.2.0,<3.0",
+    "mage-ai>=0.9.74,<1.0",
+    "pandas>=2.2.3,<3.0",
     "psycopg2-binary>=2.9.9,<3.0",
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "ruff>=0.1.6",
-    "jupyterlab>=3.6.7",
+    "ruff>=0.7.3"
 ]
 
 [tool.ruff]
 line-length = 100
+lint.select = ["F", "E", "W", "I001"]
