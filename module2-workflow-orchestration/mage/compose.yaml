@@ -1,5 +1,3 @@
-version: "3.9"
-
 x-mage-image: &mage-image mageai/mageai:${MAGE_VERSION:-0.9.74}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.1}
@@ -18,7 +16,7 @@ x-mage-common:
     - ${MAGE_PROJ_DIR:-./magic}:${USER_CODE_PATH:-/opt/mage/magic}
     - ~/.gcp/workflow-orchestration-credentials.json:/.gcp/credentials.json
   depends_on:
-    mage-db:
+    mage-metastore:
       condition: service_healthy
     mage-redis:
       condition: service_healthy
@@ -27,46 +25,45 @@ x-mage-common:
   restart: on-failure
 
 services:
-  postgres:
+  ingest-db:
     image: *postgres-image
-    container_name: postgres
-    restart: always
+    container_name: ingest-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: nyc_taxi
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
     ports:
       - '5432:5432'
     volumes:
-      - nyc_taxi_pgdata:/var/lib/postgresql/data
+      - vol-ingest-db:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
-      timeout: 3s
+      timeout: 5s
       retries: 5
+    restart: on-failure
 
-  mage-db:
+  mage-metastore:
     image: *postgres-image
-    container_name: mage_postgres
-    restart: always
+    container_name: mage-metastore
     environment:
       POSTGRES_USER: mage
       POSTGRES_PASSWORD: mage
       POSTGRES_DB: mage
     ports:
-      - '5432'
+      - '5433:5432'
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - vol-mage-metastore:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U mage"]
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: on-failure
 
   mage-redis:
     image: *redis-image
-    container_name: mage_redis
-    restart: always
+    container_name: mage-redis
     ports:
       - '6379'
     healthcheck:
@@ -74,10 +71,11 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: on-failure
 
   mage-web:
     <<: *mage-common
-    container_name: mage_web
+    container_name: mage-web
     environment:
       <<: *mage-common-env
       INSTANCE_TYPE: 'web_server'
@@ -91,14 +89,14 @@ services:
 
   mage-scheduler:
     <<: *mage-common
-    container_name: mage_scheduler
+    container_name: mage-scheduler
     environment:
       <<: *mage-common-env
       INSTANCE_TYPE: 'scheduler'
 
   mage-init:
     image: *mage-image
-    container_name: mage_init
+    container_name: mage-init
     entrypoint: /bin/bash
     environment: 
       <<: *mage-common-env
@@ -117,7 +115,7 @@ services:
       - ${MAGE_PROJ_DIR:-.}:/mnt/mage/
 
 volumes:
-  nyc_taxi_pgdata:
-    name: nyc_taxi_pgdata
-  pg_data:
-    name: mage_pgdata
+  vol-ingest-db:
+    name: vol-ingest-db
+  vol-mage-metastore:
+    name: vol-mage-metastore
