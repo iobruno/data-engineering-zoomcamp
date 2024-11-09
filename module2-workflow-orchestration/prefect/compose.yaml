@@ -1,23 +1,59 @@
-x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-3.0.4-python3.12-kubernetes}
+x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-3.1.1-python3.12-kubernetes}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
+  ingest-db:
+    image: *postgres-image
+    container_name: ingest-db
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
+    ports:
+      - '5432:5432'
+    volumes:
+      - vol-ingest-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+  prefect-metastore:
+    image: *postgres-image
+    container_name: prefect-metastore
+    environment:
+      POSTGRES_USER: 'prefect'
+      POSTGRES_PASSWORD: 'prefect'
+      POSTGRES_DB: 'prefect'
+    ports:
+      - '5432'
+    volumes:
+      - vol-prefect-metastore:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U prefect"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
   prefect-server:
     image: *prefect-image
     container_name: prefect-server
     entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "server", "start"]
     environment:
-      PREFECT_UI_URL: 'http://localhost:4200/api'
-      PREFECT_API_URL: 'http://localhost:4200/api'
+      PREFECT_UI_URL: 'http://localhost:4200'
+      PREFECT_API_URL: 'http://localhost:4200/api/'
       PREFECT_SERVER_API_HOST: '0.0.0.0'
-      PREFECT_API_DATABASE_CONNECTION_URL: 'postgresql+asyncpg://prefect:prefect@prefect-db:5432/prefect'
+      PREFECT_API_DATABASE_CONNECTION_URL: 'postgresql+asyncpg://prefect:prefect@prefect-metastore:5432/prefect'
       EXTRA_PIP_PACKAGES: 'prefect-gcp'
     ports:
       - "4200:4200"
     volumes:
-      - prefect:/root/.prefect
+      - vol-prefect-server:/root/.prefect
     depends_on:
-      prefect-db:
+      prefect-metastore:
         condition: service_healthy
     restart: on-failure
 
@@ -32,24 +68,6 @@ services:
       prefect-server:
         condition: service_started
     restart: on-failure:5
-
-  prefect-db:
-    image: *postgres-image
-    container_name: prefect-db
-    environment:
-      POSTGRES_USER: 'prefect'
-      POSTGRES_PASSWORD: 'prefect'
-      POSTGRES_DB: 'prefect'
-    ports:
-      - '5432'
-    volumes:
-      - prefect_pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U prefect"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    restart: on-failure
 
   prefect-cli:
     image: *prefect-image
@@ -66,28 +84,10 @@ services:
       prefect-server:
         condition: service_started
 
-  postgres:
-    image: *postgres-image
-    container_name: postgres
-    environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres'
-      POSTGRES_DB: 'nyc_taxi'
-    ports:
-      - '5432:5432'
-    volumes:
-      - pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    restart: on-failure
-
 volumes:
-  prefect:
-    name: prefect
-  prefect_pg_data:
-    name: prefect_pg_data
-  pg_data:
-    name: pg_data
+  vol-ingest-db:
+    name: vol-ingest-db
+  vol-prefect-metastore:
+    name: vol-prefect-metastore
+  vol-prefect-server:
+    name: vol-prefect-server
