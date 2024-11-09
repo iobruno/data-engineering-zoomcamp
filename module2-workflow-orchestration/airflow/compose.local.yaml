@@ -25,6 +25,24 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  ingest-db:
+    image: *postgres-image
+    container_name: ingest-db
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
+    ports:
+      - '5432:5432'
+    volumes:
+      - vol-ingest-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
   airflow-metastore:
     image: *postgres-image
     container_name: airflow-metastore
@@ -34,9 +52,9 @@ services:
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
     ports:
-      - '5432'
+      - '5433:5432'
     volumes:
-      - airflow_pgdata:/var/lib/postgresql/data
+      - vol-airflow-metastore-localexec:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -102,5 +120,7 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
 
 volumes:
-  airflow_pgdata:
-    name: airflow_pgdata
+  vol-ingest-db:
+    name: vol-ingest-db
+  vol-airflow-metastore-localexec:
+    name: vol-airflow-metastore-localexec
