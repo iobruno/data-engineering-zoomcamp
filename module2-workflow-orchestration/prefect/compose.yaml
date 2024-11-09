@@ -44,7 +44,7 @@ services:
     entrypoint: ["/opt/prefect/entrypoint.sh", "prefect", "server", "start"]
     environment:
       PREFECT_UI_URL: 'http://localhost:4200'
-      PREFECT_API_URL: 'http://localhost:4200/api/'
+      PREFECT_API_URL: 'http://localhost:4200/api'
       PREFECT_SERVER_API_HOST: '0.0.0.0'
       PREFECT_API_DATABASE_CONNECTION_URL: 'postgresql+asyncpg://prefect:prefect@prefect-metastore:5432/prefect'
       EXTRA_PIP_PACKAGES: 'prefect-gcp'
