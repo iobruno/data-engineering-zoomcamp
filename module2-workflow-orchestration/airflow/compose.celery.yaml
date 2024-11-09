@@ -1,6 +1,6 @@
-x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.2-python3.12}
+x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.3-python3.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.0-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.1-alpine}
 
 x-airflow-common:
   &airflow-common
@@ -120,7 +120,7 @@ services:
     ports:
       - '5555:5555'
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:5555"]
+      test: ["CMD-SHELL", "curl --fail -u airflow:airflow http://localhost:5555"]
       interval: 5s
       timeout: 10s
       retries: 5
