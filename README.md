@@ -20,17 +20,17 @@ can take the course at your own pace
 
 ## Syllabus 
 
-### [Module 1: Data Ingestion & Infrastructure as Code](module1-data-ingestion)
-* [Python data ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
+### [Module 1: Data Ingestion & IaC](module1-data-ingestion)
+* [Python ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
 * Rust data ingestion
 * [data load tool (dlt)](module1-data-ingestion/data-load-tool/)
 * [Terraform for BigQuery and GCS](infrastructure/terraform-gcp)
 * Homework
 
 ### [Module 2: Workflow Orchestration](module2-workflow-orchestration)
-* [Workflow Orchestration with Airflow](module2-workflow-orchestration/airflow)
-* [Workflow Orchestration with Mage](module2-workflow-orchestration/mage)
-* [Workflow Orchestration with Prefect](module2-workflow-orchestration/prefect)
+* [Workflow orchestration with Airflow](module2-workflow-orchestration/airflow)
+* [Workflow orchestration with Mage](module2-workflow-orchestration/mage)
+* [Workflow orchestration with Prefect](module2-workflow-orchestration/prefect)
 * Homework
 
 ### [Module 3: Data Warehouse](module3-data-warehouse)
@@ -48,14 +48,14 @@ can take the course at your own pace
 * [Data Visualization with Superset/Metabase](module4-analytics-engineering/datavis)
 * Homework
 
-### [Module 5: Batch processing](module5-batch-processing)
+### [Module 5: Batch Processing](module5-batch-processing)
 * [PySpark](module5-batch-processing/pyspark/)
 * Spark + Scala
 * Spark + Kotlin (TBD)
 * Homework
 
-### [Module 6: Streaming](module6-stream-processing)
-* [Kafka for Stream Processing with Kotlin](module6-stream-processing/kotlin)
+### [Module 6: Stream Processing](module6-stream-processing)
+* [Stream Processing with Kafka, ksqlDB and Kotlin](module6-stream-processing/kotlin)
 * [Kafka Streams with ksqlDB](module6-stream-processing/ksqldb)
 * [RisingWave: Streaming Database](module6-stream-processing/risingwave/)
 * Homework

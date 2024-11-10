@@ -15,13 +15,11 @@ GRANT USAGE ON DATABASE awsdatacatalog to "IAM:my_iam_user";
 GRANT ALL ON DATABASE <DATABASE_NAME> to "IAM:my_iam_user";
 ```
 
-
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-redshift](https://docs.getdbt.com/reference/warehouse-setups/redshift-setup)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
-
 
 ## Up and Running
 
@@ -57,7 +55,6 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
 4.2. Set the environment variables for `dbt-bigquery`:
-
 ```shell
 export DBT_REDSHIFT_HOST=redshift.[id].[region].redshift-serverless.amazonaws.com
 export DBT_REDSHIFT_DATABASE=dev
@@ -109,7 +106,6 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
@@ -131,7 +127,6 @@ docker run -d --rm \
   --name dbt-redshift \
   dbt-redshift
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

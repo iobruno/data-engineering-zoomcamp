@@ -20,7 +20,6 @@ It also adds Data Reliability on top of that with PipeRider.
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 
-
 ## Up and Running
 
 ### Developer Setup
@@ -117,7 +116,6 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
@@ -138,7 +136,6 @@ docker run -d --rm \
 ```
 
 Note: If the container suddenly gets killed, it means it has run out-of-ram to process the full workload. Increase the amount of available RAM a container can use (on Docker settings).
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

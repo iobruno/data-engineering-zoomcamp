@@ -1,6 +1,6 @@
-x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.0}
-x-presto-image: &presto-image trinodb/trino:${TRINO_VERSION:-452}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-4.0.1}
+x-presto-image: &presto-image trinodb/trino:${TRINO_VERSION:-464}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
   presto:
@@ -9,17 +9,17 @@ services:
     ports:
       - '8080:8080'
 
-  hive-db:
+  hive-metastore-db:
     image: *postgres-image
-    container_name: hive-db
+    container_name: hive-metastore-db
     environment:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'postgres'
       POSTGRES_DB: 'metastore'
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
-      - hive_pg_data:/var/lib/postgresql/data
+      - vol-hive-metastore:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -32,19 +32,23 @@ services:
     container_name: hive-metastore
     environment:
       SERVICE_NAME: 'metastore'
-      SERVICE_OPTS: '-Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-db:5432/metastore -Djavax.jdo.option.ConnectionUserName=postgres -Djavax.jdo.option.ConnectionPassword=postgres'
+      SERVICE_OPTS: |- 
+        -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver 
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-metastore-db:5432/metastore 
+        -Djavax.jdo.option.ConnectionUserName=postgres 
+        -Djavax.jdo.option.ConnectionPassword=postgres
       HIVE_AUX_JARS_PATH: /opt/hive/aux_jars/
       DB_DRIVER: 'postgres'
     ports:
       - '9083:9083'
     depends_on:
-      hive-db: 
+      hive-metastore-db: 
         condition: service_healthy
       hive-init:
         condition: service_completed_successfully
     volumes:
-      - warehouse:/opt/hive/data/warehouse
-      - auxjars:/opt/hive/aux_jars/
+      - vol-hive-warehouse:/opt/hive/data/warehouse
+      - vol-hive-auxjars:/opt/hive/aux_jars/
 
   hive-server:
     image: *hive-image
@@ -54,13 +58,13 @@ services:
       SERVICE_OPTS: '-Dhive.metastore.uris=thrift://hive-metastore:9083'
       IS_RESUME: 'true'
     ports:
-      - '10000:10000'
-      - '10002:10002'
+      - '10002:10002' # Web UI
+      - '10000:10000' # JDBC
     depends_on:
       hive-metastore:
         condition: service_started
     volumes:
-      - warehouse:/opt/hive/data/warehouse
+      - vol-hive-warehouse:/opt/hive/data/warehouse
 
   hive-init:
     image: *hive-image
@@ -73,12 +77,12 @@ services:
         apt update && apt install curl -y
         curl --create-dirs -O --output-dir /tmp/aux_jars https://jdbc.postgresql.org/download/postgresql-42.7.3.jar
     volumes:
-      - auxjars:/tmp/aux_jars
+      - vol-hive-auxjars:/tmp/aux_jars
 
 volumes:
-  hive_pg_data:
-    name: hive_pg_data
-  warehouse:
-    name: hive_warehouse
-  auxjars:
-    name: hive_auxjars
+  vol-hive-metastore:
+    name: vol-hive-metastore
+  vol-hive-warehouse:
+    name: vol-hive-warehouse
+  vol-hive-auxjars:
+    name: vol-hive-auxjars

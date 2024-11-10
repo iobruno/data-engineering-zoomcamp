@@ -11,14 +11,12 @@ using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-d
 
 **NOTE**: This is not meant for production use at scale, but rather for educational purposes only. Consider using `RedShift`, `BigQuery`, `Snowflake` or `Databricks` instead. If those options are too costy, or if you need something for on-premises deploy, consider `Clickhouse` instead.
 
-
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
-
 
 ## Up and Running
 
@@ -101,7 +99,6 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
@@ -121,7 +118,6 @@ docker run -d --rm \
   --name dbt-postgres \
   dbt-postgres
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM
