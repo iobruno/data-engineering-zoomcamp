@@ -197,7 +197,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - conduktor_data:/var/conduktor
+      - vol-conduktor-data:/var/conduktor
     depends_on:
       <<: *depends-on-kafka-cluster
       conduktor-metastore:
@@ -218,7 +218,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - conduktor_metadata:/var/lib/postgresql/data
+      - vol-conduktor-metadata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -238,7 +238,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - conduktor_sql:/var/lib/postgresql/data
+      - vol-conduktor-sql:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -247,9 +247,9 @@ services:
     restart: on-failure:5
 
 volumes:
-  conduktor_data:
-    name: conduktor_data
-  conduktor_metadata:
-    name: conduktor_metadata
-  conduktor_sql:
-    name: conduktor_sql
+  vol-conduktor-data:
+    name: vol-conduktor-data
+  vol-conduktor-metadata:
+    name: vol-conduktor-metadata
+  vol-conduktor-sql:
+    name: vol-conduktor-sql

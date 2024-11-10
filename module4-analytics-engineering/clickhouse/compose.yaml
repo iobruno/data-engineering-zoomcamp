@@ -1,7 +1,25 @@
-x-clickhouse-image: &clickhouse-image clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-24.9.2-alpine}
+x-clickhouse-image: &clickhouse-image clickhouse/clickhouse-server:${CLICKHOUSE_VERSION:-24-alpine}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
+  ingest-db:
+    image: *postgres-image
+    container_name: ingest-db
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
+    ports:
+      - '5432:5432'
+    volumes:
+      - vol-ingest-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
   clickhouse:
     image: *clickhouse-image
     container_name: clickhouse
@@ -14,8 +32,8 @@ services:
       - "8123:8123"
       - "9000:9000"
     volumes:
-      - dbt_ch_data:/var/lib/clickhouse/
-      - dbt_ch_logs:/var/log/clickhouse-server/
+      - vol-clickhouse-data:/var/lib/clickhouse/
+      - vol-clickhouse-logs:/var/log/clickhouse-server/
     ulimits:
       nofile:
         soft: 262144
@@ -27,28 +45,10 @@ services:
       retries: 3
     restart: on-failure
 
-  postgres:
-    image: *postgres-image
-    container_name: postgres
-    environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres'
-      POSTGRES_DB: 'nyc_taxi'
-    ports:
-      - '5432:5432'
-    volumes:
-      - dbt_pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-    restart: on-failure
-
 volumes:
-  dbt_ch_data:
-    name: dbt_clickhouse_data
-  dbt_ch_logs:
-    name: dbt_clickhouse_logs
-  dbt_pg_data:
-    name: dbt_pg_data
+  vol-ingest-db:
+    name: vol-ingest-db
+  vol-clickhouse-data:
+    name: vol-clickhouse-data
+  vol-clickhouse-logs:
+    name: vol-clickhouse-logs

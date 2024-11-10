@@ -11,12 +11,12 @@ authors = [
 requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "dbt-bigquery>=1.8.2,<2.0",
+    "dbt-bigquery>=1.8.3,<2.0",
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "ruff>=0.6.9",
+    "ruff>=0.7.3"
 ]
 
 [tool.ruff]
