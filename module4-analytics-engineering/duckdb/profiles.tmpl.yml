@@ -6,6 +6,7 @@ dbt_duckdb_analytics:
     dev:
       type: duckdb
       path: "{{ env_var('DBT_DUCKDB_TARGET_PATH', '/tmp/dbt.duck') }}"
+      threads: 4
       filesystems:
         - fs: gcs
           access: read_write

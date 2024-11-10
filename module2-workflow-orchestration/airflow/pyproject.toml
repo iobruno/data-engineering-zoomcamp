@@ -1,22 +1,22 @@
 [project]
-name = "airflow-playground"
+name = ""
 version = "0.1"
-description = "Airflow DAGs for workflow orchestration"
+description = "Workflow orchestration with Airflow"
 license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
 authors = [
     {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-requires-python = ">=3.10,<3.12"
+requires-python = ">=3.10,<3.13"
 
 dependencies = [
 
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "ruff>=0.6.9",
+    "ruff>=0.7.3"
 ]
 
 [tool.ruff]

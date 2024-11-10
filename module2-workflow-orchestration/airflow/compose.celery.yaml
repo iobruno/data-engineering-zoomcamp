@@ -1,6 +1,6 @@
-x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.2-python3.12}
+x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.3-python3.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.0-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7-alpine}
 
 x-airflow-common:
   &airflow-common
@@ -30,6 +30,24 @@ x-airflow-common:
       condition: service_healthy
 
 services:
+  ingest-db:
+    image: *postgres-image
+    container_name: ingest-db
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'nyc_taxi'
+    ports:
+      - '5432:5432'
+    volumes:
+      - vol-ingest-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
   airflow-metastore:
     image: *postgres-image
     container_name: airflow-metastore
@@ -40,7 +58,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - airflow_pgdata:/var/lib/postgresql/data
+      - vol-airflow-metastore-celeryexec:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -120,7 +138,7 @@ services:
     ports:
       - '5555:5555'
     healthcheck:
-      test: ["CMD-SHELL", "curl --fail http://localhost:5555"]
+      test: ["CMD-SHELL", "curl --fail -u airflow:airflow http://localhost:5555"]
       interval: 5s
       timeout: 10s
       retries: 5
@@ -148,5 +166,7 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
 
 volumes:
-  airflow_pgdata:
-    name: airflow_pgdata
+  vol-ingest-db:
+    name: vol-ingest-db
+  vol-airflow-metastore-celeryexec:
+    name: vol-airflow-metastore-celeryexec

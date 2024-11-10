@@ -1,4 +1,4 @@
-# PySpark Playground
+# Batch processing with PySpark
 
 ![Python](https://img.shields.io/badge/Python-3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![PySpark](https://img.shields.io/badge/pySpark-3.5-E36B22?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=3C3A3E)
@@ -14,7 +14,7 @@ Welcome to
       ____              __
      / __/__  ___ _____/ /__
     _\ \/ _ \/ _ `/ __/  '_/
-   /__ / .__/\_,_/_/ /_/\_\   version 3.5.1
+   /__ / .__/\_,_/_/ /_/\_\   version 3.5.3
       /_/
 
 Using Python version 3.11.9 (main, Jun  6 2024 18:26:44)
@@ -23,24 +23,21 @@ Spark context available as 'sc' (master = local[*], app id = local-1724831152309
 SparkSession available as 'spark'.
 ```
 
-
 ## Tech Stack
 - [PySpark](https://spark.apache.org/docs/latest/api/python/user_guide)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
 
-
 ## Up and Running
 
 ### Developer Setup
 
 **1.** Install `JDK` 11 or 17, Spark 3.5.x, and Hadoop:
-
 ```shell
-sdk i java 17.0.10-librca
-sdk i spark 3.5.1
-sdk i hadoop 3.3.5
+sdk i 17.0.13-librca
+sdk i spark 3.5.3
+sdk i hadoop 3.4.1
 ```
 
 **2.** Install the project dependencies with:
@@ -62,7 +59,6 @@ pre-commit install
 ```shell
 docker compose -f ../docker-compose.yml up -d
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

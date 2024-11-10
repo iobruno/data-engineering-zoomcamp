@@ -1,3 +1,0 @@
-sqlalchemy-bigquery==1.11.0
-sqlalchemy-redshift==0.8.14
-clickhouse-connect==0.7.16

@@ -1,4 +1,4 @@
-# Data Visualzation with Superset and Metabase
+# Data visualization with Superset and Metabase
 
 ![Superset](https://img.shields.io/badge/Superset-0A2933?style=flat&logo=apache&logoColor=F8FDFF&labelColor=0A2933)
 ![Metabase](https://img.shields.io/badge/Metabase-509EE3?style=flat&logo=metabase&logoColor=white&labelColor=65A9E7)

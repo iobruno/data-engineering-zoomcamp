@@ -9,14 +9,12 @@
 This project is meant for experimenting with `dbt` and the `dbt-clickhouse` adapter for Analytics,
 using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique.
 
-
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-clickhouse](https://docs.getdbt.com/docs/core/connect-data-platform/clickhouse-setup)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
-
 
 ## Up and Running
 
@@ -98,7 +96,6 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-
 ## Containerization and Testing
 
 **1.** With your instance of Clickhouse and Postgres up, connect to ClickHouse and run:
@@ -123,7 +120,6 @@ docker run -d --rm \
   --name dbt-clickhouse \
   dbt-clickhouse
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

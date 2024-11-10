@@ -1,11 +1,11 @@
-# Stream Processing with Kafka & ksqlDB
+# Stream processing with Kafka & ksqlDB
 
-![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.6.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
+![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.7-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This submodule focuses on various approaches for Stream Processing, such as:
+This submodule focuses on various approaches for stream processing, such as:
 
 - [Kotlin](kotlin/): Producing and Consuming messages from/to Kafka with Kotlin/Java
 - [kSQLDB](ksqldb/): Stream Processing with kSQLDB (Kafka Streams)

@@ -17,45 +17,45 @@ can take the course at your own pace
 * You don't need to fill in the registration form. Just start watching the videos and join Slack
 * Check [FAQ](https://docs.google.com/document/d/19bnYs80DwuUimHM65UV3sylsCn2j1vziPOwzBwQrebw/edit?usp=sharing) if you have problems
 
+## Syllabus
 
-## Syllabus 
-
-### [Module 1: Data Ingestion & Infrastructure as Code](module1-data-ingestion)
-* [Python data ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
+### [Module 1: Data ingestion & IaC](module1-data-ingestion/)
+* [Python ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
 * Rust data ingestion
 * [data load tool (dlt)](module1-data-ingestion/data-load-tool/)
-* [Terraform for BigQuery and GCS](infrastructure/terraform-gcp)
+* [Terraform for BigQuery and GCS](infrastructure/terraform-gcp/)
 * Homework
 
-### [Module 2: Workflow Orchestration](module2-workflow-orchestration)
-* [Workflow Orchestration with Airflow](module2-workflow-orchestration/airflow)
-* [Workflow Orchestration with Mage](module2-workflow-orchestration/mage)
-* [Workflow Orchestration with Prefect](module2-workflow-orchestration/prefect)
+### [Module 2: Workflow orchestration](module2-workflow-orchestration/)
+* [Workflow orchestration with Airflow](module2-workflow-orchestration/airflow/)
+* [Workflow orchestration with Mage](module2-workflow-orchestration/mage/)
+* [Workflow orchestration with Prefect](module2-workflow-orchestration/prefect/)
 * Homework
 
-### [Module 3: Data Warehouse](module3-data-warehouse)
-* [BigQuery Data Warehouse](module3-data-warehouse/bigquery)
+### [Module 3: Data Warehouse](module3-data-warehouse/)
+* [BigQuery Data Warehouse](module3-data-warehouse/bigquery/)
 * Lakehouse with Delta Lake/Iceberg
 * Homework
 
-### [Module 4: Analytics Engineering](module4-analytics-engineering)
-* [BigQuery and dbt](module4-analytics-engineering/bigquery)
-* [Redshift and dbt](module4-analytics-engineering/redshift)
+### [Module 4: Analytics engineering](module4-analytics-engineering/)
+* [BigQuery and dbt](module4-analytics-engineering/bigquery/)
+* [Redshift and dbt](module4-analytics-engineering/redshift/)
 * Databricks and dbt
-* [ClickHouse and dbt](module4-analytics-engineering/clickhouse)
-* [PostgreSQL and dbt](module4-analytics-engineering/postgres)
-* [DuckDB and dbt](module4-analytics-engineering/duckdb)
-* [Data Visualization with Superset/Metabase](module4-analytics-engineering/datavis)
+* [ClickHouse and dbt](module4-analytics-engineering/clickhouse/)
+* [PostgreSQL and dbt](module4-analytics-engineering/postgres/)
+* [DuckDB and dbt](module4-analytics-engineering/duckdb/)
+* [Data visualization with Superset/Metabase](module4-analytics-engineering/visualization/)
 * Homework
 
-### [Module 5: Batch processing](module5-batch-processing)
+### [Module 5: Batch processing](module5-batch-processing/)
+* [Big Data ecosystem](module5-batch-processing/bigdata-ecosystem/)
 * [PySpark](module5-batch-processing/pyspark/)
 * Spark + Scala
 * Spark + Kotlin (TBD)
 * Homework
 
-### [Module 6: Streaming](module6-stream-processing)
-* [Kafka for Stream Processing with Kotlin](module6-stream-processing/kotlin)
-* [Kafka Streams with ksqlDB](module6-stream-processing/ksqldb)
+### [Module 6: Stream processing](module6-stream-processing/)
+* [Stream processing with Kafka, ksqlDB and Kotlin](module6-stream-processing/kotlin/)
+* [Kafka Streams with ksqlDB](module6-stream-processing/ksqldb/)
 * [RisingWave: Streaming Database](module6-stream-processing/risingwave/)
 * Homework

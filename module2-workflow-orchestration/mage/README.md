@@ -1,23 +1,20 @@
-# Mage.ai Workflow Orchestration
+# Workflow orchestration with Mage.ai
 
-![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Mage.ai](https://img.shields.io/badge/Mage.ai-0.9-111113?style=flat&logoColor=white&labelColor=111113)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-
 This setups the infrastructure for Mage, in Docker, as close as possible to a deploy in a Kubernetes/Helm environment: having a `web_server` and `scheduler` containers, but using a `LocalExecutor` instead.
 
 An additional container `mage_init` sets up this root folder as the main project, and creates a `${MAGE_PROJ_NAME:-magic}` folder for the sub project, so that orchestration across subprojects can also done.
-
 
 ## Tech Stack
 - [Mage.ai](https://docs.mage.ai/getting-started/setup)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
-
 
 ## Up and Running
 
@@ -65,10 +62,9 @@ brew install pre-commit
 pre-commit install
 ```
 
-**4.** Start Mage in standalone mode (`web_server` + `scheduler` with `LocalExecutor`):
+**4.** Start Mage in standalone mode:
 
 4.1. Start by starting Postgres and setting the connection URL for mage:
-
 ```shell
 docker compose up -d postgres
 export MAGE_DATABASE_CONNECTION_URL=postgresql+psycopg2://mage:mage@localhost/mage 
@@ -76,7 +72,6 @@ export MAGE_DATABASE_CONNECTION_URL=postgresql+psycopg2://mage:mage@localhost/ma
 
 4.2. Next, start Mage in Standalone mode
 ```shell
-# mage start <project_path>
 mage start magic
 ```
 
@@ -84,7 +79,6 @@ mage start magic
 ```shell
 open http://localhost:6789
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

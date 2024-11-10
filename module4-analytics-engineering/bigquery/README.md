@@ -15,7 +15,6 @@ using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-d
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 
-
 ## Up and Running
 
 ### Developer Setup
@@ -50,7 +49,6 @@ cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
 4.2. Set the environment variables for `dbt-bigquery`:
-
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs
 export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data
@@ -100,7 +98,6 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-
 ## Containerization and Testing
 
 **1.** Build the Docker Image with:
@@ -120,7 +117,6 @@ docker run -d --rm \
   --name dbt-bigquery \
   dbt-bigquery
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

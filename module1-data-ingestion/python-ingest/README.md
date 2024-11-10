@@ -1,6 +1,7 @@
-# Python data ingestion with polars and pandas
+# Python ingestion with polars and pandas
 
 ![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+![Typer](https://img.shields.io/badge/Typer-262A38?style=flat&logo=typer&logoColor=FFFFFF&labelColor=262A38)
 ![Polars](https://img.shields.io/badge/polars-24292E?style=flat&logo=polars&logoColor=CC792B&labelColor=24292E)
 ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
@@ -10,16 +11,14 @@
 This cli script is set to be able to fetch the CSV datasets for NYC Yellow Trip Data, Green Trip Data, and Lookup Zones
 based on the endpoints in [datasets.yaml](./datasets.yaml).
 
-
 ## Tech Stack
+- [Typer](https://typer.tiangolo.com/tutorial/)
+- [Textualize Rich](https://github.com/Textualize/rich)
 - [polars](https://docs.pola.rs/)
 - [pandas](https://pandas.pydata.org/docs/user_guide/)
-- [Typer](https://typer.tiangolo.com/tutorial/)
-- [Rich CLI](https://github.com/Textualize/rich)
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
-
 
 ## Up and Running
 
@@ -70,11 +69,9 @@ export DATABASE_PASSWORD=postgres
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `zone_lookup`
 
-
 Additionally, you can use `--use-polars` for a major speed boost with Polars. 
 
 You can use any combination of options above to fetch more than dataset group at a time. For instance: `python run.py -gz --use-polars` fetches the **NYC Green Trip Data** and **NYC Lookup Zones** while **using Polars** as the Dataframe library.
-
 
 ## Containerization and Testing
 
@@ -94,7 +91,6 @@ docker run -d --rm \
   --name pyingest \
   iobruno/pyingest
 ```
-
 
 ## TODO:
 - [x] PEP-517: Packaging and dependency management with PDM

@@ -1,4 +1,4 @@
-# Workflow Orchestration with Prefect
+# Workflow orchestration with Prefect
 
 ![Python](https://img.shields.io/badge/Python-3.12-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Prefect](https://img.shields.io/badge/Prefect-3.0-060F11?style=flat&logo=prefect&logoColor=white&labelColor=060F11)
@@ -17,7 +17,6 @@ This GitHub project streamlines `Prefect Flows` to fetch NYC Taxi Tripdata CSV d
 - [PDM](https://pdm-project.org/latest/usage/dependency/)
 - [Ruff](https://docs.astral.sh/ruff/configuration/)
 - [Docker](https://docs.docker.com/get-docker/)
-
 
 ## Up and Running
 
@@ -55,8 +54,7 @@ For the very first run:
 - You need to set `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
   That will enable the flow to automatically create the `GcsBucket` and `GcpCredentials` Prefect Blocks
 
-- Before running `flows/web_csv_to_gcs.py`, you should comment out/uncomment the endpoints in `app.yml`
-  under `datasets.green`, `datasets.yelow`, and `datasets.fhv`
+- Before running `flows/web_csv_to_gcs.py`, you should comment out/uncomment the endpoints in `app.yml` under `datasets.green`, `datasets.yelow`, and `datasets.fhv`
 
 ```shell
 python flows/web_cs_to_gcs.py

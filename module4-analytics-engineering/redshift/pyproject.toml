@@ -1,7 +1,7 @@
 [project]
-name = "dbt-redshift-analytics"
+name = ""
 version = "1.0"
-description = "Analytics Engineering with dbt and Redshift"
+description = "Analytics engineering with dbt and Redshift"
 license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
 authors = [
@@ -12,12 +12,12 @@ requires-python = ">=3.10,<3.13"
 
 dependencies = [
     "dbt-redshift>=1.8.1,<2.0",
-    "awscli>=1.35.0,<2.0",
+    "awscli>=1.35.23,<2.0",
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "ruff>=0.6.9",
+    "ruff>=0.7.3"
 ]
 
 [tool.ruff]

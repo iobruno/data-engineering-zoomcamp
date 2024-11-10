@@ -1,4 +1,4 @@
-# Stream Processing with RisingWave
+# Stream processing with RisingWave
 
 ![Python](https://img.shields.io/badge/Python-3.10_|_3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
 ![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.6.x-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
@@ -9,9 +9,8 @@
 
 ![RisingWaveProject](../../assets/rw-workshop-project.png)
 
-
 ## Tech Stack
-- [RisingWave]() (Stream Processing)
+- [RisingWave](https://docs.risingwave.com/get-started/intro) (Stream Processing)
 - [Kafka](https://docs.confluent.io/platform/current/installation/configuration/index.html) (Data Source)
 - [ClickHouse](https://clickhouse.com/docs/en/sql-reference/statements/create/table) (Sink)
 - [MinIO](https://min.io/docs/minio/container) (Object Storage)

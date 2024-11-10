@@ -1,7 +1,7 @@
 [project]
-name = "dbt-clickhouse-analytics"
+name = ""
 version = "1.0"
-description = "Analytics Engineering with dbt and ClickHouse"
+description = "Analytics engineering with dbt and ClickHouse"
 license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
 authors = [
@@ -14,9 +14,9 @@ dependencies = [
     "dbt-clickhouse>=1.8.4,<2.0",
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "ruff>=0.6.9",
+    "ruff>=0.7.3"
 ]
 
 [tool.ruff]

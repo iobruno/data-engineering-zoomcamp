@@ -1,5 +1,5 @@
-x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-v0.50.12}
-x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-16-alpine}
+x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-v0.51.2.4}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 x-metabase-common: &metabase-common
   image: *metabase-image
@@ -16,8 +16,8 @@ x-metabase-common: &metabase-common
     MUID: ${MUID:-2000}
     MGID: ${MGID:-2000}
   volumes:
-    - metabase_data:/metabase-data
-    - metabase_plugins:${MB_PLUGINS_DIR:-/app/plugins}
+    - vol-metabase-data:/metabase-data
+    - vol-metabase-plugins:${MB_PLUGINS_DIR:-/app/plugins}
 
 services:
   metabase-db:
@@ -30,7 +30,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - metabase_pg_data:/var/lib/postgresql/data
+      - vol-metabase-db:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -40,7 +40,7 @@ services:
 
   metabase:
     <<: *metabase-common
-    container_name: metabase-app
+    container_name: metabase
     ports:
       - 3000:3000
     depends_on:
@@ -68,9 +68,9 @@ services:
         chown -R $${MUID}:$${MGID} $${MB_PLUGINS_DIR}
 
 volumes:
-  metabase_pg_data:
-    name: metabase_pg_data
-  metabase_data:
-    name: metabase_data
-  metabase_plugins:
-    name: metabase_plugins
+  vol-metabase-db:
+    name: vol-metabase-db
+  vol-metabase-data:
+    name: vol-metabase-data
+  vol-metabase-plugins:
+    name: vol-metabase-plugins
