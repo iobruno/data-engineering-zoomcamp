@@ -1,6 +1,6 @@
 x-mage-image: &mage-image mageai/mageai:${MAGE_VERSION:-0.9.74}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.1-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7-alpine}
 
 x-mage-common: 
   &mage-common

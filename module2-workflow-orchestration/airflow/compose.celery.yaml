@@ -1,6 +1,6 @@
 x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.3-python3.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
-x-redis-image: &redis-image redis:${REDIS_VERSION:-7.4.1-alpine}
+x-redis-image: &redis-image redis:${REDIS_VERSION:-7-alpine}
 
 x-airflow-common:
   &airflow-common
