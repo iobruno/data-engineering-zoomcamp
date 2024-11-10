@@ -14,7 +14,7 @@ Welcome to
       ____              __
      / __/__  ___ _____/ /__
     _\ \/ _ \/ _ `/ __/  '_/
-   /__ / .__/\_,_/_/ /_/\_\   version 3.5.1
+   /__ / .__/\_,_/_/ /_/\_\   version 3.5.3
       /_/
 
 Using Python version 3.11.9 (main, Jun  6 2024 18:26:44)
@@ -39,7 +39,7 @@ SparkSession available as 'spark'.
 
 ```shell
 sdk i java 17.0.10-librca
-sdk i spark 3.5.1
+sdk i spark 3.5.3
 sdk i hadoop 3.3.5
 ```
 
