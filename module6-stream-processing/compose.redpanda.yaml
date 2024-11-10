@@ -1,13 +1,8 @@
 x-redpanda-image: &redpanda-image redpandadata/redpanda:${REDPANDA_VERSION:-v24.2.7}
-
 x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.28.0}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
-  # Redpanda Setup 
-  ### 9092 - Redpanda Broker
-  ### 8081 - Schema Registry (doesn't support JSON)
-  ### 8082 - REST Proxy
   broker0:
     image: *redpanda-image
     container_name: broker0
@@ -22,9 +17,9 @@ services:
       - --pandaproxy-addr 0.0.0.0:8082
       - --advertise-pandaproxy-addr localhost:8082
     ports:
-      - '9092:9092'
-      - '8081:8081'
-      - '8082:8082'
+      - '9092:9092' # Redpanda Broker
+      - '8081:8081' # Schema Registry (doesn't support JSON)
+      - '8082:8082' # REST Proxy
     healthcheck:
       test: ["CMD-SHELL", "rpk cluster health -e || exit 1"]
       start_period: 10s
@@ -50,7 +45,7 @@ services:
     ports:
       - '8080:8080'
     volumes:
-      - conduktor_data:/var/conduktor
+      - vol-conduktor-data:/var/conduktor
     depends_on:
       broker0:
         condition: service_started
@@ -68,7 +63,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - conduktor_metadata:/var/lib/postgresql/data
+      - vol-conduktor-metadata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -88,7 +83,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - conduktor_sql:/var/lib/postgresql/data
+      - vol-conduktor-sql:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -97,9 +92,9 @@ services:
     restart: on-failure:5
 
 volumes:
-  conduktor_data:
-    name: conduktor_data
-  conduktor_metadata:
-    name: conduktor_metadata
-  conduktor_sql:
-    name: conduktor_sql
+  vol-conduktor-data:
+    name: vol-conduktor-data
+  vol-conduktor-metadata:
+    name: vol-conduktor-metadata
+  vol-conduktor-sql:
+    name: vol-conduktor-sql
