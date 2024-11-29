@@ -1,5 +1,7 @@
-x-redpanda-image: &redpanda-image redpandadata/redpanda:${REDPANDA_VERSION:-v24.2.7}
-x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.28.0}
+x-redpanda-image: &redpanda-image redpandadata/redpanda:${REDPANDA_VERSION:-v24.2.12}
+
+x-conduktor-monitoring: &conduktor-monitoring-image conduktor/conduktor-console-cortex:${CONDUKTOR_PLATFORM_VERSION:-1.29.1}
+x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.29.1}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
@@ -12,13 +14,13 @@ services:
       - --smp 1
       - --overprovisioned
       - --node-id 0
-      - --kafka-addr INTERNAL://0.0.0.0:29092,OUTSIDE://0.0.0.0:9092
-      - --advertise-kafka-addr INTERNAL://broker0:29092,OUTSIDE://localhost:9092
+      - --kafka-addr INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      - --advertise-kafka-addr INTERNAL://broker0:29092,EXTERNAL://localhost:9092
       - --pandaproxy-addr 0.0.0.0:8082
       - --advertise-pandaproxy-addr localhost:8082
     ports:
       - '9092:9092' # Redpanda Broker
-      - '8081:8081' # Schema Registry (doesn't support JSON)
+      - '8081:8081' # Schema Registry
       - '8082:8082' # REST Proxy
     healthcheck:
       test: ["CMD-SHELL", "rpk cluster health -e || exit 1"]
@@ -41,6 +43,10 @@ services:
       CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: 'http://broker0:8081'
       CDK_DATABASE_URL: "postgresql://postgres:postgres@conduktor-metastore:5432/conduktor"
       CDK_KAFKASQL_DATABASE_URL: "postgresql://postgres:postgres@conduktor-sql:5432/conduktor-sql"
+      CDK_MONITORING_CORTEX-URL: http://conduktor-monitoring:9009/
+      CDK_MONITORING_ALERT-MANAGER-URL: http://conduktor-monitoring:9010/
+      CDK_MONITORING_CALLBACK-URL: http://conduktor-console:8080/monitoring/api/
+      CDK_MONITORING_NOTIFICATIONS-CALLBACK-URL: http://localhost:8080
       CDK_LISTENING_PORT: 8080
     ports:
       - '8080:8080'
@@ -89,6 +95,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: on-failure:5
+
+  conduktor-monitoring:
+    image: *conduktor-monitoring-image
+    environment:
+      CDK_CONSOLE-URL: "http://conduktor-console:8080"
+    ports:
+      - "9009:9009" # cortex api
+      - "9010:9010" # alertmanager api
+      - "9090:9090" # prometheus api
     restart: on-failure:5
 
 volumes:
