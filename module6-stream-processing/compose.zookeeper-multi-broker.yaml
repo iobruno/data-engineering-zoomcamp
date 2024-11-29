@@ -1,11 +1,12 @@
-x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
-x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
-x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
-x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
-x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
-x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUENT_PLATFORM_VERSION:-7.7.1}
+x-cp-zookeeper-image: &cp-zookeeper-image confluentinc/cp-zookeeper:${CONFLUENT_PLATFORM_VERSION:-7.7.2}
+x-cp-kafka-image: &cp-kafka-image confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.7.2}
+x-cp-schema-registry-image: &cp-schema-registry-image confluentinc/cp-schema-registry:${CONFLUENT_PLATFORM_VERSION:-7.7.2}
+x-cp-rest-proxy-image: &cp-restproxy-image confluentinc/cp-kafka-rest:${CONFLUENT_PLATFORM_VERSION:-7.7.2}
+x-cp-ksqldb-server-image: &cp-ksqldb-server-image confluentinc/cp-ksqldb-server:${CONFLUENT_PLATFORM_VERSION:-7.7.2}
+x-cp-ksqldb-cli-image: &cp-ksqldb-cli-image confluentinc/cp-ksqldb-cli:${CONFLUENT_PLATFORM_VERSION:-7.7.2}
 
-x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.28.0}
+x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.29.1}
+x-conduktor-monitoring: &conduktor-monitoring-image conduktor/conduktor-console-cortex:${CONDUKTOR_PLATFORM_VERSION:-1.29.1}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 x-kafka-common:
@@ -18,6 +19,7 @@ x-kafka-common:
     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     KAFKA_AUTO_CREATE_TOPICS_ENABLE: false
     KAFKA_DELETE_TOPIC_ENABLE: true
+    KAFKA_JMX_PORT: 9999
   depends_on:
     zookeeper:
       condition: service_healthy
@@ -212,6 +214,10 @@ services:
       CDK_CLUSTERS_0_KSQLDBS_0_URL: 'http://ksqldb0:8088'
       CDK_DATABASE_URL: "postgresql://postgres:postgres@conduktor-metastore:5432/conduktor"
       CDK_KAFKASQL_DATABASE_URL: "postgresql://postgres:postgres@conduktor-sql:5432/conduktor-sql"
+      CDK_MONITORING_CORTEX-URL: http://conduktor-monitoring:9009/
+      CDK_MONITORING_ALERT-MANAGER-URL: http://conduktor-monitoring:9010/
+      CDK_MONITORING_CALLBACK-URL: http://conduktor-console:8080/monitoring/api/
+      CDK_MONITORING_NOTIFICATIONS-CALLBACK-URL: http://localhost:8080
       CDK_LISTENING_PORT: 8080
     ports:
       - '8080:8080'
@@ -263,6 +269,16 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    restart: on-failure:5
+
+  conduktor-monitoring:
+    image: *conduktor-monitoring-image
+    environment:
+      CDK_CONSOLE-URL: "http://conduktor-console:8080"
+    ports:
+      - "9009:9009" # cortex api
+      - "9010:9010" # alertmanager api
+      - "9090:9090" # prometheus api
     restart: on-failure:5
 
 volumes:
