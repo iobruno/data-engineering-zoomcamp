@@ -13,26 +13,23 @@ based on the endpoints in [datasets.yaml](./datasets.yaml).
 
 ## Tech Stack
 - [Typer](https://typer.tiangolo.com/tutorial/)
-- [Textualize Rich](https://github.com/Textualize/rich)
 - [polars](https://docs.pola.rs/)
 - [pandas](https://pandas.pydata.org/docs/user_guide/)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n pyingest python=3.12 -y
-conda activate pyingest
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync --no-self
+source .venv/bin/activate
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -45,10 +42,10 @@ pre-commit install
 
 **4.** Export ENV VARS to connect to DB:
 ```shell
-export DATABASE_HOST=localhost
-export DATABASE_NAME=nyc_taxi
-export DATABASE_USERNAME=postgres
-export DATABASE_PASSWORD=postgres
+export DB_HOST=localhost
+export DB_NAME=nyc_taxi
+export DB_USERNAME=postgres
+export DB_PASSWORD=postgres
 ```
 
 **5.** Run the script with the intended flags or use `--help`:
