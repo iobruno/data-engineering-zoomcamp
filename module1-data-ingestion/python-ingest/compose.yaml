@@ -35,7 +35,6 @@ services:
       ingest-db:
         condition: service_healthy
 
-
 volumes:
   vol-ingest-db:
     name: vol-ingest-db
