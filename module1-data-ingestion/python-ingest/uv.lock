@@ -1016,6 +1016,49 @@ wheels = [
 ]
 
 [[package]]
+name = "nyctlc"
+version = "2.0"
+source = { editable = "." }
+dependencies = [
+    { name = "adbc-driver-manager" },
+    { name = "adbc-driver-postgresql" },
+    { name = "hydra-core" },
+    { name = "loguru" },
+    { name = "pandas" },
+    { name = "polars" },
+    { name = "psycopg", extra = ["binary"] },
+    { name = "pyarrow" },
+    { name = "sqlalchemy" },
+    { name = "typer" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "jupyterlab" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "adbc-driver-manager", specifier = ">=1.3.0,<2.0" },
+    { name = "adbc-driver-postgresql", specifier = ">=1.3.0,<2.0" },
+    { name = "hydra-core", specifier = ">=1.3.2,<2.0" },
+    { name = "loguru", specifier = ">=0.7.3,<1.0" },
+    { name = "pandas", specifier = ">=2.2.3,<3.0" },
+    { name = "polars", specifier = ">=1.17.0,<2.0" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.3,<4.0" },
+    { name = "pyarrow", specifier = ">=18.0.0,<19" },
+    { name = "sqlalchemy", specifier = ">=2.0.36,<3.0" },
+    { name = "typer", specifier = ">=0.15.1,<1.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "jupyterlab", specifier = ">=4.3.2" },
+    { name = "ruff", specifier = ">=0.8.2" },
+]
+
+[[package]]
 name = "omegaconf"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1290,49 +1333,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/8e/62/8336eff65bcbc8e4cb5d05b55faf041285951b6e80f33e2bff2024788f31/pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199", size = 4891905 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f7/3f/01c8b82017c199075f8f788d0d906b9ffbbc5a47dc9918a945e13d5a2bda/pygments-2.18.0-py3-none-any.whl", hash = "sha256:b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a", size = 1205513 },
-]
-
-[[package]]
-name = "pyingest"
-version = "1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "adbc-driver-manager" },
-    { name = "adbc-driver-postgresql" },
-    { name = "hydra-core" },
-    { name = "loguru" },
-    { name = "pandas" },
-    { name = "polars" },
-    { name = "psycopg", extra = ["binary"] },
-    { name = "pyarrow" },
-    { name = "sqlalchemy" },
-    { name = "typer" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "jupyterlab" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "adbc-driver-manager", specifier = ">=1.3.0,<2.0" },
-    { name = "adbc-driver-postgresql", specifier = ">=1.3.0,<2.0" },
-    { name = "hydra-core", specifier = ">=1.3.2,<2.0" },
-    { name = "loguru", specifier = ">=0.7.3" },
-    { name = "pandas", specifier = ">=2.2.3,<3.0" },
-    { name = "polars", specifier = ">=1.17.0,<2.0" },
-    { name = "psycopg", extras = ["binary"], specifier = ">=3.2.3,<4.0" },
-    { name = "pyarrow", specifier = ">=18.0.0,<19" },
-    { name = "sqlalchemy", specifier = ">=2.0.36,<3.0" },
-    { name = "typer", specifier = ">=0.15.1,<1.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "jupyterlab", specifier = ">=4.3.2" },
-    { name = "ruff", specifier = ">=0.8.2" },
 ]
 
 [[package]]

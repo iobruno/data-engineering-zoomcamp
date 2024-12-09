@@ -5,11 +5,12 @@ requires = [
 build-backend = "hatchling.build"
 
 [project]
-name = "pyingest"
-version = "1.0"
+name = "nyctlc"
+version = "2.0"
 description = "Headless CLI for processing the NYC TLC Dataset"
-license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
+license = {text = "CC-BY-SA-4.0"}
+
 requires-python = ">=3.10,<3.13"
 
 dependencies = [
@@ -31,8 +32,11 @@ dev = [
     "jupyterlab>=4.3.2",
 ]
 
+[projects.scripts]
+nyctlc = "app.command:cli"
+
 [tool.hatch.build.targets.wheel]
-include = ["src/**"]
+include = ["app/**"]
 
 [tool.ruff]
 line-length = 100
