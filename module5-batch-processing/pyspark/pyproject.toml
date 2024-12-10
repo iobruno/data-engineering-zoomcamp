@@ -1,5 +1,5 @@
 [project]
-name = "pyspark"
+name = "pyspark-playground"
 version = "1.0"
 description = "Batch processing with PySpark"
 readme = "README.md"
