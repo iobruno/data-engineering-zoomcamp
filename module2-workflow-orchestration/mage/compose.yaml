@@ -7,7 +7,7 @@ x-mage-common:
   image: *mage-image
   environment:
     &mage-common-env
-    MAGE_DATABASE_CONNECTION_URL: 'postgresql+psycopg2://mage:mage@mage-db/mage'
+    MAGE_DATABASE_CONNECTION_URL: 'postgresql+psycopg2://mage:mage@mage-metastore/mage'
     REDIS_URL: 'redis://@mage-redis:6379/0'
     MAGE_PROJ_NAME: ${MAGE_PROJ_NAME:-magic}
     USER_CODE_PATH: ${USER_CODE_PATH:-/opt/mage/magic}
