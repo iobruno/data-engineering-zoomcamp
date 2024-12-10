@@ -10,7 +10,7 @@ This setups the infrastructure for Airflow, in Docker, as close as possible to a
 
 ## Tech Stack
 - [Airflow](https://airflow.apache.org/docs/apache-airflow/stable/start.html)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 ## Up and Running
@@ -39,7 +39,7 @@ open http://localhost:8080
 To deploy Airflow DAGs, just move them inside the [dags](dags/) folder and Airflow should pick it up soon enough
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [ ] Run Airflow DAGs on Docker
 - [ ] Code format/lint with Ruff
 - [ ] Complete [Astronomer Academy's Airflow 101](https://academy.astronomer.io/path/airflow-101)
