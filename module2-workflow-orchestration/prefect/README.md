@@ -44,33 +44,37 @@ pre-commit install
 prefect server start
 ```
 
+**5.** Setup Prefect server for the flows:
+```shell
+prefect config set PREFECT_API_URL=http://127.0.0.1:4200/api
+```
+
 ### Prefect Flows
 
-**flows/web_csv_to_gcs.py**:
+#### flows/web_csv_to_gcs.py:
 
-For the very first run:
-- You need to set `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
-  That will enable the flow to automatically create the `GcsBucket` and `GcpCredentials` Prefect Blocks
+Set the `GOOGLE_APPLICATION_CREDENTIALS` env variable.
+```shell
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/gcs_credentials.json
+```
 
-- Before running `flows/web_csv_to_gcs.py`, you should comment out/uncomment the endpoints in `app.yml` under `datasets.green`, `datasets.yelow`, and `datasets.fhv`
-
+Execute the flow with:
 ```shell
 python flows/web_cs_to_gcs.py
 ```
 
-**flows/sqlalchemy_ingest.py**:
+#### flows/sqlalchemy_ingest.py:
 
-For the very first run:
-- Make sure to set the environment variables: `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`,
-- Also, configure the database name it should connect to on `app.yml` under the key: `prefect_block.sqlalchemy.ny_taxi.database`
+Set the environment variables:
 ```shell
-export DB_USERNAME=sqlalchemy
-export DB_PASSWORD=sqlalchemy
+export DB_USERNAME=postgres
+export DB_PASSWORD=postgres
 export DB_HOST=localhost
 export DB_PORT=5432
 export DB=nyc_taxi
 ```
 
+And then execute with:
 ```shell
 python flows/sqlalchemy_ingest.py
 ```
