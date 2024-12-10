@@ -12,8 +12,7 @@ An additional container `mage_init` sets up this root folder as the main project
 
 ## Tech Stack
 - [Mage.ai](https://docs.mage.ai/getting-started/setup)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 ## Up and Running
@@ -43,15 +42,14 @@ open http://localhost:6789
 
 If a local environment is prefered, though,
 
-**1.** Create and activate a virtualenv for Python 3.11 with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n mage python=3.11 -y
-conda activate mage
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync
+source .venv/bin/activate
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -81,7 +79,7 @@ open http://localhost:6789
 ```
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
 - [x] Run Mage pipelines on Docker
 - [ ] Deploy [Mage to Kubernetes with Helm](https://docs.mage.ai/production/deploying-to-cloud/using-helm)
