@@ -1,7 +1,6 @@
-import logging
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
-from typing import List, Literal
+from typing import Literal
 
 from rich.progress import BarColumn, Progress, TaskID, TextColumn, TimeElapsedColumn
 
@@ -9,7 +8,6 @@ from app.df_fetcher import PandasFetcher, PolarsFetcher
 from app.df_repository import SQLRepo
 from app.schemas import FhvSchema, GreenTaxiSchema, Schema, YellowTaxiSchema, ZoneLookupSchema
 
-log = logging.getLogger("py-ingest-processor")
 progress = Progress(
     TextColumn("[bold blue]{task.description}"),
     BarColumn(),
@@ -29,14 +27,14 @@ class Processor(metaclass=ABCMeta):
             fetcher = PandasFetcher().with_schema(self.schema.pyarrow)
 
         self.use_polars = polars_ff
-        self.fetcher = fetcher.with_renaming_strategy(self.renaming)
+        self.fetcher = fetcher.with_renaming_strategy(self.schema.rename_to)
 
     def extract_and_load_with(
         self,
         repo: SQLRepo,
-        endpoints: List[str],
+        endpoints: list[str],
         write_disposition: Literal["replace", "append"],
-        tasks: List[TaskID],
+        tasks: list[TaskID],
     ):
         if not endpoints:
             return
@@ -71,12 +69,8 @@ class Processor(metaclass=ABCMeta):
     def schema(self) -> Schema:
         raise NotImplementedError()
 
-    @property
-    def renaming(self):
-        return self.schema.rename_to
-
     @classmethod
-    def gen_progress_tasks_for(cls, endpoints: List[str]) -> List[TaskID]:
+    def gen_progress_tasks_for(cls, endpoints: list[str]) -> list[TaskID]:
         filenames = [Path(endpoint).stem for endpoint in endpoints]
         return [
             progress.add_task(name, start=False, total=float("inf"), completed=0)

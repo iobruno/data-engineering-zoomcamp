@@ -1,8 +1,8 @@
 from os import getenv
 
-import sqlalchemy
 from hydra import compose, initialize
 from loguru import logger
+from sqlalchemy import create_engine, exc, text
 from typer import BadParameter, Context, Option, Typer
 
 from app.df_repository import FhvTaxiRepo, GreenTaxiRepo, YellowTaxiRepo, ZoneLookupRepo
@@ -23,12 +23,12 @@ def load_conf():
 
 
 def test_db_conn(conn_str: str):
-    engine = sqlalchemy.create_engine(conn_str)
+    engine = create_engine(conn_str)
     try:
         with engine.connect() as conn:
-            conn.execute(sqlalchemy.text("select 1"))
+            conn.execute(text("select 1"))
             logger.info("Connection successfully established!")
-    except sqlalchemy.exc.OperationalError as ex:
+    except exc.OperationalError as ex:
         raise BadParameter(f"You must specify the db credentials with env variables - {ex}")
 
 

@@ -11,7 +11,7 @@ description = "Headless CLI for processing the NYC TLC Dataset"
 readme = "README.md"
 license = {text = "CC-BY-SA-4.0"}
 
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
     "typer>=0.15.1,<1.0",
