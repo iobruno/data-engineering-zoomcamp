@@ -25,8 +25,7 @@ SparkSession available as 'spark'.
 
 ## Tech Stack
 - [PySpark](https://spark.apache.org/docs/latest/api/python/user_guide)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 ## Up and Running
@@ -35,17 +34,22 @@ SparkSession available as 'spark'.
 
 **1.** Install `JDK` 11 or 17, Spark 3.5.x, and Hadoop:
 ```shell
-sdk i 17.0.13-librca
+sdk i java 17.0.13-librca
 sdk i spark 3.5.3
 sdk i hadoop 3.4.1
 ```
 
-**2.** Install the project dependencies with:
+**2.** Install the dependencies on `pyproject.toml`:
 ```shell
-pdm sync
+uv sync
 ```
 
-**3. (Optional)**  Install pre-commit:
+**3.** Activate the virtualenv created by `uv`:
+```shell
+source .venv/bin/activate
+```
+
+**4. (Optional)**  Install pre-commit:
 ```shell
 brew install pre-commit
 ```
@@ -55,17 +59,17 @@ From root folder where `.pre-commit-config.yaml` is located, run:
 pre-commit install
 ```
 
-**4.** Spin up the Spark Cluster
+**5.** Spin up the Spark Cluster
 ```shell
 docker compose -f ../docker-compose.yml up -d
 ```
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
 - [X] Set up a Jupyter Playground for PySpark
 - [X] Enable Spark to read from Google Cloud Storage
 - [ ] Enable Spark to read from AWS S3
 - [ ] Submit a PySpark job to the Google Dataproc
-- [ ] Deploy [Spark to Kubernetes with Helm](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator) using: [minikube](https://minikube.sigs.k8s.io/docs/start/) or [kind](https://kind.sigs.k8s.io/)
+- [ ] Deploy [Spark to Kubernetes with Helm](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator) with [minikube](https://minikube.sigs.k8s.io/docs/start/) or [kind](https://kind.sigs.k8s.io/)
 - [ ] Submit a PySpark job to the K8s Spark Cluster
