@@ -1,24 +1,19 @@
 [project]
-name = ""
-version = "0.1"
+name = "mage-playground"
+version = "1.0"
 description = "Workflow orchestration with Mage.ai"
-license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
-authors = [
-    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
-]
-
 requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "mage-ai>=0.9.74,<1.0",
+    "mage-ai>=0.9.75,<1.0",
     "pandas>=2.2.3,<3.0",
-    "psycopg2-binary>=2.9.9,<3.0",
+    "psycopg2-binary>=2.9.10,<3.0",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.7.3"
+    "ruff>=0.8.2",
 ]
 
 [tool.ruff]
