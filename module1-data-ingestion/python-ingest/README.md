@@ -50,7 +50,7 @@ export DB_PASSWORD=postgres
 
 **5.** Run the script with the intended flags or use `--help`:
 
-- `python run.py -y` or `--yellow`:
+- `python run.py ingest -y` or `--yellow`:
   - fetches the datasets under the key `yellow_trip_data` only
   - persists to Postgres, on table `yellow_taxi_data`
   
@@ -68,7 +68,7 @@ export DB_PASSWORD=postgres
 
 Additionally, you can use `--use-polars` for a major speed boost with Polars. 
 
-You can use any combination of options above to fetch more than dataset group at a time. For instance: `python run.py -gz --use-polars` fetches the **NYC Green Trip Data** and **NYC Lookup Zones** while **using Polars** as the Dataframe library.
+You can use any combination of options above to fetch more than dataset group at a time. For instance: `python run.py ingest -gz --use-polars` fetches the **NYC GreenTaxi Trip Data** and **NYC Lookup Zones** while **using Polars** as the Dataframe library.
 
 ## Containerization and Testing
 
@@ -96,4 +96,4 @@ docker run -d --rm \
 - [x] Progress Bars to keep track of the execution with `rich`
 - [x] Run/Deploy the project on Docker
 - [x] Re-Implement the pipeline with Polars
-- [x] Define the DataFrame schemas for Polars to prevent DB errors
+- [x] Define DataFrame schemas for Polars to prevent errors
