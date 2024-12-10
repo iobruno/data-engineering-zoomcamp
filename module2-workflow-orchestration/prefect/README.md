@@ -9,28 +9,26 @@
 
 This GitHub project streamlines `Prefect Flows` to fetch NYC Taxi Tripdata CSV datasets from specified endpoints in app.yml and seamlessly sink them into Postgres and Google Cloud Storage.
 
-*Note*: The `Prefect Orion` server is now called `Prefect Server`
+**Note**: The `Prefect Orion` server is now called `Prefect Server`
 
 ## Tech Stack
 - [Prefect](https://www.prefect.io/opensource/)
 - [pandas](https://pandas.pydata.org/docs/user_guide/)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n prefect python=3.12 -y
-conda activate prefect
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync --no-self
+source .venv/bin/activate
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -66,11 +64,11 @@ For the very first run:
 - Make sure to set the environment variables: `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USERNAME`, and `DATABASE_PASSWORD`,
 - Also, configure the database name it should connect to on `app.yml` under the key: `prefect_block.sqlalchemy.ny_taxi.database`
 ```shell
-export DATABASE_USERNAME=sqlalchemy
-export DATABASE_PASSWORD=sqlalchemy
-export DATABASE_HOST=localhost
-export DATABASE_PORT=5432
-export DATABASE_NAME=nyc_taxi
+export DB_USERNAME=sqlalchemy
+export DB_PASSWORD=sqlalchemy
+export DB_HOST=localhost
+export DB_PORT=5432
+export DB=nyc_taxi
 ```
 
 ```shell
@@ -78,7 +76,7 @@ python flows/sqlalchemy_ingest.py
 ```
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Deploy Prefect Server / Agent on Docker
 - [x] Code format/lint with Ruff
 - [ ] Run Prefect flows on Docker
