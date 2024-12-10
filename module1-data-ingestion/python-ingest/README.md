@@ -54,15 +54,15 @@ export DB_PASSWORD=postgres
   - fetches the datasets under the key `yellow_trip_data` only
   - persists to Postgres, on table `yellow_taxi_data`
   
-- `python run.py -g` or `--green`:
+- `python run.py ingest -g` or `--green`:
   - fetches the datasets under the key `green_trip_data` only,
   - persists to Postgres, on table `green_taxi_data`
 
-- `python run.py -f` or `--fhv`:
+- `python run.py ingest -f` or `--fhv`:
   - fetches the datasets under the key `fhv_trip_data`
   - persists to Postgres, on table: `fhv_taxi_data`
 
-- `python run.py -z` or `--zones`:
+- `python run.py ingest -z` or `--zones`:
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `zone_lookup`
 
@@ -74,23 +74,23 @@ You can use any combination of options above to fetch more than dataset group at
 
 **1.** Build the Docker Image with:
 ```shell
-docker build -t iobruno/pyingest:latest . --no-cache
+docker build -t iobruno/ntlcli:latest . --no-cache
 ```
 
 **2.** Start a container with it:
 ```shell
 docker run -d --rm \
-  -e DATABASE_HOST=host.docker.internal \
-  -e DATABASE_PORT=5432 \
-  -e DATABASE_NAME=nyc_taxi \
-  -e DATABASE_USERNAME=postgres \
-  -e DATABASE_PASSWORD=postgres \
-  --name pyingest \
-  iobruno/pyingest
+  -e DB_HOST=host.docker.internal \
+  -e DB_PORT=5432 \
+  -e DB_NAME=nyc_taxi \
+  -e DB_USERNAME=postgres \
+  -e DB_PASSWORD=postgres \
+  --name ntlcli \
+  iobruno/ntlcli
 ```
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
 - [x] Build a CLI app with `Typer`
 - [x] Progress Bars to keep track of the execution with `rich`
