@@ -28,7 +28,7 @@ can take the course at your own pace
 
 ### [Module 2: Workflow orchestration](module2-workflow-orchestration/)
 * [Workflow orchestration with Airflow](module2-workflow-orchestration/airflow/)
-* [Workflow orchestration with Mage](module2-workflow-orchestration/mage/)
+* [Workflow orchestration with Mage](module2-workflow-orchestration/mageai/)
 * [Workflow orchestration with Prefect](module2-workflow-orchestration/prefect/)
 * Homework
 
