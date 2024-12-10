@@ -1,29 +1,27 @@
 # Builder stage
 FROM python:3.12-slim AS builder
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-ADD pyproject.toml pdm.lock /app/
-WORKDIR /app/
+WORKDIR /ntlcli
 
-RUN pip install -U pip setuptools wheel && \
-    pip install pdm && \
-    mkdir -p __pypackages__ && \
-    pdm sync --prod --no-self --no-editable
+ENV UV_COMPILE_BYTECODE=1
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv pip install -r pyproject.toml --system
+
+ADD app /ntlcli/app/
 
 # Runner stage
 FROM python:3.12-slim AS runner
 
-ENV DATABASE_HOST=
-ENV DATABASE_PORT=
-ENV DATABASE_USERNAME=
-ENV DATABASE_PASSWORD=
-ENV DATABASE_NAME=
+COPY --from=builder /usr/local/lib/python3.12   /usr/local/lib/python3.12
+COPY --from=builder /usr/local/bin/*            /usr/local/bin/
+COPY --from=builder /ntlcli/                    /ntlcli/
+ADD pyproject.toml uv.lock datasets.yaml        /ntlcli/
+ADD run.py                                      /ntlcli/
 
-ENV PYTHONPATH=/usr/local/lib/python/
-COPY --from=builder /app/__pypackages__/3.12/lib /usr/local/lib/python/
+WORKDIR /ntlcli/
 
-ADD src /app/src/
-ADD run.py datasets.yaml /app/
-
-WORKDIR /app/
-
-ENTRYPOINT ["python", "run.py", "-zygf", "--use-polars"]
+ENTRYPOINT ["python", "run.py", "ingest", "-zygf", "--use-polars"]
