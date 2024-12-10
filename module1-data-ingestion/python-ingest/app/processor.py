@@ -1,34 +1,40 @@
-import logging
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
-from typing import List, Literal, Type
+from typing import Literal
 
-from rich.progress import Progress, TaskID
+from rich.progress import BarColumn, Progress, TaskID, TextColumn, TimeElapsedColumn
 
-from src.df_fetcher import PandasFetcher, PolarsFetcher
-from src.df_repository import FhvTaxiRepo, GreenTaxiRepo, SQLRepo, YellowTaxiRepo, ZoneLookupRepo
-from src.schemas import FhvSchema, GreenTaxiSchema, Schema, YellowTaxiSchema, ZoneLookupSchema
+from app.df_fetcher import PandasFetcher, PolarsFetcher
+from app.df_repository import SQLRepo
+from app.schemas import FhvSchema, GreenTaxiSchema, Schema, YellowTaxiSchema, ZoneLookupSchema
 
-log = logging.getLogger("py-ingest-processor")
+progress = Progress(
+    TextColumn("[bold blue]{task.description}"),
+    BarColumn(),
+    "Chunk: {task.completed}/{task.total}",
+    "•",
+    "[progress.percentage]{task.percentage:>3.1f}%",
+    "•",
+    TimeElapsedColumn(),
+)
 
 
 class Processor(metaclass=ABCMeta):
     def __init__(self, polars_ff: bool = False):
         if polars_ff:
-            _fetcher = PolarsFetcher().with_schema(self.schema.polars)
+            fetcher = PolarsFetcher().with_schema(self.schema.polars)
         else:
-            _fetcher = PandasFetcher().with_schema(self.schema.pyarrow)
+            fetcher = PandasFetcher().with_schema(self.schema.pyarrow)
 
         self.use_polars = polars_ff
-        self.fetcher = _fetcher.with_renaming_strategy(self.renaming)
+        self.fetcher = fetcher.with_renaming_strategy(self.schema.rename_to)
 
     def extract_and_load_with(
         self,
         repo: SQLRepo,
-        endpoints: List[str],
+        endpoints: list[str],
         write_disposition: Literal["replace", "append"],
-        tasks: List[int],
-        progress,
+        tasks: list[TaskID],
     ):
         if not endpoints:
             return
@@ -52,35 +58,19 @@ class Processor(metaclass=ABCMeta):
             completeness += 1
             progress.update(task_id=tid, completed=completeness, total=total_parts)
 
-        self.extract_and_load_with(
-            repo=repo,
-            endpoints=remain_endpoints,
-            write_disposition="append",
-            tasks=remain_tasks,
-            progress=progress,
-        )
+        self.extract_and_load_with(repo, remain_endpoints, "append", remain_tasks)
 
-    def run(self, endpoints, db_settings, write_disposition, progress):
-        repo = self.repo.with_config(*db_settings)
-        tasks = self.gen_progress_tasks_for(endpoints, progress)
-        self.extract_and_load_with(repo, endpoints, write_disposition, tasks, progress)
+    def run(self, endpoints, repo, write_disposition):
+        tasks = self.gen_progress_tasks_for(endpoints)
+        self.extract_and_load_with(repo, endpoints, write_disposition, tasks)
 
     @property
     @abstractmethod
     def schema(self) -> Schema:
         raise NotImplementedError()
 
-    @property
-    @abstractmethod
-    def repo(self) -> Type[SQLRepo]:
-        raise NotImplementedError()
-
-    @property
-    def renaming(self):
-        return self.schema.rename_to
-
     @classmethod
-    def gen_progress_tasks_for(cls, endpoints: List[str], progress: Progress) -> List[TaskID]:
+    def gen_progress_tasks_for(cls, endpoints: list[str]) -> list[TaskID]:
         filenames = [Path(endpoint).stem for endpoint in endpoints]
         return [
             progress.add_task(name, start=False, total=float("inf"), completed=0)
@@ -90,19 +80,11 @@ class Processor(metaclass=ABCMeta):
 
 class GreenTaxiProcessor(Processor):
     @property
-    def repo(self) -> Type[GreenTaxiRepo]:
-        return GreenTaxiRepo
-
-    @property
     def schema(self) -> Schema:
         return GreenTaxiSchema()
 
 
 class YellowTaxiProcessor(Processor):
-    @property
-    def repo(self) -> Type[YellowTaxiRepo]:
-        return YellowTaxiRepo
-
     @property
     def schema(self) -> Schema:
         return YellowTaxiSchema()
@@ -110,19 +92,11 @@ class YellowTaxiProcessor(Processor):
 
 class FhvProcessor(Processor):
     @property
-    def repo(self) -> Type[FhvTaxiRepo]:
-        return FhvTaxiRepo
-
-    @property
     def schema(self) -> Schema:
         return FhvSchema()
 
 
 class ZoneLookupProcessor(Processor):
-    @property
-    def repo(self) -> Type[ZoneLookupRepo]:
-        return ZoneLookupRepo
-
     @property
     def schema(self) -> Schema:
         return ZoneLookupSchema()

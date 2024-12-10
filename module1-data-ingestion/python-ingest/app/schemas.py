@@ -1,27 +1,28 @@
 from abc import ABCMeta, abstractmethod
+
 import polars as pl
 
 
 class Schema(metaclass=ABCMeta):
     @property
     @abstractmethod
-    def polars(self):
+    def polars(self) -> dict:
         raise NotImplementedError()
 
     @property
     @abstractmethod
-    def pyarrow(self):
+    def pyarrow(self) -> dict:
         raise NotImplementedError()
 
     @property
     @abstractmethod
-    def rename_to(self):
+    def rename_to(self) -> dict:
         raise NotImplementedError()
 
 
 class GreenTaxiSchema(Schema):
     @property
-    def polars(self):
+    def polars(self) -> dict:
         return {
             "VendorID": pl.Int32,
             "lpep_pickup_datetime": pl.Datetime,
@@ -46,7 +47,7 @@ class GreenTaxiSchema(Schema):
         }
 
     @property
-    def pyarrow(self):
+    def pyarrow(self) -> dict:
         return {
             "VendorID": "Int64",
             "lpep_pickup_datetime": "datetime64[s]",
@@ -71,7 +72,7 @@ class GreenTaxiSchema(Schema):
         }
 
     @property
-    def rename_to(self):
+    def rename_to(self) -> dict:
         return {
             "VendorID": "vendor_id",
             "lpep_pickup_datetime": "lpep_pickup_datetime",
@@ -98,7 +99,7 @@ class GreenTaxiSchema(Schema):
 
 class YellowTaxiSchema(Schema):
     @property
-    def polars(self):
+    def polars(self) -> dict:
         return {
             "VendorID": pl.Int32,
             "tpep_pickup_datetime": pl.Datetime,
@@ -121,7 +122,7 @@ class YellowTaxiSchema(Schema):
         }
 
     @property
-    def pyarrow(self):
+    def pyarrow(self) -> dict:
         return {
             "VendorID": "Int64",
             "tpep_pickup_datetime": "datetime64[s]",
@@ -144,7 +145,7 @@ class YellowTaxiSchema(Schema):
         }
 
     @property
-    def rename_to(self):
+    def rename_to(self) -> dict:
         return {
             "VendorID": "vendor_id",
             "tpep_pickup_datetime": "tpep_pickup_datetime",
@@ -169,7 +170,7 @@ class YellowTaxiSchema(Schema):
 
 class FhvSchema(Schema):
     @property
-    def polars(self):
+    def polars(self) -> dict:
         return {
             "dispatching_base_num": pl.String,
             "pickup_datetime": pl.String,
@@ -181,7 +182,7 @@ class FhvSchema(Schema):
         }
 
     @property
-    def pyarrow(self):
+    def pyarrow(self) -> dict:
         return {
             "dispatching_base_num": "string",
             "pickup_datetime": "datetime64[s]",
@@ -193,7 +194,7 @@ class FhvSchema(Schema):
         }
 
     @property
-    def rename_to(self):
+    def rename_to(self) -> dict:
         return {
             "dispatching_base_num": "dispatching_base_num",
             "pickup_datetime": "pickup_datetime",
@@ -207,7 +208,7 @@ class FhvSchema(Schema):
 
 class ZoneLookupSchema(Schema):
     @property
-    def polars(self):
+    def polars(self) -> dict:
         return {
             "LocationID": pl.Int32,
             "Borough": pl.String,
@@ -216,7 +217,7 @@ class ZoneLookupSchema(Schema):
         }
 
     @property
-    def pyarrow(self):
+    def pyarrow(self) -> dict:
         return {
             "LocationID": "Int64",
             "Borough": "string",
@@ -225,7 +226,7 @@ class ZoneLookupSchema(Schema):
         }
 
     @property
-    def rename_to(self):
+    def rename_to(self) -> dict:
         return {
             "LocationID": "location_id",
             "Borough": "borough",

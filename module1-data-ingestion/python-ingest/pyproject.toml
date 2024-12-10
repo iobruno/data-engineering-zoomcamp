@@ -1,31 +1,40 @@
-[project]
-name = ""
-version = "1.0"
-description = "Headless CLI for processing the NYC TLC Dataset and storing it in Postgres"
-license = {text = "CC-BY-SA-4.0"}
-readme = "README.md"
-authors = [
-    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
+[build-system]
+requires = [
+    "hatchling>=1.26.3,<2.0",
 ]
+build-backend = "hatchling.build"
 
-requires-python = ">=3.10,<3.13"
+[project]
+name = "ntlcli"
+version = "2.0"
+description = "Headless CLI for processing the NYC TLC Dataset"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
-    "typer[all]>=0.13.0,<1.0",
-    "pandas>=2.2.3,<3.0",
+    "typer>=0.15.1,<1.0",
+    "polars>=1.17.0,<2.0",
     "pyarrow>=18.0.0,<19",
-    "polars>=1.12.0,<2.0",
-    "adbc-driver-manager>=1.2.0,<2.0",
-    "adbc-driver-postgresql>=1.2.0,<2.0",
-    "sqlalchemy>=2.0.36,<3.0",
+    "adbc-driver-manager>=1.3.0,<2.0",
+    "adbc-driver-postgresql>=1.3.0,<2.0",
     "psycopg[binary]>=3.2.3,<4.0",
+    "pandas>=2.2.3,<3.0",
+    "sqlalchemy>=2.0.36,<3.0",
+    "loguru>=0.7.3,<1.0",
     "hydra-core>=1.3.2,<2.0",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.7.3"
+    "ruff>=0.8.2",
+    "jupyterlab>=4.3.2",
 ]
+
+[project.scripts]
+ntlcli = "app.command:cli"
+
+[tool.hatch.build.targets.wheel]
+include = ["app/**"]
 
 [tool.ruff]
 line-length = 100
