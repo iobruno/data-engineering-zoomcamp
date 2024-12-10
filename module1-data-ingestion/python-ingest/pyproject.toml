@@ -30,7 +30,7 @@ dev = [
     "jupyterlab>=4.3.2",
 ]
 
-[projects.scripts]
+[project.scripts]
 ntlcli = "app.command:cli"
 
 [tool.hatch.build.targets.wheel]
