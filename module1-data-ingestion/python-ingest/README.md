@@ -50,25 +50,25 @@ export DB_PASSWORD=postgres
 
 **5.** Run the script with the intended flags or use `--help`:
 
-- `python run.py ingest -y` or `--yellow`:
+- `ntlcli ingest -y` or `--yellow`:
   - fetches the datasets under the key `yellow_trip_data` only
   - persists to Postgres, on table `yellow_taxi_data`
   
-- `python run.py ingest -g` or `--green`:
+- `ntlcli ingest -g` or `--green`:
   - fetches the datasets under the key `green_trip_data` only,
   - persists to Postgres, on table `green_taxi_data`
 
-- `python run.py ingest -f` or `--fhv`:
+- `ntlcli ingest -f` or `--fhv`:
   - fetches the datasets under the key `fhv_trip_data`
   - persists to Postgres, on table: `fhv_taxi_data`
 
-- `python run.py ingest -z` or `--zones`:
+- `ntlcli ingest -z` or `--zones`:
   - fetches the datasets under the key `zone_lookups`
   - persists to Postgres, on table: `zone_lookup`
 
 Additionally, you can use `--use-polars` for a major speed boost with Polars. 
 
-You can use any combination of options above to fetch more than dataset group at a time. For instance: `python run.py ingest -gz --use-polars` fetches the **NYC GreenTaxi Trip Data** and **NYC Lookup Zones** while **using Polars** as the Dataframe library.
+You can use any combination of options above to fetch more than dataset group at a time. For instance: `ntlcli ingest -gz --use-polars` fetches the **NYC GreenTaxi Trip Data** and **NYC Lookup Zones** while **using Polars** as the Dataframe library.
 
 ## Containerization and Testing
 
