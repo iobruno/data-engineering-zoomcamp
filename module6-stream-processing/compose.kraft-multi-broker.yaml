@@ -138,7 +138,7 @@ services:
     ports:
       - '8088:8088'
     volumes:
-      - ${KSQL_UDF_EXTENSIONS_DIR:-./volumes/ksqldb-udf}:/opt/ksqldb-udf
+      - vol-ksqldb-udf:/opt/ksqldb-udf
     depends_on:
       <<: *depends-on-kafka-cluster
     healthcheck:
@@ -270,6 +270,8 @@ volumes:
       name: vol-kafka-broker1
   vol-kafka-broker2:
       name: vol-kafka-broker2
+  vol-ksqldb-udf:
+    name: vol-ksqldb-udf
   vol-conduktor-data:
     name: vol-conduktor-data
   vol-conduktor-metastore:
