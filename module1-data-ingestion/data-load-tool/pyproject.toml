@@ -1,29 +1,22 @@
 [project]
-name = ""
+name = "dlt-playground"
 version = "1.0"
 description = "data-load-tool (dlt) Playground"
-license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
-authors = [
-    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
-]
-
 requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "dlt[bigquery]>=0.5.1",
-    "duckdb>=1.0.0,<2.0",
-    "polars>=1.1.0,<2.0",
-    "pyarrow>=16.1.0,<17.0",
-    "pandas>=2.2.2,<3.0",
-    "google-cloud-bigquery-storage>=2.25.0,<3.0",
-    "httpx>=0.27.0,<1.0",
+    "dlt[bigquery]>=1.4.1",
+    "duckdb>=1.1.3,<2.0",
+    "polars>=1.17.1,<2.0",
+    "google-cloud-bigquery-storage>=2.27.0,<3.0",
+    "httpx>=0.28.1,<1.0",
 ]
 
-[tool.pdm.dev-dependencies]
+[dependency-groups]
 dev = [
-    "ruff>=0.5.1",
-    "jupyterlab>=4.2.3",
+    "ruff>=0.8.2",
+    "jupyterlab>=4.3.3",
 ]
 
 [tool.ruff]
