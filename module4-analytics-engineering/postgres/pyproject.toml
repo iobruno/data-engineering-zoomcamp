@@ -1,5 +1,5 @@
 [project]
-name = "dbt-bigquery-analytics"
+name = "dbt-postgres-analytics"
 version = "2.0"
 description = "Analytics engineering with dbt and PostgreSQL"
 readme = "README.md"
