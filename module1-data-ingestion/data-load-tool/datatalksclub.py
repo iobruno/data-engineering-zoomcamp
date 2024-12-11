@@ -1,9 +1,10 @@
+from typing import Generator
+
 import dlt
 import polars as pl
-from typing import List, Generator
 
 
-def fetch_all(endpoints: List[str], schema=None) -> Generator:
+def fetch_all(endpoints: list[str], schema=None) -> Generator:
     for endpoint in endpoints:
         print(f"Now downloading: {endpoint}")
         yield pl.read_csv(endpoint, schema_overrides=schema).to_arrow()
