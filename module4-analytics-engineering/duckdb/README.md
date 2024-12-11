@@ -1,7 +1,7 @@
 # dbt and DuckDB for Analytics Engineering
 
 ![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![dbt](https://img.shields.io/badge/dbt-1.9-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![DuckDB](https://img.shields.io/badge/DuckDB-black?style=flat&logo=duckdb&logoColor=FEF000&labelColor=black)
 ![gcsfs](https://img.shields.io/badge/gcsfs-black?style=flat&logo=googlecloudstorage&logoColor=FEF000&labelColor=black)
 ![s3fs](https://img.shields.io/badge/s3fs-black?style=flat&logo=amazon-s3&logoColor=FEF000&labelColor=black)
@@ -17,22 +17,20 @@ It also adds Data Reliability on top of that with PipeRider.
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-duckdb](https://docs.getdbt.com/reference/warehouse-setups/duckdb-setup)
 - [fsspec](https://filesystem-spec.readthedocs.io/en/latest/api.html#other-known-implementations)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n dbt-duckdb python=3.12 -y
-conda activate dbt-duckdb
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync --no-self
+source .venv/bin/activate
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -138,7 +136,7 @@ docker run -d --rm \
 Note: If the container suddenly gets killed, it means it has run out-of-ram to process the full workload. Increase the amount of available RAM a container can use (on Docker settings).
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Bootstrap dbt with DuckDB Adapter ([dbt-duckdb](https://github.com/duckdb/dbt-duckdb))
 - [x] Configure dbt-duckdb with `fsspec` and read from [gcsfs](https://gcsfs.readthedocs.io/en/latest/api.html?highlight=GCSFileSystem#gcsfs.core.GCSFileSystem)
 - [x] Configure dbt-duckdb with `fsspec` and read from [s3fs](https://s3fs.readthedocs.io/en/latest/api.html#s3fs.core.S3FileSystem)
