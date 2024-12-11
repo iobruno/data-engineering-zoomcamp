@@ -8,26 +8,24 @@
 
 This is meant for experimenting with [data load tool (dlt)](https://dlthub.com/) for fetching data Web APIs and persiting it to a local DB
 
-
 ## Tech Stack
 - [data load tool (dlt)](https://dlthub.com/)
 - [DuckDB](https://duckdb.org/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
-
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n dlt python=3.12 -y
-conda activate dlt
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync
+source .venv/bin/activate
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -41,8 +39,7 @@ pre-commit install
 **4.** Run the dlt pipeline
 - T.B.D.
 
-
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
 - [ ] Extract data from Web APIs with dlt
