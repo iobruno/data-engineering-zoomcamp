@@ -1,7 +1,7 @@
 # dbt and Redshift for Analytics Engineering
 
 ![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![dbt](https://img.shields.io/badge/dbt-1.9-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![Redshift](https://img.shields.io/badge/AWS_Redshift-2766A7?style=flat&logo=Amazon%20RedShift&logoColor=white&labelColor=2766A7)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -18,22 +18,20 @@ GRANT ALL ON DATABASE <DATABASE_NAME> to "IAM:my_iam_user";
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-redshift](https://docs.getdbt.com/reference/warehouse-setups/redshift-setup)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv for Python 3.10 / 3.11 with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n dbt-redshift python=3.12 -y
-conda activate dbt-redshift
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync --no-self
+source .venv/bin/activate
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -129,7 +127,7 @@ docker run -d --rm \
 ```
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Bootstrap dbt with Redshift Adapter ([dbt-redshift](https://docs.getdbt.com/docs/core/connect-data-platform/redshift-setup))
 - [x] Add dbt macro to configure target schemas dinamically
 - [x] Run `dbt-core` in Docker

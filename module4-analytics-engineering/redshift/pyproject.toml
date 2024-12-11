@@ -1,23 +1,18 @@
 [project]
-name = ""
-version = "1.0"
+name = "dbt-redshift-analytics"
+version = "2.0"
 description = "Analytics engineering with dbt and Redshift"
-license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
-authors = [
-    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
-]
-
 requires-python = ">=3.10,<3.13"
 
 dependencies = [
-    "dbt-redshift>=1.8.1,<2.0",
-    "awscli>=1.35.23,<2.0",
+    "dbt-redshift>=1.9.0,<2.0",
+    "awscli>=1.36.19,<2.0",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.7.3"
+    "ruff>=0.8.2",
 ]
 
 [tool.ruff]
