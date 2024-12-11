@@ -1,7 +1,7 @@
-x-redpanda-image: &redpanda-image redpandadata/redpanda:${REDPANDA_VERSION:-v24.2.12}
+x-redpanda-image: &redpanda-image redpandadata/redpanda:${REDPANDA_VERSION:-v24.2.13}
 
-x-conduktor-monitoring: &conduktor-monitoring-image conduktor/conduktor-console-cortex:${CONDUKTOR_PLATFORM_VERSION:-1.29.1}
-x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.29.1}
+x-conduktor-console: &conduktor-console-image conduktor/conduktor-console:${CONDUKTOR_PLATFORM_VERSION:-1.29.2}
+x-conduktor-cortex: &conduktor-cortex-image conduktor/conduktor-console-cortex:${CONDUKTOR_PLATFORM_VERSION:-1.29.2}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
@@ -69,7 +69,7 @@ services:
     ports:
       - '5432'
     volumes:
-      - vol-conduktor-metadata:/var/lib/postgresql/data
+      - vol-conduktor-metastore:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -97,8 +97,9 @@ services:
       retries: 5
     restart: on-failure:5
 
-  conduktor-monitoring:
-    image: *conduktor-monitoring-image
+  conduktor-cortex:
+    image: *conduktor-cortex-image
+    container_name: conduktor-cortex
     environment:
       CDK_CONSOLE-URL: "http://conduktor-console:8080"
     ports:
@@ -110,7 +111,7 @@ services:
 volumes:
   vol-conduktor-data:
     name: vol-conduktor-data
-  vol-conduktor-metadata:
-    name: vol-conduktor-metadata
+  vol-conduktor-metastore:
+    name: vol-conduktor-metastore
   vol-conduktor-sql:
     name: vol-conduktor-sql
