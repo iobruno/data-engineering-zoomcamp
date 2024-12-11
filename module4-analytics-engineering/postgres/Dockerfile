@@ -1,13 +1,22 @@
 # Builder stage
 FROM python:3.12-slim AS builder
 
-ADD pyproject.toml pdm.lock /app/
-WORKDIR /app/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN pip install -U pip setuptools wheel && \
-    pip install pdm && \
-    mkdir -p __pypackages__ && \
-    pdm sync --prod --no-self --no-editable
+ENV UV_COMPILE_BYTECODE=1
+
+RUN --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    --mount=type=bind,source=README.md,target=README.md \
+    uv pip install -r pyproject.toml --system
+
+ADD analyses /dbt/analyses
+ADD macros   /dbt/macros
+ADD models   /dbt/models
+ADD seeds    /dbt/seeds
+ADD tests    /dbt/tests
+ADD dbt_project.yml package-lock.yml packages.yml /dbt/
+ADD profiles.tmpl.yml                             /dbt/profiles.yml
 
 # Runner stage
 FROM python:3.12-slim AS runner
@@ -21,17 +30,9 @@ ENV DBT_POSTGRES_TARGET_SCHEMA=
 ENV DBT_POSTGRES_USER=
 ENV DBT_POSTGRES_PASSWORD=
 
-ENV PYTHONPATH=/usr/local/lib/python/
-COPY --from=builder /app/__pypackages__/3.12/lib /usr/local/lib/python/
-COPY --from=builder /app/__pypackages__/3.12/bin /usr/local/bin
-
-ADD analyses /dbt/analyses
-ADD macros   /dbt/macros
-ADD models   /dbt/models
-ADD seeds    /dbt/seeds
-ADD tests    /dbt/tests
-ADD dbt_project.yml package-lock.yml packages.yml /dbt/
-ADD profiles.tmpl.yml /dbt/profiles.yml
+COPY --from=builder /usr/local/lib/python3.12   /usr/local/lib/python3.12
+COPY --from=builder /usr/local/bin/*            /usr/local/bin/
+COPY --from=builder /dbt                        /dbt
 
 WORKDIR /dbt/
 

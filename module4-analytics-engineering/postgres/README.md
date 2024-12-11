@@ -1,7 +1,7 @@
 # dbt and PostgreSQL for Analytics Engineering
 
 ![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.8-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
+![dbt](https://img.shields.io/badge/dbt-1.9-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white&labelColor=336791)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -14,23 +14,21 @@ using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-d
 ## Tech Stack
 - [dbt-core](https://github.com/dbt-labs/dbt-core)
 - [dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup)
-- [PDM](https://pdm-project.org/latest/usage/dependency/)
-- [Ruff](https://docs.astral.sh/ruff/configuration/)
+- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 - [Docker](https://docs.docker.com/get-docker/)
 
 ## Up and Running
 
 ### Developer Setup
 
-**1.** Create and activate a virtualenv with conda:
+**1.** Install the dependencies on `pyproject.toml`:
 ```shell
-conda create -n dbt-postgres python=3.12 -y
-conda activate dbt-postgres
+uv sync
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Activate the virtualenv created by `uv`:
 ```shell
-pdm sync --no-self
+source .venv/bin/activate
 ```
 
 **3. (Optional)**  Install pre-commit:
@@ -120,7 +118,7 @@ docker run -d --rm \
 ```
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with PDM
+- [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Bootstrap dbt with PostgreSQL Adapter ([dbt-postgres](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
 - [x] Add dbt macro to configure target schemas dinamically
