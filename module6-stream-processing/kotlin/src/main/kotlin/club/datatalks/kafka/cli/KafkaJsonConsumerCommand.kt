@@ -1,7 +1,7 @@
 package club.datatalks.kafka.cli
 
-import club.datatalks.kafka.service.KafkaJsonConsumerService
 import club.datatalks.kafka.dto.FhvDTO
+import club.datatalks.kafka.service.KafkaJsonConsumerService
 import club.datatalks.kafka.dto.GreenTaxiDTO
 import club.datatalks.kafka.dto.YellowTaxiDTO
 import picocli.CommandLine.Command
@@ -20,7 +20,7 @@ abstract class ConsumerOptions {
 class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val greenTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, GreenTaxiDTO::class.java)
+        val greenTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, GreenTaxiDTO::class)
         greenTaxiConsumer.start()
     }
 }
@@ -29,7 +29,7 @@ class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val yellowTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, YellowTaxiDTO::class.java)
+        val yellowTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, YellowTaxiDTO::class)
         yellowTaxiConsumer.start()
     }
 }
@@ -38,7 +38,7 @@ class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 class FhvTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val fhvTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, FhvDTO::class.java)
+        val fhvTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, FhvDTO::class)
         fhvTaxiConsumer.start()
     }
 }

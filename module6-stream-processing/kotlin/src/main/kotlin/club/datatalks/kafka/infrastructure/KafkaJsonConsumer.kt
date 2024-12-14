@@ -8,9 +8,10 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.time.Duration
 import java.time.Duration.ofSeconds
-import java.util.Properties
+import java.util.*
+import kotlin.reflect.KClass
 
-class KafkaJsonConsumer<T>(private val deserializationClass: Class<T>)
+class KafkaJsonConsumer<T>(private val deserializationClass: KClass<T>)
     where T : KafkaSerializable {
 
     private val consumerConfig: Properties by lazy {

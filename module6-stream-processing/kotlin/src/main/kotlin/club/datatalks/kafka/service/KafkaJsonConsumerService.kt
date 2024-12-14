@@ -5,11 +5,12 @@ import club.datatalks.kafka.infrastructure.KafkaSerializable
 import io.github.oshai.kotlinlogging.KotlinLogging
 
 import java.time.Duration
+import kotlin.reflect.KClass
 
 class KafkaJsonConsumerService<T>(
     private val topic: String,
     private val consumerGroup: String,
-    private val deserializationClass: Class<T>
+    private val deserializationClass: KClass<T>
 ) where T : KafkaSerializable {
 
     private val logger = KotlinLogging.logger {}
