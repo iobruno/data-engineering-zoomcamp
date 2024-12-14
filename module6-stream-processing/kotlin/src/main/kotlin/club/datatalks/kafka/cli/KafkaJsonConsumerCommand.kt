@@ -4,24 +4,16 @@ import club.datatalks.kafka.service.KafkaJsonConsumerService
 import club.datatalks.kafka.dto.FhvTaxiDTO
 import club.datatalks.kafka.dto.GreenTaxiDTO
 import club.datatalks.kafka.dto.YellowTaxiDTO
-import picocli.CommandLine
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 
 
 abstract class ConsumerOptions {
-    @CommandLine.Option(
-        names = ["-t", "--topic"],
-        required = true,
-        description = ["Source Kafka topic for records"]
-    )
-    var topic: String = ""
+    @Option(names = ["-t", "--topic"], required = true, description = ["Kafka topic to subscribe to"])
+    lateinit var topic: String
 
-    @CommandLine.Option(
-        names = ["-g", "--consumer-group"],
-        required = true,
-        description = ["Consumer group to subscribe to the Source kafka topic"]
-    )
-    var consumerGroup: String = ""
+    @Option(names = ["-g", "--consumer-group"], required = true, description = ["Kafka consumer group name"])
+    lateinit var consumerGroup: String
 }
 
 @Command(name = "green", description = ["Deserialize ConsumerRecords from source Kafka topic to GreenTaxiDTO"])

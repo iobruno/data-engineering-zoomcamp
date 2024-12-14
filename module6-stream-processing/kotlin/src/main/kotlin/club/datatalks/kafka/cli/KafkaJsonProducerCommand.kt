@@ -6,23 +6,16 @@ import club.datatalks.kafka.dto.YellowTaxiDTO
 import club.datatalks.kafka.service.KafkaJsonProducerService
 import picocli.CommandLine
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 import java.nio.file.Paths
 
 
 abstract class ProducerOptions {
-    @CommandLine.Option(
-        names = ["-i", "--csv-file"],
-        required = true,
-        description = ["CSV file path"]
-    )
-    var csvFilePath: String = ""
+    @Option(names = ["-i", "--csv-file"], required = true, description = ["CSV file path"])
+    lateinit var csvFilePath: String
 
-    @CommandLine.Option(
-        names = ["-t", "--topic"],
-        required = true,
-        description = ["Target Kafka topic for records"]
-    )
-    var topic: String = ""
+    @Option(names = ["-t", "--topic"], required = true, description = ["Target Kafka topic for records"])
+    lateinit var topic: String
 }
 
 @Command(name = "green", description = ["Process GreenTaxiDTO data from CSV file and publish to Kafka topic"])
