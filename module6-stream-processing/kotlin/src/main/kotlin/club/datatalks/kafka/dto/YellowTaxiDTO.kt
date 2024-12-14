@@ -42,7 +42,7 @@ data class YellowTaxiDTO(
         @JsonCreator
         fun create(
             @JsonProperty("vendor_id") vendorId: Int,
-            @JsonProperty("pickup_datetime")  pickupDatetime: String,
+            @JsonProperty("pickup_datetime") pickupDatetime: String,
             @JsonProperty("dropoff_datetime") dropoffDatetime: String,
             @JsonProperty("passenger_count") passengerCount: Int,
             @JsonProperty("trip_distance") tripDistance: Double,

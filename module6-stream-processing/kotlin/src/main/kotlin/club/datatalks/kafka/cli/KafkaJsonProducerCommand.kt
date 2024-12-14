@@ -39,7 +39,7 @@ class YellowTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 }
 
 @Command(name = "fhv", description = ["Process FhvTaxiDTO data from CSV file and publish to Kafka topic"])
-class FhvTaxiJsonProducerCommand :ProducerOptions(), Runnable {
+class FhvTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
         val fhvTripDataCsvPath = Paths.get(csvFilePath)

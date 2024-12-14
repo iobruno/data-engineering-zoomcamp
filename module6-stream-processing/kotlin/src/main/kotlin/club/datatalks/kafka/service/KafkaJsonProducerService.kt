@@ -10,7 +10,7 @@ import kotlin.io.path.notExists
 import kotlin.system.exitProcess
 
 class KafkaJsonProducerService<T> constructor(private val topic: String)
-    where T: KafkaSerializable{
+    where T : KafkaSerializable {
 
     private val logger = KotlinLogging.logger {}
 

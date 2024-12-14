@@ -8,9 +8,9 @@ import java.time.Duration
 
 class KafkaJsonConsumerService<T>(
     private val topic: String,
-    private val consumerGroup: String? = null,
+    private val consumerGroup: String,
     private val deserializationClass: Class<T>
-) where T: KafkaSerializable {
+) where T : KafkaSerializable {
 
     private val logger = KotlinLogging.logger {}
 
@@ -28,7 +28,7 @@ class KafkaJsonConsumerService<T>(
                 logger.info { "Fetching ${records.count()} records from from topic='${topic}'" }
                 records.map {
                     val message: T = it.value()
-                    println(message)
+                    logger.info { message }
                 }
                 logger.info { "Committing messages" }
                 kafkaJsonConsumer.commit()
