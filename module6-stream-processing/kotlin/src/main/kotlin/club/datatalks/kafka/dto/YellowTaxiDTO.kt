@@ -32,7 +32,7 @@ data class YellowTaxiDTO(
 ) : KafkaSerializable {
 
     companion object {
-        fun fromCsv(filepath: Path, hasHeader: Boolean = true): Sequence<GreenTaxiDTO> =
+        fun fromCsv(filepath: Path, hasHeader: Boolean = true): Sequence<YellowTaxiDTO> =
             DataFrame.readCSV(
                 fileOrUrl = filepath.toString(),
                 skipLines = if (hasHeader) 1 else 0,
@@ -56,7 +56,7 @@ data class YellowTaxiDTO(
                     "totalAmount",
                     "congestionSurcharge",
                 )
-            ).toListOf<GreenTaxiDTO>().asSequence()
+            ).toListOf<YellowTaxiDTO>().asSequence()
     }
 
     override fun messageKey(): String = pickupLocationId.toString()
