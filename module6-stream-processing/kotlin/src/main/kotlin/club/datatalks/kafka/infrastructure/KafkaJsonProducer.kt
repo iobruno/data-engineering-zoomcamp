@@ -34,5 +34,4 @@ class KafkaJsonProducer<T> where T : KafkaSerializable {
         }
         return futures
     }
-
 }

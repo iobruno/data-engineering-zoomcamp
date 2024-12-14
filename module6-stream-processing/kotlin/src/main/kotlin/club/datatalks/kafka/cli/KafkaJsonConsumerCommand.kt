@@ -20,8 +20,8 @@ abstract class ConsumerOptions {
 class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val greenTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, GreenTaxiDTO::class)
-        greenTaxiConsumer.start()
+        val consumer = KafkaJsonConsumerService(topic, consumerGroup, GreenTaxiDTO::class)
+        consumer.start()
     }
 }
 
@@ -29,8 +29,8 @@ class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val yellowTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, YellowTaxiDTO::class)
-        yellowTaxiConsumer.start()
+        val consumer = KafkaJsonConsumerService(topic, consumerGroup, YellowTaxiDTO::class)
+        consumer.start()
     }
 }
 
@@ -38,7 +38,7 @@ class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 class FhvTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val fhvTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, FhvDTO::class)
-        fhvTaxiConsumer.start()
+        val consumer = KafkaJsonConsumerService(topic, consumerGroup, FhvDTO::class)
+        consumer.start()
     }
 }

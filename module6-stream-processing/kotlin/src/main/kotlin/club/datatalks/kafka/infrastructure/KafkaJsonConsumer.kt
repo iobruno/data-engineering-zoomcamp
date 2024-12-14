@@ -45,5 +45,4 @@ class KafkaJsonConsumer<T>(private val deserializationClass: KClass<T>)
     }
 
     fun commit() = jsonConsumer.commitSync()
-
 }

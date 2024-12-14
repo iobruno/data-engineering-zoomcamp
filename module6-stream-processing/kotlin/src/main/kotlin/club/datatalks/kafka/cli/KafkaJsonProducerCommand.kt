@@ -21,9 +21,9 @@ abstract class ProducerOptions {
 class GreenTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
-        val greenTripDataCsvPath = Paths.get(csvFilePath)
-        val greenTaxiProducer = KafkaJsonProducerService<GreenTaxiDTO>(topic)
-        greenTaxiProducer.fromCsv(greenTripDataCsvPath, GreenTaxiDTO::fromCsv)
+        val filepath = Paths.get(csvFilePath)
+        val producer = KafkaJsonProducerService<GreenTaxiDTO>(topic)
+        producer.fromCsv(filepath, GreenTaxiDTO::fromCsv)
     }
 }
 
@@ -31,9 +31,9 @@ class GreenTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 class YellowTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
-        val yellowTripDataCsvPath = Paths.get(csvFilePath)
-        val yellowTaxiProducer = KafkaJsonProducerService<YellowTaxiDTO>(topic)
-        yellowTaxiProducer.fromCsv(yellowTripDataCsvPath, YellowTaxiDTO::fromCsv)
+        val filepath = Paths.get(csvFilePath)
+        val producer = KafkaJsonProducerService<YellowTaxiDTO>(topic)
+        producer.fromCsv(filepath, YellowTaxiDTO::fromCsv)
     }
 }
 
@@ -41,8 +41,8 @@ class YellowTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 class FhvTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
-        val fhvTripDataCsvPath = Paths.get(csvFilePath)
-        val fhvTaxiProducer = KafkaJsonProducerService<FhvDTO>(topic)
-        fhvTaxiProducer.fromCsv(fhvTripDataCsvPath, FhvDTO::fromCsv)
+        val filepath = Paths.get(csvFilePath)
+        val producer = KafkaJsonProducerService<FhvDTO>(topic)
+        producer.fromCsv(filepath, FhvDTO::fromCsv)
     }
 }
