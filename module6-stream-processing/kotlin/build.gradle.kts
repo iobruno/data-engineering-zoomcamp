@@ -20,6 +20,7 @@ repositories {
 }
 
 dependencies {
+    val kotlinDataframeVersion: String by project
     val confluentKafkaVersion: String by project
     val protobufVersion: String by project
     val avroVersion: String by project
@@ -30,6 +31,7 @@ dependencies {
     val kotestVersion: String by project
     val mockKVersion: String by project
 
+    implementation("org.jetbrains.kotlinx:dataframe:${kotlinDataframeVersion}")
     implementation("org.apache.kafka:kafka-clients:${confluentKafkaVersion}-ccs")
     implementation("org.apache.kafka:kafka-streams:${confluentKafkaVersion}-ccs")
     implementation("io.confluent:kafka-schema-registry-client:${confluentKafkaVersion}")
