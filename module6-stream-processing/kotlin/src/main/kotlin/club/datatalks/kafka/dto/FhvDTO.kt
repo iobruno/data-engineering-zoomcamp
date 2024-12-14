@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import java.io.BufferedReader
+import java.nio.file.Path
 
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class FhvTaxiDTO(
+data class FhvDTO(
     val dispatchingBaseNumber: String,
     val pickupDatetime: String,
     val dropoffDatetime: String,
@@ -37,13 +37,13 @@ data class FhvTaxiDTO(
             @JsonProperty("dropoff_location_id") dropoffLocationId: Int?,
             @JsonProperty("sr_flag") srFlag: String?,
             @JsonProperty("affiliated_base_number") affiliatedBaseNumber: String
-        ) = FhvTaxiDTO(
+        ) = FhvDTO(
             dispatchingBaseNumber, pickupDatetime, dropoffDatetime, pickupLocationId,
             dropoffLocationId, srFlag, affiliatedBaseNumber
         )
 
-        fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<FhvTaxiDTO> =
-            CsvDeserializable.seqFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
+        fun fromCsv(filepath: Path, containsHeader: Boolean = true): Sequence<FhvDTO> =
+            CsvDeserializable.seqFromCsv(filepath, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()

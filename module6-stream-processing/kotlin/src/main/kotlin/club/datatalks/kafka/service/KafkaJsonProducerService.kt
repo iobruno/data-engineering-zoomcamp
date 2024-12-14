@@ -14,7 +14,7 @@ class KafkaJsonProducerService<T> constructor(private val topic: String)
 
     private val logger = KotlinLogging.logger {}
 
-    fun fromCsv(filepath: Path, csvReaderFunction: (BufferedReader, Boolean) -> Sequence<T>) {
+    fun fromCsv(filepath: Path, csvReaderFunction: (Path, Boolean) -> Sequence<T>) {
         logger.info { "Attempting to fetch CSV file..." }
         if (filepath.notExists()) {
             logger.error { "Could not load CSV. File not found!" }
@@ -22,8 +22,7 @@ class KafkaJsonProducerService<T> constructor(private val topic: String)
         }
 
         logger.info { "Deserializing CSV into a Data Class..." }
-        val reader = Files.newBufferedReader(filepath)!!
-        val records: Sequence<T> = csvReaderFunction(reader, true)
+        val records: Sequence<T> = csvReaderFunction(filepath, true)
 
         logger.info { "Preparing to push messages to Kafka (topic='${topic}')" }
         val kafkaJsonProducer = KafkaJsonProducer<T>()

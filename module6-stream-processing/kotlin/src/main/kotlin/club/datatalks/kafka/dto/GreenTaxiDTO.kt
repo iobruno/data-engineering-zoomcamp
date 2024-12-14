@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.fasterxml.jackson.dataformat.csv.CsvSchema
-import java.io.BufferedReader
+import java.nio.file.Path
 
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
@@ -69,8 +69,10 @@ data class GreenTaxiDTO(
             ehailFee, improvementSurcharge, totalAmount, paymentType, tripType, congestionSurcharge
         )
 
-        fun fromCsv(reader: BufferedReader, containsHeader: Boolean = true): Sequence<GreenTaxiDTO> =
-            CsvDeserializable.seqFromCsv(reader, schema = csvSchema(), containsHeader = containsHeader)
+
+
+        fun fromCsv(filepath: Path, containsHeader: Boolean = true): Sequence<GreenTaxiDTO> =
+            CsvDeserializable.seqFromCsv(filepath, schema = csvSchema(), containsHeader = containsHeader)
 
         private fun csvSchema(): CsvSchema =
             CsvSchema.builder()

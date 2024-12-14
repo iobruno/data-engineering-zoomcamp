@@ -1,10 +1,9 @@
 package club.datatalks.kafka.cli
 
-import club.datatalks.kafka.dto.FhvTaxiDTO
+import club.datatalks.kafka.dto.FhvDTO
 import club.datatalks.kafka.dto.GreenTaxiDTO
 import club.datatalks.kafka.dto.YellowTaxiDTO
 import club.datatalks.kafka.service.KafkaJsonProducerService
-import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.nio.file.Paths
@@ -43,7 +42,7 @@ class FhvTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
         val fhvTripDataCsvPath = Paths.get(csvFilePath)
-        val fhvTaxiProducer = KafkaJsonProducerService<FhvTaxiDTO>(topic)
-        fhvTaxiProducer.fromCsv(fhvTripDataCsvPath, FhvTaxiDTO::fromCsv)
+        val fhvTaxiProducer = KafkaJsonProducerService<FhvDTO>(topic)
+        fhvTaxiProducer.fromCsv(fhvTripDataCsvPath, FhvDTO::fromCsv)
     }
 }
