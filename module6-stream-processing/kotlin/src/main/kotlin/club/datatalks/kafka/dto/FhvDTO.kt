@@ -1,6 +1,8 @@
 package club.datatalks.kafka.dto
 
 import club.datatalks.kafka.infrastructure.KafkaSerializable
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -10,14 +12,14 @@ import java.nio.file.Path
 
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class FhvDTO(
-    val dispatchingBaseNumber: String?,
-    val pickupDatetime: String,
-    val dropoffDatetime: String,
-    val pickupLocationId: Int?,
-    val dropoffLocationId: Int?,
-    val srFlag: String?,
-    val affiliatedBaseNumber: String?
+data class FhvDTO @JsonCreator constructor(
+    @JsonProperty("dispatching_base_number") val dispatchingBaseNumber: String?,
+    @JsonProperty("pickup_datetime") val pickupDatetime: String,
+    @JsonProperty("dropoff_datetime") val dropoffDatetime: String,
+    @JsonProperty("pickup_location_id") val pickupLocationId: Int?,
+    @JsonProperty("dropoff_location_id") val dropoffLocationId: Int?,
+    @JsonProperty("sr_flag") val srFlag: String?,
+    @JsonProperty("affiliated_base_number") val affiliatedBaseNumber: String?
 ) : KafkaSerializable {
 
     companion object {

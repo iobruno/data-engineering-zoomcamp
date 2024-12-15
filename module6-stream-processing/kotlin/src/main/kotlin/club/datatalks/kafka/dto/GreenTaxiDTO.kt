@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.io.readCsv
 import java.nio.file.Path
-import kotlin.reflect.full.primaryConstructor
+
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class GreenTaxiDTO @JsonCreator constructor(

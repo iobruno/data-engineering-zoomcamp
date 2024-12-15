@@ -1,6 +1,8 @@
 package club.datatalks.kafka.dto
 
 import club.datatalks.kafka.infrastructure.KafkaSerializable
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -10,25 +12,25 @@ import java.nio.file.Path
 
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
-data class YellowTaxiDTO(
-    val vendorId: Int,
-    val pickupDatetime: String,
-    val dropoffDatetime: String,
-    val passengerCount: Int,
-    val tripDistance: Double,
-    val rateCodeId: Int,
-    val storeAndForward: String,
-    val pickupLocationId: Int,
-    val dropoffLocationId: Int,
-    val paymentType: Int,
-    val fareAmount: Double,
-    val extra: Double,
-    val mtaTax: Double,
-    val tipAmount: Double,
-    val tollsAMount: Double,
-    val improvementSurcharge: Double,
-    val totalAmount: Double,
-    val congestionSurcharge: Double?
+data class YellowTaxiDTO @JsonCreator constructor(
+    @JsonProperty("vendor_id") val vendorId: Int,
+    @JsonProperty("pickup_datetime") val pickupDatetime: String,
+    @JsonProperty("dropoff_datetime") val dropoffDatetime: String,
+    @JsonProperty("passenger_count") val passengerCount: Int,
+    @JsonProperty("trip_distance") val tripDistance: Double,
+    @JsonProperty("rate_code_id") val rateCodeId: Int,
+    @JsonProperty("store_and_forward") val storeAndForward: String,
+    @JsonProperty("pickup_location_id") val pickupLocationId: Int,
+    @JsonProperty("dropoff_location_id") val dropoffLocationId: Int,
+    @JsonProperty("payment_type") val paymentType: Int,
+    @JsonProperty("fare_amount") val fareAmount: Double,
+    @JsonProperty("extra") val extra: Double,
+    @JsonProperty("mta_tax") val mtaTax: Double,
+    @JsonProperty("tip_amount") val tipAmount: Double,
+    @JsonProperty("tolls_amount") val tollsAMount: Double,
+    @JsonProperty("improvement_surcharge") val improvementSurcharge: Double,
+    @JsonProperty("total_amount") val totalAmount: Double,
+    @JsonProperty("congestion_surcharge") val congestionSurcharge: Double?
 ) : KafkaSerializable {
 
     companion object {
