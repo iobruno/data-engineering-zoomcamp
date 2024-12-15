@@ -1,18 +1,38 @@
-{
-  "resources": {
-    "includes": [
-      {
-        "name": "io.confluent.kafka.serializers.KafkaJsonSerializer",
-        "allDeclaredConstructors": true,
-        "allDeclaredMethods": true,
-        "allDeclaredFields": true
-      },
-      {
-        "name": "io.confluent.kafka.serializers.KafkaJsonDeserializer",
-        "allDeclaredConstructors": true,
-        "allDeclaredMethods": true,
-        "allDeclaredFields": true
-      }
-    ]
+[
+  {
+    "name": "io.confluent.kafka.serializers.KafkaJsonSerializer",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "io.confluent.kafka.serializers.KafkaJsonDeserializer",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "club.datatalks.kafka.dto.FhvDTO",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "club.datatalks.kafka.dto.GreenTaxiDTO",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "club.datatalks.kafka.dto.YellowTaxiDTO",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "club.datatalks.kafka.dto.OverallPickupStatsDTO",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true,
+    "allDeclaredFields": true
   }
-}
+]
