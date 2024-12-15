@@ -1,14 +1,22 @@
 pluginManagement {
     val kotlinVersion: String by settings
-    val detektVersion: String by settings
+    val kaptVersion: String by settings
+    val graalvmBuildToolsVersion: String by settings
     val shadowJarVersion: String by settings
 
     plugins {
         kotlin("jvm") version kotlinVersion
-        id("io.gitlab.arturbosch.detekt") version detektVersion
+        kotlin("kapt") version kaptVersion
+        id("org.graalvm.buildtools.native") version graalvmBuildToolsVersion
         id("com.github.johnrengelman.shadow") version shadowJarVersion
     }
 
+    repositories {
+        maven {
+            url = uri("https://raw.githubusercontent.com/graalvm/native-build-tools/snapshots")
+        }
+        gradlePluginPortal()
+    }
 }
 
 rootProject.name = "kotlin-sp"

@@ -9,7 +9,7 @@ import picocli.CommandLine.HelpCommand
     KafkaJsonProducerRootCommand::class,
     KafkaJsonConsumerRootCommand::class
 ])
-class CLIRootCommand
+open class CLIRootCommand()
 
 
 @Command(
@@ -21,7 +21,7 @@ class CLIRootCommand
         FhvTaxiJsonProducerCommand::class
     ]
 )
-class KafkaJsonProducerRootCommand
+open class KafkaJsonProducerRootCommand()
 
 
 @Command(
@@ -33,4 +33,4 @@ class KafkaJsonProducerRootCommand
         FhvTaxiJsonConsumerCommand::class
     ]
 )
-class KafkaJsonConsumerRootCommand
+open class KafkaJsonConsumerRootCommand()

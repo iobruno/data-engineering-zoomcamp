@@ -1,0 +1,18 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "name": "io.confluent.kafka.serializers.KafkaJsonSerializer",
+        "allDeclaredConstructors": true,
+        "allDeclaredMethods": true,
+        "allDeclaredFields": true
+      },
+      {
+        "name": "io.confluent.kafka.serializers.KafkaJsonDeserializer",
+        "allDeclaredConstructors": true,
+        "allDeclaredMethods": true,
+        "allDeclaredFields": true
+      }
+    ]
+  }
+}
