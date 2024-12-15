@@ -24,7 +24,7 @@ class KafkaJsonConsumer<T>(private val deserializationClass: KClass<T>)
         properties[GROUP_ID_CONFIG] = "defaultConsumerGroup"
         properties[KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         properties[VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaJsonDeserializer::class.java
-        properties[JSON_VALUE_TYPE] = deserializationClass
+        properties[JSON_VALUE_TYPE] = deserializationClass::class.java
         properties
     }
 
