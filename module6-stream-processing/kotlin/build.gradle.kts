@@ -45,6 +45,8 @@ dependencies {
     /** Kafka and Kafka Streams Serde for JSON Schema **/
     implementation("io.confluent:kafka-json-serializer:${confluentKafkaVersion}")
     implementation("io.confluent:kafka-streams-json-schema-serde:${confluentKafkaVersion}")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
 
     /** Kafka and Kafka Streams Serde for Avro **/
     implementation("io.confluent:kafka-avro-serializer:${confluentKafkaVersion}")
@@ -89,9 +91,9 @@ tasks.withType<ShadowJar> {
     manifest {
         attributes(mapOf("Main-Class" to "club.datatalks.kafka.CliApplication"))
     }
-    archiveBaseName.set(artifactName)
-    version = "1.0"
     archiveClassifier.set("")
+    archiveBaseName.set(artifactName)
+    version = artifactVersion
     isZip64 = true
     mergeServiceFiles()
 }
