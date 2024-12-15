@@ -108,4 +108,5 @@ Deserialize ConsumerRecords from source Kafka topic to [GreenTaxiDTO|YellowTaxiD
 - [x] Build a Cli Application for Producer and Consumer
 - [x] Explore serialization with `JSON`
 - [ ] Explore serialization with `Protobuf`
-- [ ] Static code analysis with [detekt](https://detekt.dev/)
+- [x] Adds support to Native Image builds (GraalVM)
+- [x] Static code analysis with [detekt](https://detekt.dev/)

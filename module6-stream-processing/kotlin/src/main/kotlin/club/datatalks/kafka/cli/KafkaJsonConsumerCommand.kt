@@ -1,35 +1,27 @@
 package club.datatalks.kafka.cli
 
-import club.datatalks.kafka.service.KafkaJsonConsumerService
-import club.datatalks.kafka.dto.FhvTaxiDTO
+import club.datatalks.kafka.dto.FhvDTO
 import club.datatalks.kafka.dto.GreenTaxiDTO
 import club.datatalks.kafka.dto.YellowTaxiDTO
-import picocli.CommandLine
+import club.datatalks.kafka.service.KafkaConsumerService
 import picocli.CommandLine.Command
+import picocli.CommandLine.Option
 
 
 abstract class ConsumerOptions {
-    @CommandLine.Option(
-        names = ["-t", "--topic"],
-        required = true,
-        description = ["Source Kafka topic for records"]
-    )
-    var topic: String = ""
+    @Option(names = ["-t", "--topic"], required = true, description = ["Kafka topic to subscribe to"])
+    lateinit var topic: String
 
-    @CommandLine.Option(
-        names = ["-g", "--consumer-group"],
-        required = true,
-        description = ["Consumer group to subscribe to the Source kafka topic"]
-    )
-    var consumerGroup: String = ""
+    @Option(names = ["-g", "--consumer-group"], required = true, description = ["Kafka consumer group name"])
+    lateinit var consumerGroup: String
 }
 
 @Command(name = "green", description = ["Deserialize ConsumerRecords from source Kafka topic to GreenTaxiDTO"])
 class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val greenTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, GreenTaxiDTO::class.java)
-        greenTaxiConsumer.start()
+        val consumer = KafkaConsumerService(topic, consumerGroup, GreenTaxiDTO::class)
+        consumer.start()
     }
 }
 
@@ -37,8 +29,8 @@ class GreenTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val yellowTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, YellowTaxiDTO::class.java)
-        yellowTaxiConsumer.start()
+        val consumer = KafkaConsumerService(topic, consumerGroup, YellowTaxiDTO::class)
+        consumer.start()
     }
 }
 
@@ -46,7 +38,7 @@ class YellowTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 class FhvTaxiJsonConsumerCommand : ConsumerOptions(), Runnable {
 
     override fun run() {
-        val fhvTaxiConsumer = KafkaJsonConsumerService(topic, consumerGroup, FhvTaxiDTO::class.java)
-        fhvTaxiConsumer.start()
+        val consumer = KafkaConsumerService(topic, consumerGroup, FhvDTO::class)
+        consumer.start()
     }
 }

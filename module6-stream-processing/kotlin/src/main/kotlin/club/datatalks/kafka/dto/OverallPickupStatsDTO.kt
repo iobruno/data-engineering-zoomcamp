@@ -14,5 +14,4 @@ data class OverallPickupStatsDTO(
 ) : KafkaSerializable {
 
     override fun messageKey(): String? = null
-
 }
