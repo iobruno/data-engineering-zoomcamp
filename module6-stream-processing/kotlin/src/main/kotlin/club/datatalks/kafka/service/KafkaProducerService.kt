@@ -13,7 +13,7 @@ import java.util.concurrent.Future
 import kotlin.io.path.notExists
 import kotlin.system.exitProcess
 
-class KafkaJsonProducerService<T> constructor(val topic: String)
+class KafkaProducerService<T> constructor(val topic: String)
     where T : KafkaSerializable {
 
     val logger = KotlinLogging.logger {}

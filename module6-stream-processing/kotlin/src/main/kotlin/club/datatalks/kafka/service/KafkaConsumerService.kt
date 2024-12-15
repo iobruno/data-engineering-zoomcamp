@@ -7,7 +7,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import java.time.Duration
 import kotlin.reflect.KClass
 
-class KafkaJsonConsumerService<T>(
+class KafkaConsumerService<T>(
     private val topic: String,
     private val consumerGroup: String,
     private val deserializationClass: KClass<T>

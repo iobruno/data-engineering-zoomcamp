@@ -3,7 +3,7 @@ package club.datatalks.kafka.cli
 import club.datatalks.kafka.dto.FhvDTO
 import club.datatalks.kafka.dto.GreenTaxiDTO
 import club.datatalks.kafka.dto.YellowTaxiDTO
-import club.datatalks.kafka.service.KafkaJsonProducerService
+import club.datatalks.kafka.service.KafkaProducerService
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.nio.file.Paths
@@ -22,7 +22,7 @@ class GreenTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
         val filepath = Paths.get(csvFilePath)
-        val producer = KafkaJsonProducerService<GreenTaxiDTO>(topic)
+        val producer = KafkaProducerService<GreenTaxiDTO>(topic)
         producer.fromCsv(filepath, GreenTaxiDTO::fromCsv)
     }
 }
@@ -32,7 +32,7 @@ class YellowTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
         val filepath = Paths.get(csvFilePath)
-        val producer = KafkaJsonProducerService<YellowTaxiDTO>(topic)
+        val producer = KafkaProducerService<YellowTaxiDTO>(topic)
         producer.fromCsv(filepath, YellowTaxiDTO::fromCsv)
     }
 }
@@ -42,7 +42,7 @@ class FhvTaxiJsonProducerCommand : ProducerOptions(), Runnable {
 
     override fun run() {
         val filepath = Paths.get(csvFilePath)
-        val producer = KafkaJsonProducerService<FhvDTO>(topic)
+        val producer = KafkaProducerService<FhvDTO>(topic)
         producer.fromCsv(filepath, FhvDTO::fromCsv)
     }
 }
