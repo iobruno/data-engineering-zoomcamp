@@ -15,7 +15,7 @@ class KafkaJsonProducer<T>
 
     private val producerConfig: Properties by lazy {
         val properties = Properties()
-        properties[BOOTSTRAP_SERVERS_CONFIG] = "localhost:9090,localhost:9091,localhost:9092"
+        properties[BOOTSTRAP_SERVERS_CONFIG] = "localhost:9092"
         properties[CLIENT_DNS_LOOKUP_CONFIG] = "use_all_dns_ips"
         properties[ACKS_CONFIG] = "all"
         properties[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
