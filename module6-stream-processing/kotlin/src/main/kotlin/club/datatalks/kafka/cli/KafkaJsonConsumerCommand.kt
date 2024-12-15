@@ -1,9 +1,9 @@
 package club.datatalks.kafka.cli
 
 import club.datatalks.kafka.dto.FhvDTO
-import club.datatalks.kafka.service.KafkaJsonConsumerService
 import club.datatalks.kafka.dto.GreenTaxiDTO
 import club.datatalks.kafka.dto.YellowTaxiDTO
+import club.datatalks.kafka.service.KafkaJsonConsumerService
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 

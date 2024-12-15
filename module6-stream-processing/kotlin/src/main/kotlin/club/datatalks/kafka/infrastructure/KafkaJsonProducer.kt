@@ -10,7 +10,8 @@ import java.util.*
 import java.util.concurrent.Future
 
 
-class KafkaJsonProducer<T> where T : KafkaSerializable {
+class KafkaJsonProducer<T>
+    where T : KafkaSerializable {
 
     private val producerConfig: Properties by lazy {
         val properties = Properties()
@@ -25,13 +26,8 @@ class KafkaJsonProducer<T> where T : KafkaSerializable {
     private val jsonProducer: KafkaProducer<String, T> =
         KafkaProducer(producerConfig)
 
-    fun push(entities: Sequence<T>, topic: String): Sequence<Future<RecordMetadata>> {
-        val producerRecords: Sequence<ProducerRecord<String, T>> =
-            entities.map { ProducerRecord(topic, it.messageKey(), it) }
-        val chunkedProducerRecords: Sequence<List<ProducerRecord<String, T>>> = producerRecords.chunked(100_000)
-        val futures: Sequence<Future<RecordMetadata>> = chunkedProducerRecords.flatMap { records ->
-            records.map { record -> jsonProducer.send(record) }
-        }
-        return futures
-    }
+    fun push(entities: List<T>, topic: String): List<Future<RecordMetadata>> =
+        entities
+            .map { ProducerRecord(topic, it.messageKey(), it) }
+            .mapNotNull { record -> jsonProducer.send(record) }
 }
