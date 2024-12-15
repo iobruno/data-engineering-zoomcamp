@@ -11,19 +11,20 @@ import java.nio.file.Path
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 data class FhvDTO(
-    val dispatchingBaseNumber: String,
+    val dispatchingBaseNumber: String?,
     val pickupDatetime: String,
     val dropoffDatetime: String,
     val pickupLocationId: Int?,
     val dropoffLocationId: Int?,
     val srFlag: String?,
-    val affiliatedBaseNumber: String
+    val affiliatedBaseNumber: String?
 ) : KafkaSerializable {
 
     companion object {
         fun fromCsv(filepath: Path, hasHeader: Boolean = true): DataFrame<FhvDTO> {
             return DataFrame.readCsv(
                 file = filepath.toFile(),
+                skipLines = if (hasHeader) 1 else 0,
                 header = listOf(
                     "dispatchingBaseNumber",
                     "pickupDatetime",

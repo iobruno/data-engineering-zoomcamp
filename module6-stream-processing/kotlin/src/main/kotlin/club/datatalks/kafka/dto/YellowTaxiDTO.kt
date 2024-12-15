@@ -28,7 +28,7 @@ data class YellowTaxiDTO(
     val tollsAMount: Double,
     val improvementSurcharge: Double,
     val totalAmount: Double,
-    val congestionSurcharge: Double
+    val congestionSurcharge: Double?
 ) : KafkaSerializable {
 
     companion object {
