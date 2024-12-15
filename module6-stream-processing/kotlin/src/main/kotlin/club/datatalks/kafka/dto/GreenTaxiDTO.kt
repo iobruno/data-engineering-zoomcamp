@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import java.nio.file.Path
 
 
@@ -35,8 +35,8 @@ data class GreenTaxiDTO(
 
     companion object {
         fun fromCsv(filepath: Path, hasHeader: Boolean = true): DataFrame<GreenTaxiDTO> =
-            DataFrame.readCSV(
-                fileOrUrl = filepath.toString(),
+            DataFrame.readCsv(
+                file = filepath.toFile(),
                 skipLines = if (hasHeader) 1 else 0,
                 header = listOf(
                     "vendorId",
