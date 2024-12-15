@@ -4,8 +4,8 @@ import club.datatalks.kafka.infrastructure.KafkaSerializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.toListOf
-import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.io.readCsv
 import java.nio.file.Path
 
 
@@ -21,10 +21,9 @@ data class FhvDTO(
 ) : KafkaSerializable {
 
     companion object {
-        fun fromCsv(filepath: Path, hasHeader: Boolean = true): Sequence<FhvDTO> =
-            DataFrame.readCSV(
-                fileOrUrl = filepath.toString(),
-                skipLines = if (hasHeader) 1 else 0,
+        fun fromCsv(filepath: Path, hasHeader: Boolean = true): DataFrame<FhvDTO> {
+            return DataFrame.readCsv(
+                file = filepath.toFile(),
                 header = listOf(
                     "dispatchingBaseNumber",
                     "pickupDatetime",
@@ -34,7 +33,8 @@ data class FhvDTO(
                     "srFlag",
                     "affiliatedBaseNumber",
                 )
-            ).toListOf<FhvDTO>().asSequence()
+            ).cast<FhvDTO>()
+        }
     }
 
     override fun messageKey(): String = pickupLocationId.toString()

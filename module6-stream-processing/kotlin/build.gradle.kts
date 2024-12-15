@@ -31,7 +31,7 @@ dependencies {
     val kotestVersion: String by project
     val mockKVersion: String by project
 
-    implementation("org.jetbrains.kotlinx:dataframe:${kotlinDataframeVersion}")
+    implementation("org.jetbrains.kotlinx:dataframe-csv:${kotlinDataframeVersion}")
     implementation("org.apache.kafka:kafka-clients:${confluentKafkaVersion}-ccs")
     implementation("org.apache.kafka:kafka-streams:${confluentKafkaVersion}-ccs")
     implementation("io.confluent:kafka-schema-registry-client:${confluentKafkaVersion}")

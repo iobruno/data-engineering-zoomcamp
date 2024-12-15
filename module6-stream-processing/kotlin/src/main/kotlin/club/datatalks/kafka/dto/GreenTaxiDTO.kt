@@ -4,7 +4,7 @@ import club.datatalks.kafka.infrastructure.KafkaSerializable
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.toListOf
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import java.nio.file.Path
 
@@ -34,7 +34,7 @@ data class GreenTaxiDTO(
 ) : KafkaSerializable {
 
     companion object {
-        fun fromCsv(filepath: Path, hasHeader: Boolean = true): Sequence<GreenTaxiDTO> =
+        fun fromCsv(filepath: Path, hasHeader: Boolean = true): DataFrame<GreenTaxiDTO> =
             DataFrame.readCSV(
                 fileOrUrl = filepath.toString(),
                 skipLines = if (hasHeader) 1 else 0,
@@ -60,7 +60,7 @@ data class GreenTaxiDTO(
                     "tripType",
                     "congestionSurcharge",
                 )
-            ).toListOf<GreenTaxiDTO>().asSequence()
+            ).cast<GreenTaxiDTO>()
     }
 
     override fun messageKey(): String = pickupLocationId.toString()
