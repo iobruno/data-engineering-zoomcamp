@@ -1,10 +1,12 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     kotlin("jvm")
     kotlin("kapt")
     id("org.graalvm.buildtools.native")
     id("com.github.johnrengelman.shadow")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 val artifactName = "kotlin-sp"
@@ -57,6 +59,11 @@ graalvmNative {
     }
 }
 
+detekt {
+    config.setFrom(file("detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
 tasks.withType<Jar> {
     from("src/main/resources") {
         include("META-INF/native-image/**")
@@ -77,4 +84,14 @@ tasks.withType<ShadowJar> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<Detekt>().configureEach {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        md.required.set(true)
+        txt.required.set(false)
+        sarif.required.set(false)
+    }
 }
