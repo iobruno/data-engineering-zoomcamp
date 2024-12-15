@@ -15,6 +15,10 @@ class KafkaConsumerService<T>(
 
     private val logger = KotlinLogging.logger {}
 
+    companion object {
+        const val POLLING_DURATION = 5L
+    }
+
     fun start() {
         logger.info { "Starting Kafka Consumer binding on Topic='${topic}'..." }
         val kafkaJsonConsumer: KafkaJsonConsumer<T> = KafkaJsonConsumer(deserializationClass)
@@ -22,7 +26,7 @@ class KafkaConsumerService<T>(
         while (true) {
             val records = kafkaJsonConsumer.subscribeTo(
                 topic = topic,
-                pollingDuration = Duration.ofSeconds(5L),
+                pollingDuration = Duration.ofSeconds(POLLING_DURATION),
                 consumerGroup = consumerGroup
             )
             if (!records.isEmpty) {

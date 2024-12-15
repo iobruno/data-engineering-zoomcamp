@@ -18,6 +18,10 @@ class KafkaProducerService<T> constructor(val topic: String)
 
     val logger = KotlinLogging.logger {}
 
+    companion object {
+        const val DATAFRAME_CHUNK_SIZE = 10_000
+    }
+
     inline fun <reified T : KafkaSerializable> fromCsv(
         filepath: Path,
         csvReaderFunction: (Path, Boolean) -> DataFrame<T>
@@ -34,7 +38,7 @@ class KafkaProducerService<T> constructor(val topic: String)
         logger.info { "Preparing to push messages to Kafka (topic='${topic}')" }
         val kafkaJsonProducer = KafkaJsonProducer<T>()
 
-        dataFrame.chunked(10_000).forEach { chunk ->
+        dataFrame.chunked(DATAFRAME_CHUNK_SIZE).forEach { chunk ->
             val records: List<T> = chunk.toList()
             val futures: List<Future<RecordMetadata>> = kafkaJsonProducer.push(records, topic = topic)
             logger.info { "Awaiting for all messages to be successfully sent..." }
