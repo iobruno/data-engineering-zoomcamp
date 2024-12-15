@@ -35,9 +35,6 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:${confluentKafkaVersion}-ccs")
     implementation("org.apache.kafka:kafka-streams:${confluentKafkaVersion}-ccs")
     implementation("io.confluent:kafka-schema-registry-client:${confluentKafkaVersion}")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:${jacksonVersion}")
     implementation("info.picocli:picocli:$picocliVersion")
 
     /** Kafka and Kafka Streams Serde for Protobuf **/
