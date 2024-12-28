@@ -1,8 +1,7 @@
 # Batch processing with PySpark
 
 ![Python](https://img.shields.io/badge/Python-3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![PySpark](https://img.shields.io/badge/pySpark-3.5-E36B22?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=3C3A3E)
-![Jupyter](https://img.shields.io/badge/Jupyter-31393F.svg?style=flat&logo=jupyter&logoColor=F37726&labelColor=31393F)
+![PySpark](https://img.shields.io/badge/PySpark-3.5-262A38?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=262A38)
 ![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
@@ -36,7 +35,7 @@ SparkSession available as 'spark'.
 ```shell
 sdk i java 17.0.13-librca
 sdk i spark 3.5.3
-sdk i hadoop 3.4.1
+sdk i hadoop 3.3.6
 ```
 
 **2.** Install the dependencies on `pyproject.toml`:
@@ -61,7 +60,7 @@ pre-commit install
 
 **5.** Spin up the Spark Cluster
 ```shell
-docker compose -f ../docker-compose.yml up -d
+docker compose -f ../compose.yaml up -d
 ```
 
 ## TODO:
