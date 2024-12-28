@@ -2,11 +2,11 @@
 
 ## Taking the course
 
-### 2024 Cohort
+### 2025 Cohort
 
-* **Start**: 15 January 2024 (Monday) at 17:00 CET
+* **Start**: 13 January 2025
 * **Registration link**: https://airtable.com/shr6oVXeQvSI5HuWD
-* [Cohort folder](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/cohorts/2024) with homeworks and deadlines
+* [Cohort folder](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/cohorts/2025) with homeworks and deadlines
 
 ### Self-paced mode
 
@@ -19,11 +19,10 @@ can take the course at your own pace
 
 ## Syllabus
 
-### [Module 1: Data ingestion & IaC](module1-data-ingestion/)
+### [Module 1: Data ingestion](module1-data-ingestion/)
 * [Python ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
 * Rust data ingestion
 * [data load tool (dlt)](module1-data-ingestion/data-load-tool/)
-* [Terraform for BigQuery and GCS](infrastructure/terraform-gcp/)
 * Homework
 
 ### [Module 2: Workflow orchestration](module2-workflow-orchestration/)
@@ -34,7 +33,7 @@ can take the course at your own pace
 
 ### [Module 3: Data Warehouse](module3-data-warehouse/)
 * [BigQuery Data Warehouse](module3-data-warehouse/bigquery/)
-* Lakehouse with Delta Lake/Iceberg
+* Lakehouse with Delta Lake
 * Homework
 
 ### [Module 4: Analytics engineering](module4-analytics-engineering/)
@@ -48,10 +47,9 @@ can take the course at your own pace
 * Homework
 
 ### [Module 5: Batch processing](module5-batch-processing/)
-* [Big Data ecosystem](module5-batch-processing/bigdata-ecosystem/)
 * [PySpark](module5-batch-processing/pyspark/)
-* Spark + Scala
-* Spark + Kotlin (TBD)
+* Spark + Kotlin API
+* Spark (Scala)
 * Homework
 
 ### [Module 6: Stream processing](module6-stream-processing/)
@@ -59,3 +57,8 @@ can take the course at your own pace
 * [Kafka Streams with ksqlDB](module6-stream-processing/ksqldb/)
 * [RisingWave: Streaming Database](module6-stream-processing/risingwave/)
 * Homework
+
+### Extras
+* [IaC with Terraform (Google Cloud Platform)](infrastructure/terraform-gcp/)
+* [LakeHouse with Delta, Iceberg, Hive](https://github.com/iobruno/lakehouse-labs/)
+* Capstone Project
