@@ -1,4 +1,4 @@
-x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-3.1.5-python3.12-kubernetes}
+x-prefect-image:  &prefect-image prefecthq/prefect:${PREFECT_VERSION:-3.1.15-python3.12-kubernetes}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 services:
