@@ -1,9 +1,10 @@
 # Workflow orchestration with Mage.ai
 
-![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![Mage.ai](https://img.shields.io/badge/Mage.ai-0.9-111113?style=flat&logoColor=white&labelColor=111113)
-![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)
-![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+![Python](https://img.shields.io/badge/Python-3.12-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+[![Mage.ai](https://img.shields.io/badge/Mage.ai-0.9-111113?style=flat&logo=apacheairflow&logoColor=white&labelColor=111113)](https://docs.mage.ai/getting-started/setup)
+[![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=E70488&labelColor=150458)](https://pandas.pydata.org/docs/user_guide/)
+[![uv](https://img.shields.io/badge/astral/uv-261230?style=flat&logo=uv&logoColor=DE5FE9&labelColor=261230)](https://docs.astral.sh/uv/getting-started/installation/)
+[![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)](https://docs.docker.com/get-docker/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
@@ -11,13 +12,8 @@ This setups the infrastructure for Mage, in Docker, as close as possible to a de
 
 An additional container `mage_init` sets up this root folder as the main project, and creates a `${MAGE_PROJ_NAME:-magic}` folder for the sub project, so that orchestration across subprojects can also done.
 
-## Tech Stack
-- [Mage.ai](https://docs.mage.ai/getting-started/setup)
-- [pandas](https://pandas.pydata.org/docs/user_guide/)
-- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
-- [Docker](https://docs.docker.com/get-docker/)
 
-## Up and Running
+## 🛠️ Getting Started
 
 ### Developer Setup (Docker)
 
@@ -42,45 +38,41 @@ open http://localhost:6789
 
 ### Developer Setup (Local)
 
-If a local environment is prefered, though,
+If a local environment is prefered,
 
-**1.** Install the dependencies on `pyproject.toml`:
+**1.** Install dependencies from pyproject.toml and activate the created virtualenv:
 ```shell
-uv sync
+uv sync && source .venv/bin/activate
 ```
 
-**2.** Activate the virtualenv created by `uv`:
-```shell
-source .venv/bin/activate
-```
-
-**3.** (Optional) Install pre-commit:
+**2.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
 
-# From root folder where `.pre-commit-config.yaml` is, run:
+# From root folder where `.pre-commit-config.yaml` is located, run:
 pre-commit install
 ```
 
-**4.** Start Mage in standalone mode:
+**3.** Start Mage in standalone mode:
 
-4.1. Start by starting Postgres and setting the connection URL for mage:
+3.1. Start by starting Postgres and setting the connection URL for mage:
 ```shell
 docker compose up -d ingest-db mage-metastore
 export MAGE_DATABASE_CONNECTION_URL=postgresql+psycopg2://mage:mage@localhost:5433/mage
 ```
 
-4.2. Next, start Mage in Standalone mode
+3.2. Next, start Mage in Standalone mode
 ```shell
 mage start magic
 ```
 
-4.3. Mage UI will be accessible at:
+3.3. Mage UI will be accessible at:
 ```shell
 open http://localhost:6789
 ```
 
-## TODO:
+
+## 📋 TODO's:
 - [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
 - [x] Run Mage pipelines on Docker
