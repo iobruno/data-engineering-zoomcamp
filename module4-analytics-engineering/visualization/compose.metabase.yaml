@@ -1,4 +1,4 @@
-x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-v0.51.2.4}
+x-metabase-image: &metabase-image metabase/metabase:${METABASE_VERSION:-v0.53.x}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 x-metabase-common: &metabase-common
