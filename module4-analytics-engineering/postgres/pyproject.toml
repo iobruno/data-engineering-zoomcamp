@@ -3,15 +3,16 @@ name = "dbt-postgres-analytics"
 version = "2.0"
 description = "Analytics engineering with dbt and PostgreSQL"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
+    "dbt-core>=1.9.2",
     "dbt-postgres>=1.9.0,<2.0",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.8.2",
+    "ruff>=0.9.4",
 ]
 
 [tool.ruff]
