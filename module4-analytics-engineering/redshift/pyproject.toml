@@ -3,16 +3,17 @@ name = "dbt-redshift-analytics"
 version = "2.0"
 description = "Analytics engineering with dbt and Redshift"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.12,<3.13"
 
 dependencies = [
+    "dbt-core>=1.9.2,<2.0",
     "dbt-redshift>=1.9.0,<2.0",
-    "awscli>=1.36.19,<2.0",
+    "awscli>=1.37.11,<2.0",
 ]
 
 [dependency-groups]
 dev = [
-    "ruff>=0.8.2",
+    "ruff>=0.9.4",
 ]
 
 [tool.ruff]
