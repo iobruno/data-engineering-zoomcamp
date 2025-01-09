@@ -1,52 +1,40 @@
-# dbt and BigQuery for Analytics Engineering
+# dbt and BigQuery for Analytics
 
-![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dbt](https://img.shields.io/badge/dbt-1.9-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)
-![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)
+![Python](https://img.shields.io/badge/Python-3.12-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+[![BigQuery](https://img.shields.io/badge/BigQuery-3772FF?style=flat&logo=googlebigquery&logoColor=white&labelColor=3772FF)](https://console.cloud.google.com/bigquery)
+[![dbt](https://img.shields.io/badge/dbt--bigquery-1.9-262A38?style=flat&logo=dbt&logoColor=FF6849&labelColor=262A38)](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
+[![uv](https://img.shields.io/badge/astral/uv-261230?style=flat&logo=uv&logoColor=DE5FE9&labelColor=261230)](https://docs.astral.sh/uv/getting-started/installation/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This project is meant for experimenting with `dbt` and the `dbt-bigquery` adapter for Analytics,
 using [NYC TLC Trip Record](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) dataset as the datasource, with Kimball dimensional modeling technique.
 
-## Tech Stack
-- [dbt-core](https://github.com/dbt-labs/dbt-core)
-- [dbt-bigquery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup)
-- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
 
-## Up and Running
+## Getting Started
 
-### Developer Setup
-
-**1.** Install the dependencies on `pyproject.toml`:
+**1.** Install dependencies from pyproject.toml and activate the created virtualenv:
 ```shell
-uv sync
+uv sync && source .venv/bin/activate
 ```
 
-**2.** Activate the virtualenv created by `uv`:
-```shell
-source .venv/bin/activate
-```
-
-**3. (Optional)**  Install pre-commit:
+**2.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
-```
 
-From root folder where `.pre-commit-config.yaml` is located, run:
-```shell
+# From root folder where `.pre-commit-config.yaml` is located, run:
 pre-commit install
 ```
 
-**4.** Setup dbt profiles.yaml accordingly (use the `profiles.tmpl.yaml` as template)
+**3.** Setup dbt profiles.yaml accordingly (use the `profiles.tmpl.yaml` as template)
 
-4.1. By default, the profiles_dir is the user '$HOME/.dbt/'
+3.1. By default, the profiles_dir is the user '$HOME/.dbt/'
 ```shell
 mkdir -p ~/.dbt/
 cat profiles.tmpl.yml >> ~/.dbt/profiles.yml
 ```
 
-4.2. Set the environment variables for `dbt-bigquery`:
+3.2. Set the environment variables for `dbt-bigquery`:
 ```shell
 export DBT_BIGQUERY_PROJECT=iobruno-gcp-labs
 export DBT_BIGQUERY_SOURCE_DATASET=raw_nyc_tlc_trip_data
@@ -54,24 +42,24 @@ export DBT_BIGQUERY_TARGET_DATASET=nyc_tlc_trip_data
 export DBT_BIGQUERY_DATASET_LOCATION=us-central1
 ```
 
-4.3. Since we're doing `oauth` authentication for development, run:
+3.3. Since we're doing `oauth` authentication for our Development env, run:
 ```shell
 gcloud auth login
 ```
 
-**5.** Install dbt dependencies and trigger the pipeline
+**4.** Install dbt dependencies and trigger the pipeline
 
-5.1. Run `dbt deps` to install  dbt plugins
+4.1. Run `dbt deps` to install  dbt plugins
 ```shell
 dbt deps
 ```
 
-5.2. Run `dbt seed` to push/create the tables from the .csv seed files to the target schema
+4.2. Run `dbt seed` to push/create the tables from the .csv seed files to the target schema
 ```shell
 dbt seed
 ```
 
-5.3. Run dbt run to trigger the dbt models to run
+4.3. Run dbt run to trigger the dbt models to run
 ```shell
 dbt build
 
@@ -85,7 +73,7 @@ dbt [build|run] --select +models/staging
 dbt [build|run] --select models/staging+
 ```
 
-**6.** Generate the Docs and the Data Lineage graph with:
+**5.** Generate the Docs and the Data Lineage graph with:
 ```shell
 dbt docs generate
 dbt docs serve
@@ -96,7 +84,8 @@ Access the generated docs at:
 open http://localhost:8080
 ```
 
-## Containerization and Testing
+
+## Containerization
 
 **1.** Build the Docker Image with:
 
@@ -116,7 +105,8 @@ docker run -d --rm \
   dbt-bigquery
 ```
 
-## TODO:
+
+## TODO's:
 - [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Bootstrap dbt with BigQuery Adapter ([dbt-bigquery](https://docs.getdbt.com/docs/core/connect-data-platform/bigquery-setup))
 - [x] Generate and serve docs and Data Lineage Graphs locally
