@@ -1,0 +1,66 @@
+x-doris-fe-image: &doris-fe-image apache/doris:${DORIS_VERSION:-doris-fe-2.1.7}
+x-doris-be-image: &doris-be-image apache/doris:${DORIS_VERSION:-doris-be-2.1.7}
+x-minio-image: &minio-image minio/minio:${MINIO_VERSION:-RELEASE.2024-11-07T00-52-20Z}
+
+
+services:
+  doris-fe:
+    image: *doris-fe-image
+    container_name: doris-frontend
+    environment:
+      FE_SERVICE_HOST: "doris-fe"
+    ports:
+      - "8030:8030" # Web UI
+      - "9030:9030" # MySQL protocol
+    restart: on-failure
+
+  doris-be:
+    image: *doris-be-image
+    container_name: doris-backend
+    environment:
+      FE_SERVICE_HOST: "doris-fe"
+    ports:
+      - "8040:8040" # HTTP service (Web UI)
+      - "9050:9050" # BRPC port
+      - "9060:9060" # Heartbeat
+    depends_on:
+      - doris-fe
+    restart: on-failure
+
+  minio:
+    image: *minio-image
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - vol-minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: on-failure
+
+  minio-init:
+    image: *minio-image
+    container_name: minio-init
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mc alias set local http://minio:9000 minioadmin minioadmin
+        mc mb local/lakehouse-raw
+        mc mb local/lakehouse-staging
+        mc mb local/lakehouse-service
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  vol-minio-data:
+    name: vol-minio-data
