@@ -43,7 +43,7 @@ services:
         echo "block_cache_disk_size = 1073741824" >> /opt/starrocks/be/conf/be.conf
         sleep 15s
         mysql --connect-timeout 2 -h starrocks-fe -P 9030 -u root -e "ALTER SYSTEM ADD BACKEND \"starrocks-be:9050\";"
-        bash /opt/starrocks/be/bin/start_be.sh        
+        bash /opt/starrocks/be/bin/start_be.sh
     environment:
       HOST_TYPE: "FQDN"
     ports:
@@ -54,7 +54,35 @@ services:
       timeout: 5s
       retries: 20
     depends_on:
-      - starrocks-fe
+      starrocks-fe:
+        condition: service_healthy
+    restart: on-failure
+
+  starrocks-cn:
+    image: *starrocks-cn-image
+    container_name: starrocks-cn
+    user: root
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        ulimit -u 65535
+        ulimit -n 65535
+        mysql --connect-timeout 2 -h starrocks-fe -P9030 -uroot -e "ALTER SYSTEM ADD COMPUTE NODE \"starrocks-cn:9050\";"
+        /opt/starrocks/cn/bin/start_cn.sh
+    environment:
+      HOST_TYPE: "FQDN"
+    ports:
+      - 8041:8040
+    healthcheck:
+      test: ["CMD-SHELL", 'mysql -u root -h starrocks-fe -P 9030 -e "SHOW COMPUTE NODES\G" |grep "Alive: true"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    depends_on:
+      starrocks-fe:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     restart: on-failure
 
   minio:
