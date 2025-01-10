@@ -1,8 +1,10 @@
 # Batch processing with PySpark
 
-![Python](https://img.shields.io/badge/Python-3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![PySpark](https://img.shields.io/badge/PySpark-3.5-262A38?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=262A38)
-![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+![Python](https://img.shields.io/badge/Python-3.11-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+[![SDKMan](https://img.shields.io/badge/SDKMan-1076C6?style=flat&logo=openjdk&logoColor=FFFFFF&labelColor=1076C6)](https://sdkman.io/)
+[![PySpark](https://img.shields.io/badge/PySpark-3.5-262A38?style=flat-square&logo=apachespark&logoColor=E36B22&labelColor=262A38)](https://spark.apache.org/docs/latest/api/python/user_guide)
+[![uv](https://img.shields.io/badge/astral/uv-261230?style=flat&logo=uv&logoColor=DE5FE9&labelColor=261230)](https://docs.astral.sh/uv/getting-started/installation/)
+[![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)](https://docs.docker.com/get-docker/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
@@ -16,54 +18,41 @@ Welcome to
    /__ / .__/\_,_/_/ /_/\_\   version 3.5.3
       /_/
 
-Using Python version 3.11.9 (main, Jun  6 2024 18:26:44)
+Using Python version 3.11.11 (main, Jan 14 2025 23:36:41)
 Spark context Web UI available at http://192.168.15.29:4040
-Spark context available as 'sc' (master = local[*], app id = local-1724831152309).
+Spark context available as 'sc' (master = local[*], app id = local-1738438879580).
 SparkSession available as 'spark'.
 ```
 
-## Tech Stack
-- [PySpark](https://spark.apache.org/docs/latest/api/python/user_guide)
-- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
-- [Docker](https://docs.docker.com/get-docker/)
 
-## Up and Running
+## Getting Started
 
-### Developer Setup
-
-**1.** Install `JDK` 11 or 17, Spark 3.5.x, and Hadoop:
+**1.** Install JDK 17 or 11, Spark 3.5.x, and Hadoop with [SDKMan](https://sdkman.io/):
 ```shell
 sdk i java 17.0.13-librca
 sdk i spark 3.5.3
 sdk i hadoop 3.3.6
 ```
 
-**2.** Install the dependencies on `pyproject.toml`:
+**2.** Install dependencies from pyproject.toml and activate the created virtualenv:
 ```shell
-uv sync
+uv sync && source .venv/bin/activate
 ```
 
-**3.** Activate the virtualenv created by `uv`:
-```shell
-source .venv/bin/activate
-```
-
-**4. (Optional)**  Install pre-commit:
+**3.** (Optional) Install pre-commit:
 ```shell
 brew install pre-commit
-```
 
-From root folder where `.pre-commit-config.yaml` is located, run:
-```shell
+# From root folder where `.pre-commit-config.yaml` is located, run:
 pre-commit install
 ```
 
-**5.** Spin up the Spark Cluster
+**4.** Spin up the Spark Cluster with:
 ```shell
 docker compose -f ../compose.yaml up -d
 ```
 
-## TODO:
+## TODO's:
 - [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
 - [X] Set up a Jupyter Playground for PySpark
