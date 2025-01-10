@@ -1,30 +1,60 @@
-x-doris-fe-image: &doris-fe-image apache/doris:${DORIS_VERSION:-doris-fe-2.1.7}
-x-doris-be-image: &doris-be-image apache/doris:${DORIS_VERSION:-doris-be-2.1.7}
+x-starrocks-fe-image: &starrocks-fe-image starrocks/fe-ubuntu:${STARROCKS_VERSION:-3.3-latest}
+x-starrocks-be-image: &starrocks-be-image starrocks/be-ubuntu:${STARROCKS_VERSION:-3.3-latest}
+x-starrocks-cn-image: &starrocks-cn-image starrocks/cn-ubuntu:${STARROCKS_VERSION:-3.3-latest}
+
 x-minio-image: &minio-image minio/minio:${MINIO_VERSION:-RELEASE.2024-11-07T00-52-20Z}
 
-
 services:
-  doris-fe:
-    image: *doris-fe-image
-    container_name: doris-frontend
+  starrocks-fe:
+    image: *starrocks-fe-image
+    container_name: starrocks-fe
+    user: root
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        /opt/starrocks/fe/bin/start_fe.sh --host_type FQDN
     environment:
-      FE_SERVICE_HOST: "doris-fe"
+      - AWS_ACCESS_KEY_ID=minioadmin
+      - AWS_SECRET_ACCESS_KEY=minioadmin
+      - AWS_REGION=us-east-1
     ports:
-      - "8030:8030" # Web UI
-      - "9030:9030" # MySQL protocol
+      - "8030:8030" # HTTP Server (Web UI)
+      - "9020:9020" # Thrift Server
+      - "9030:9030" # MySQL Server
+    healthcheck:
+      test: ["CMD-SHELL", 'mysql -u root -h starrocks-fe -P 9030 -e "SHOW FRONTENDS\G" |grep "Alive: true"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
     restart: on-failure
 
-  doris-be:
-    image: *doris-be-image
-    container_name: doris-backend
+  starrocks-be:
+    image: *starrocks-be-image
+    container_name: starrocks-be
+    user: root
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        ulimit -u 65535
+        ulimit -n 65535
+        echo "# Enable data cache"  >> /opt/starrocks/be/conf/be.conf
+        echo "block_cache_enable = true"  >> /opt/starrocks/be/conf/be.conf
+        echo "block_cache_mem_size = 536870912" >> /opt/starrocks/be/conf/be.conf
+        echo "block_cache_disk_size = 1073741824" >> /opt/starrocks/be/conf/be.conf
+        sleep 15s
+        mysql --connect-timeout 2 -h starrocks-fe -P 9030 -u root -e "ALTER SYSTEM ADD BACKEND \"starrocks-be:9050\";"
+        bash /opt/starrocks/be/bin/start_be.sh        
     environment:
-      FE_SERVICE_HOST: "doris-fe"
+      HOST_TYPE: "FQDN"
     ports:
-      - "8040:8040" # HTTP service (Web UI)
-      - "9050:9050" # BRPC port
-      - "9060:9060" # Heartbeat
+      - 8040:8040
+    healthcheck:
+      test: ["CMD-SHELL", 'mysql -u root -h starrocks-fe -P 9030 -e "SHOW BACKENDS\G" |grep "Alive: true"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
     depends_on:
-      - doris-fe
+      - starrocks-fe
     restart: on-failure
 
   minio:
