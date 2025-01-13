@@ -34,7 +34,7 @@ class DataframeFetcher(metaclass=ABCMeta):
 
 class PolarsFetcher(DataframeFetcher):
     def fetch(self, endpoint: str) -> Record:
-        df = pl.read_csv(endpoint, dtypes=self.schema)
+        df = pl.read_csv(endpoint, schema_overrides=self.schema)
         df = df.rename(self.renaming_strategy)
         return Record(endpoint, self.slice_df_in_chunks(df))
 
