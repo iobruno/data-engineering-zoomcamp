@@ -1,21 +1,10 @@
 # Data Engineering Zoomcamp
 
-## Taking the course
-
-### 2025 Cohort
+## Taking the course (20205 Cohort)
 
 * **Start**: 13 January 2025
 * **Registration link**: https://airtable.com/shr6oVXeQvSI5HuWD
 * [Cohort folder](https://github.com/DataTalksClub/data-engineering-zoomcamp/tree/main/cohorts/2025) with homeworks and deadlines
-
-### Self-paced mode
-
-All the materials of the course are freely available, so that you
-can take the course at your own pace
-
-* Follow the suggested syllabus (see below) week by week
-* You don't need to fill in the registration form. Just start watching the videos and join Slack
-* Check [FAQ](https://docs.google.com/document/d/19bnYs80DwuUimHM65UV3sylsCn2j1vziPOwzBwQrebw/edit?usp=sharing) if you have problems
 
 ## Syllabus
 
@@ -23,6 +12,7 @@ can take the course at your own pace
 * [Python ingestion with polars and pandas](module1-data-ingestion/python-ingest/)
 * Rust data ingestion
 * [data load tool (dlt)](module1-data-ingestion/data-load-tool/)
+* [IaC with Terraform (Google Cloud Platform)](infrastructure/terraform-gcp/)
 * Homework
 
 ### [Module 2: Workflow orchestration](module2-workflow-orchestration/)
@@ -59,6 +49,5 @@ can take the course at your own pace
 * Homework
 
 ### Extras
-* [IaC with Terraform (Google Cloud Platform)](infrastructure/terraform-gcp/)
 * [LakeHouse with Delta, Iceberg, Hive](https://github.com/iobruno/lakehouse-labs/)
 * Capstone Project
