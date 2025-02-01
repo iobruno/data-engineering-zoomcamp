@@ -1,4 +1,4 @@
-# StarRocks
+# StarRocks: QueryEngine
 ![StarRocks](https://img.shields.io/badge/StarRocks-3.4-FABF00?style=flat&logo=apachespark&logoColor=FABF00&labelColor=1B1F21)
 ![MinIO](https://img.shields.io/badge/MinIO-00091B?style=flat&logo=minio&logoColor=CF163D&labelColor=00091B)
 

@@ -23,6 +23,7 @@
 
 ### [Module 3: Data Warehouse](module3-data-warehouse/)
 * [BigQuery Data Warehouse](module3-data-warehouse/bigquery/)
+* [StarRocks Query Engine](module3-data-warehouse/starrocks/)
 * Lakehouse with Delta Lake
 * Homework
 
