@@ -1,0 +1,183 @@
+x-starrocks-fe-image: &starrocks-fe-image starrocks/fe-ubuntu:3.4-latest
+x-starrocks-be-image: &starrocks-be-image starrocks/be-ubuntu:3.4-latest
+x-starrocks-cn-image: &starrocks-cn-image starrocks/cn-ubuntu:3.4-latest
+
+x-hive-image:  &hive-image  apache/hive:${HIVE_VERSION:-3.1.3}
+x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-13-alpine}
+x-minio-image: &minio-image minio/minio:${MINIO_VERSION:-RELEASE.2024-11-07T00-52-20Z}
+
+services:
+  starrocks-fe:
+    image: *starrocks-fe-image
+    container_name: starrocks-fe
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        echo "# enable shared data, set storage type, set endpoint" >> /opt/starrocks/fe/conf/fe.conf
+        echo "run_mode = shared_data" >> /opt/starrocks/fe/conf/fe.conf
+        echo "cloud_native_storage_type = S3" >> /opt/starrocks/fe/conf/fe.conf
+
+        echo "# set the path in MinIO" >> /opt/starrocks/fe/conf/fe.conf
+        echo "aws_s3_endpoint = minio:9000" >> /opt/starrocks/fe/conf/fe.conf
+        echo "aws_s3_path = starrocks" >> /opt/starrocks/fe/conf/fe.conf
+        echo "aws_s3_access_key = minioadmin" >> /opt/starrocks/fe/conf/fe.conf
+        echo "aws_s3_secret_key = minioadmin" >> /opt/starrocks/fe/conf/fe.conf
+        echo "aws_s3_use_instance_profile = false" >> /opt/starrocks/fe/conf/fe.conf
+        echo "aws_s3_use_aws_sdk_default_behavior = false" >> /opt/starrocks/fe/conf/fe.conf
+
+        echo "# Set this to false if you do not want default" >> /opt/starrocks/fe/conf/fe.conf
+        echo "# storage created in the object storage using" >> /opt/starrocks/fe/conf/fe.conf
+        echo "# the details provided above" >> /opt/starrocks/fe/conf/fe.conf
+        echo "enable_load_volume_from_conf = true" >> /opt/starrocks/fe/conf/fe.conf
+        /opt/starrocks/fe/bin/start_fe.sh --host_type FQDN
+    ports:
+      - '8030:8030' # HTTP server
+      - '9020:9020' # Thrift server
+      - '9030:9030' # MySQL server
+      - '9010:9010' # Internal communication (edit_log_port)
+      - '6090:6090' # Cloud-Native metadata
+    depends_on:
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", 'mysql -u root -h starrocks-fe -P 9030 -e "show frontends\G" |grep "Alive: true"']
+      interval: 10s
+      timeout: 5s
+      retries: 3    
+    restart: on-failure
+
+  starrocks-cn:
+    image: *starrocks-cn-image
+    container_name: starrocks-cn
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        sleep 15s;
+        ulimit -u 65535;
+        ulimit -n 65535;
+        mysql --connect-timeout 2 -h starrocks-fe -P9030 -uroot -e "ALTER SYSTEM ADD COMPUTE NODE \"starrocks-cn:9050\";"
+        /opt/starrocks/cn/bin/start_cn.sh
+    environment:
+      HOST_TYPE: "FQDN"
+    ports:
+      - '8140:8040' # HTTP server port
+      - '8160:8060' # bRPC port
+      - '9150:9050' # Heartbeat service
+      - '9160:9060' # Thrift server
+      - '9170:9070' # extra agent service for BE and CE
+    depends_on:
+      starrocks-fe:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", 'mysql -u root -h starrocks-fe -P 9030 -e "SHOW COMPUTE NODES\G" |grep "Alive: true"']
+      interval: 10s
+      timeout: 5s
+      retries: 3    
+    restart: on-failure
+
+  metastore-db:
+    image: *postgres-image
+    container_name: metastore-db
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'metastore'
+    ports:
+      - '5433:5432'
+    volumes:
+      - vol-metastore-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+
+  metastore:
+    image: *hive-image
+    platform: linux/amd64
+    container_name: metastore
+    environment:
+      SERVICE_NAME: 'metastore'
+      SERVICE_OPTS: |- 
+        -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://metastore-db:5432/metastore
+        -Djavax.jdo.option.ConnectionUserName=postgres
+        -Djavax.jdo.option.ConnectionPassword=postgres
+      HIVE_AUX_JARS_PATH: /opt/hive/aux_jars/
+      DB_DRIVER: 'postgres'
+    ports:
+      - '9083:9083'
+    depends_on:
+      metastore-db:
+        condition: service_healthy
+      metastore-init:
+        condition: service_completed_successfully
+    volumes:
+      - ./conf/hive-site.xml:/opt/hive/conf/hive-site.xml
+      - vol-metastore-warehouse:/opt/hive/data/warehouse
+      - vol-metastore-auxjars:/opt/hive/aux_jars/
+
+  metastore-init:
+    image: *hive-image
+    platform: linux/amd64
+    container_name: metastore-init
+    user: 0:0
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        apt-get update && apt-get install -y curl
+        curl --fail --show-error --create-dirs -O --output-dir /tmp/aux_jars https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
+        curl --fail --show-error --create-dirs -O --output-dir /tmp/aux_jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar
+        curl --fail --show-error --create-dirs -O --output-dir /tmp/aux_jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-auth/3.3.4/hadoop-auth-3.3.4.jar
+        curl --fail --show-error --create-dirs -O --output-dir /tmp/aux_jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.4/hadoop-common-3.3.4.jar
+        curl --fail --show-error --create-dirs -O --output-dir /tmp/aux_jars https://repo1.maven.org/maven2/org/apache/hadoop/thirdparty/hadoop-shaded-guava/1.1.1/hadoop-shaded-guava-1.1.1.jar
+        curl --fail --show-error --create-dirs -O --output-dir /tmp/aux_jars https://jdbc.postgresql.org/download/postgresql-42.7.1.jar
+    volumes:
+      - vol-metastore-auxjars:/tmp/aux_jars
+
+  minio:
+    image: *minio-image
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - vol-minio-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: on-failure
+
+  minio-init:
+    image: *minio-image
+    container_name: minio-init
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mc alias set local http://minio:9000 minioadmin minioadmin
+        mc mb local/lakehouse-raw
+        mc mb local/lakehouse-staging
+        mc mb local/lakehouse-service
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: "no"
+
+volumes:
+  vol-minio-data:
+    name: vol-minio-data
+  vol-metastore-db:
+    name: vol-metastore-db
+  vol-metastore-warehouse:
+    name: vol-metastore-warehouse
+  vol-metastore-auxjars:
+    name: vol-metastore-auxjars
