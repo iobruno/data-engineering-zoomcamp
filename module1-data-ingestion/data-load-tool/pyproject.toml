@@ -1,24 +1,27 @@
 [project]
 name = "dlt-playground"
-version = "1.0"
-description = "data-load-tool (dlt) Playground"
+version = "2.0"
+description = "data load tool workshop"
+license = {text = "CC-BY-SA-4.0"}
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
-
-dependencies = [
-    "dlt[bigquery]>=1.4.1",
-    "duckdb>=1.1.3,<2.0",
-    "polars>=1.17.1,<2.0",
-    "google-cloud-bigquery-storage>=2.27.0,<3.0",
-    "httpx>=0.28.1,<1.0",
+authors = [
+    {name = "Bruno Oliveira", email = "bruno.ariev@gmail.com"},
 ]
 
-[dependency-groups]
+requires-python = ">=3.12,<3.13"
+
+dependencies = [
+    "dlt[duckdb]>=1.5.0,<2.0",
+    "duckdb>=1.1.3,<2.0",
+    "polars>=1.21.0,<2.0",
+    "pandas>=2.2.3,<3.0",
+]
+
+[tool.pdm.dev-dependencies]
 dev = [
-    "ruff>=0.8.2",
-    "jupyterlab>=4.3.3",
+    "ruff>=0.9.4",
+    "jupyterlab>=4.3.5",
 ]
 
 [tool.ruff]
 line-length = 100
-lint.select = ["F", "E", "W", "I001"]
