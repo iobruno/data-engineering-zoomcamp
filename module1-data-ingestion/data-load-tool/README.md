@@ -1,31 +1,26 @@
-# data load tool (dlt)
+# dltHub: data load tool
 
-![Python](https://img.shields.io/badge/Python-3.12_|_3.11_|_3.10-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
-![dltHub](https://img.shields.io/badge/dltHub-59C1D5?style=flat&logo=pandas&logoColor=C6D300&labelColor=59C1D5)
-![DuckDB](https://img.shields.io/badge/DuckDB-black?style=flat&logo=duckdb&logoColor=FEF000&labelColor=black)
+![Python](https://img.shields.io/badge/Python-3.12-4B8BBE.svg?style=flat&logo=python&logoColor=FFD43B&labelColor=306998)
+[![dltHub](https://img.shields.io/badge/dltHub-1.5-59C1D5?style=flat&logo=pandas&logoColor=59C1D5&labelColor=191A37)](https://dlthub.com/)
+[![Polars](https://img.shields.io/badge/polars-24292E?style=flat&logo=polars&logoColor=CC792B&labelColor=24292E)](https://docs.pola.rs/)
+[![DuckDB](https://img.shields.io/badge/DuckDB-0D0D0D?style=flat&logo=duckdb&logoColor=FEF000&labelColor=0D0D0D)](https://duckdb.org/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This is meant for experimenting with [data load tool (dlt)](https://dlthub.com/) for fetching data Web APIs and persiting it to a local DB
+This is meant for experimenting with [data load tool (dlt)](https://dlthub.com/) for fetching data from APIs and persiting it to a local DuckDB, Google CloudStorage, and BigQuery.
 
-## Tech Stack
-- [data load tool (dlt)](https://dlthub.com/)
-- [DuckDB](https://duckdb.org/)
-- [uv](https://docs.astral.sh/uv/concepts/projects/dependencies/)
-- [Docker](https://docs.docker.com/get-docker/)
 
-## Up and Running
+## Getting Started
 
-### Developer Setup
-
-**1.** Install the dependencies on `pyproject.toml`:
+**1.** Create and activate a virtualenv for Python 3.11 with conda:
 ```shell
-uv sync
+conda create -n dlt python=3.11 -y
+conda activate dlt
 ```
 
-**2.** Activate the virtualenv created by `uv`:
+**2.** Install the dependencies on `pyproject.toml`:
 ```shell
-source .venv/bin/activate
+pdm sync
 ```
 
 **3.** (Optional) Install pre-commit:
@@ -37,9 +32,12 @@ pre-commit install
 ```
 
 **4.** Run the dlt pipeline
-- T.B.D.
+```shell
+T.B.D.
+```
+
 
 ## TODO:
-- [x] PEP-517: Packaging and dependency management with `uv`
+- [x] PEP-517: Packaging and dependency management with PDM
 - [x] Code format/lint with Ruff
 - [ ] Extract data from Web APIs with dlt
