@@ -21,9 +21,9 @@
 * [Workflow orchestration with Prefect](module2-workflow-orchestration/prefect/)
 * Homework
 
-### [Module 3: Data Warehouse](module3-data-warehouse/)
-* [BigQuery Data Warehouse](module3-data-warehouse/bigquery/)
-* [StarRocks Query Engine](module3-data-warehouse/starrocks/)
+### [Module 3: Lakehouses & Data Warehouse](module3-lakehouse-data-warehouse/)
+* [BigQuery Data Warehouse](module3-lakehouse-data-warehouse/bigquery/)
+* [StarRocks Query Engine](module3-lakehouse-data-warehouse/starrocks/)
 * Lakehouse with Delta Lake
 * Homework
 
