@@ -35,10 +35,10 @@ Superset supports PostgreSQL, MySQL and out-of-the-box. To enable additional dat
 
 A complete list of supported data sources can be found [here](https://superset.apache.org/docs/databases/installing-database-drivers/).
 
-```json
+```text
+clickhouse-connect==0.8.15
 sqlalchemy-bigquery==1.12.1
 sqlalchemy-redshift==0.8.14
-clickhouse-connect==0.8.15
 ```
 
 **3.** After the `superset-app` container is in a healthy state, you can acccess Superset at:
