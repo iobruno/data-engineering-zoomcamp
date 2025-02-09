@@ -37,8 +37,7 @@ To deploy Airflow DAGs, just move them inside the [dags](dags/) folder and Airfl
 ## TODO's:
 - [x] PEP-517: Packaging and dependency management with `uv`
 - [x] Code format/lint with Ruff
-- [ ] Run Airflow DAGs on Docker
+- [x] Run Airflow DAGs on Docker
 - [ ] Build Airflow DAGs with [TaskFlow API](https://airflow.apache.org/docs/apache-airflow/stable/tutorial/taskflow.html)
-- [ ] Complete [Astronomer Academy's Airflow 101](https://academy.astronomer.io/path/airflow-101)
 - [ ] Deploy [Airflow to Kubernetes with Helm](https://airflow.apache.org/docs/helm-chart/stable/index.html)
 - [ ] Run/Deploy [Airflow DAGs on Kubernetes with KubernetesPodOperator](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/operators.html)
