@@ -6,7 +6,10 @@ readme = "README.md"
 requires-python = ">=3.12,<3.13"
 
 dependencies = [
-
+    "sqlalchemy>=1.4.54,<2.0",                         # Airflow doesn't yet support SQLAlchemy 2.x
+    "psycopg2-binary==2.9.10",                         # psycopg3 is only supported by SQLAlchemy 2.0+
+    "apache-airflow-providers-celery>=3.10.0,<4.0",    # Required for CeleryExecutor
+    "apache-airflow-providers-redis>=3.8.0,<4.0",      # Required for CeleryExecutor
 ]
 
 [dependency-groups]
