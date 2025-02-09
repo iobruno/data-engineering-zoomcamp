@@ -2,9 +2,11 @@ x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 x-airflow-common:
   &airflow-common
-  build: .
+  build:
+    context: .
+    dockerfile: Dockerfile.LocalExecutor
   pull_policy: build
-  image: apache/airflow:custom
+  image: apache/airflow:2.10-py3.12-local-custom
   user: "${AIRFLOW_UID:-50000}:0"
   environment:
     &airflow-common-env
