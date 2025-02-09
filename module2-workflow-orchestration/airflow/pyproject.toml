@@ -20,3 +20,6 @@ dev = [
 [tool.ruff]
 line-length = 100
 lint.select = ["F", "E", "W", "I001"]
+
+[tool.setuptools.packages.find]
+exclude = ["config", "dags", "logs", "plugins"]
