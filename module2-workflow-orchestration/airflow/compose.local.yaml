@@ -1,9 +1,10 @@
-x-airflow-image: &airflow-image apache/airflow:${AIRFLOW_VERSION:-2.10.4-python3.12}
 x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 
 x-airflow-common:
   &airflow-common
-  image: *airflow-image 
+  build: .
+  pull_policy: build
+  image: apache/airflow:custom
   user: "${AIRFLOW_UID:-50000}:0"
   environment:
     &airflow-common-env
@@ -46,7 +47,6 @@ services:
   airflow-metastore:
     image: *postgres-image
     container_name: airflow-metastore
-    restart: always
     environment:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
@@ -60,11 +60,11 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    restart: on-failure
 
   airflow-scheduler:
     <<: *airflow-common
     container_name: airflow-scheduler
-    restart: always
     command: ["airflow", "scheduler"]
     ports:
       - '8974'
@@ -73,22 +73,22 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+    restart: on-failure
 
   airflow-triggerer:
     <<: *airflow-common
     container_name: airflow-triggerer
-    restart: always
     command: ["airflow", "triggerer"]
     healthcheck:
       test: ["CMD-SHELL", 'airflow jobs check --job-type TriggererJob --hostname "$${HOSTNAME}"']
       interval: 5s
       timeout: 10s
       retries: 5
+    restart: on-failure
 
   airflow-web:
     <<: *airflow-common
     container_name: airflow-web
-    restart: always
     command: ["airflow", "webserver"]
     ports:
       - '8080:8080'
@@ -97,6 +97,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+    restart: on-failure
 
   airflow-init:
     <<: *airflow-common
