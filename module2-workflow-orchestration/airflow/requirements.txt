@@ -1,0 +1,2 @@
+sqlalchemy>=1.4.54,<2.0       # Airflow doesn't yet support SQLAlchemy 2.x
+psycopg2-binary==2.9.10        # psycopg3 is only supported by SQLAlchemy 2.0+

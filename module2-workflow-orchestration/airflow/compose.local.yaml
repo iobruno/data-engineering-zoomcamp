@@ -3,6 +3,7 @@ x-postgres-image: &postgres-image postgres:${POSTGRES_VERSION:-17-alpine}
 x-airflow-common:
   &airflow-common
   build: .
+  pull_policy: build
   image: apache/airflow:custom
   user: "${AIRFLOW_UID:-50000}:0"
   environment:
