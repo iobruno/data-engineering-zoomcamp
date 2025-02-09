@@ -1,7 +1,7 @@
 # Kafka Streams with ksqlDB
 
-![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.8-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
-![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+[![Kafka](https://img.shields.io/badge/Confluent_Platform-7.8-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)](https://docs.confluent.io/platform/current/)
+[![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)](https://docs.docker.com/get-docker/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
@@ -21,7 +21,7 @@ This contains the SQL statements to build the KStreams and KTables for ksqlDB to
 
 Copyright 2017-2022 Confluent Inc.
 
-CLI v7.7.1, Server v7.7.1 located at http://ksqldb0:8088
+CLI v7.8.0, Server v7.8.0 located at http://ksqldb0:8088
 Server Status: RUNNING
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
@@ -29,13 +29,8 @@ Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
 ksql>
 ```
 
-## Tech Stack
-- [Confluent Kafka](https://docs.confluent.io/platform/current/installation/overview.html)
-- [ksqlDB](https://docs.ksqldb.io/en/latest/)
-- [Docker](https://docs.docker.com/get-docker/)
 
-
-## Up & Running
+## Getting Started
 
 **0.** Make sure `ksqlDB-server` and `ksql-cli` are up. Check the instructions on [README](../README.md) for more details:
 ```shell

@@ -1,27 +1,17 @@
 # Stream processing with Kafka, ksqlDB and Kotlin
 
-![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.8-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
-![Kotlin](https://img.shields.io/badge/Kotlin-2.0-603DC0.svg?style=flat&logo=kotlin&logoColor=white&labelColor=603DC0)
-![JDK](https://img.shields.io/badge/JDK-21_|_17_|_11-3F90BD.svg?style=flat&logo=openjdk&logoColor=white&labelColor=3F90BD)
-![Gradle](https://img.shields.io/badge/gradle-8.5-02303A?style=flat&logo=gradle&logoColor=white&labelColor=02303A)
-![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+[![Kafka](https://img.shields.io/badge/Confluent_Platform-7.8-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)](https://docs.confluent.io/platform/current/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.1-603DC0.svg?style=flat&logo=kotlin&logoColor=white&labelColor=603DC0)](https://github.com/JetBrains/kotlin/releases/tag/v2.1.10)
+[![JDK](https://img.shields.io/badge/JDK-21_|_17-1076C6?style=flat&logo=openjdk&logoColor=FFFFFF&labelColor=1076C6)](https://sdkman.io/)
+[![Gradle](https://img.shields.io/badge/gradle-8.12-02303A?style=flat&logo=gradle&logoColor=white&labelColor=02303A)](https://gradle.org/releases/)
+[![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)](https://docs.docker.com/get-docker/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
-This project aims to experiment with stream processing using `Kotlin`, `Kafka`, and `ksqlDB`, providing a playground for seamless data integration and analysis
+Experiment with stream processing using `Kotlin`, `Kafka`, and `ksqlDB`, providing a playground for seamless data integration and analysis
 
 
-## Tech Stack
-- [Confluent Kafka](https://docs.confluent.io/platform/current/installation/overview.html)
-- [Confluent Schema Registry](https://docs.confluent.io/platform/current/schema-registry/index.html)
-- [ksqlDB](https://docs.ksqldb.io/en/latest/)
-- [Gradle with Kotlin DSL](https://docs.gradle.org/current/userguide/userguide.html)
-- [Docker](https://docs.docker.com/get-docker/)
-
-
-## Up and Running
-
-### Developer Setup
+## Getting Started
 
 **1.** Install `JDK` 17 (or 11). You can do so easily with [SDKMAN!](https://sdkman.io/):
 
@@ -102,7 +92,7 @@ Deserialize ConsumerRecords from source Kafka topic to [GreenTaxiDTO|YellowTaxiD
   -t, --topic=<topic>   Source Kafka topic for records
 ```
 
-## TODO:
+## TODO's:
 - [x] Set up an environment for Kotlin, Kafka Client and KafkaStreams
 - [x] Set up a Schema Registry
 - [x] Build a Cli Application for Producer and Consumer

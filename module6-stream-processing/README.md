@@ -1,33 +1,18 @@
 # Stream processing with Kafka & ksqlDB
 
-![Kafka](https://img.shields.io/badge/Confluent_Kafka-7.8-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)
-![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)
+[![Kafka](https://img.shields.io/badge/Confluent_Platform-7.8-141414?style=flat&logo=apachekafka&logoColor=white&labelColor=141414)](https://docs.confluent.io/platform/current/)
+[![Docker](https://img.shields.io/badge/Docker-329DEE?style=flat&logo=docker&logoColor=white&labelColor=329DEE)](https://docs.docker.com/get-docker/)
 
 ![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-31393F?style=flat&logo=creativecommons&logoColor=black&labelColor=white)
 
 This submodule focuses on various approaches for stream processing, such as:
 
 - [Kotlin](kotlin/): Producing and Consuming messages from/to Kafka with Kotlin/Java
-- [kSQLDB](ksqldb/): Stream Processing with kSQLDB (Kafka Streams)
+- [ksqlDB](ksqldb/): Stream Processing with ksqlDB (Kafka Streams)
 - [RisingWave](risingwave/): Stream Processing with RisingWave
 
-Hop into their respective folders for details on how to spin them up.
 
-**Note**: They all use the same [docker-compose.yml](docker-compose.yml) to bootstrap the kafka cluster. So read the **Up and Running** instructions down below on how to set it up.
-
-
-## Tech Stack
-- Confluent Kafka
-- Confluent Schema Registry
-- Confluent REST Proxy
-- [ksqlDB](https://ksqldb.io/)
-- [Conduktor Platform](https://v2.conduktor.io/)
-- [Docker](https://docs.docker.com/get-docker/)
-
-
-## Up and Running
-
-### Developer Setup
+## Getting Started
 
 **1.** Spin up Kafka Broker with one of the following options:
 
@@ -56,7 +41,8 @@ docker compose -f compose.redpanda.yaml up -d
 open http://localhost:8080
 ```
 
-## TODO:
+
+## TODO's:
 - [x] Single-broker Kafka Cluster (with KRaft)
 - [x] Multi-broker Kafka Cluster (with KRaft)
 - [x] Multi-broker Kafka Cluster (with Zookeeper)
@@ -64,4 +50,4 @@ open http://localhost:8080
 - [x] Confluent Rest Proxy
 - [x] ksqlDB Server and CLI
 - [x] Kafka Admin UI: `Conduktor Console`
-- [ ] Deploy Kafka Cluster (with Zookeeper or KRaft) on K8s using Helm Charts
+- [ ] Deploy Kafka Cluster on Kubernetes using Helm Charts
